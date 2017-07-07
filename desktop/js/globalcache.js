@@ -5,10 +5,15 @@ $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',funct
 	var paramerter=$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=methode]').parent().parent();
 	switch($(this).val()){
 	       case 'ir':
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
+				.append($('<option>').attr('value','IR').text('IR'))
+				.append($('<option>').attr('value','SENSOR').text('SENSOR'))
+				.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
+				.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')));
+			/*paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')
 				.append($('<option>').attr('value','sendir').text('sendir'))
 				.append($('<option>').attr('value','completeir').text('completeir'))
-				.append($('<option>').attr('value','stopir').text('stopir')));	
+				.append($('<option>').attr('value','stopir').text('stopir')));	*/
 		break;
 		case 'serial':
 			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">')
@@ -18,7 +23,7 @@ $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',funct
 				.append($('<option>').attr('value','9600').text('9600'))
 				.append($('<option>').attr('value','19200').text('19200'))
 				.append($('<option>').attr('value','38400').text('38400'))
-				.append($('<option>').attr('value','sendir').text('57600')));	
+				.append($('<option>').attr('value','57600').text('57600')));	
 			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">')
 				.append($('<option>').attr('value','FLOW_HARDWARE').text('FLOW_HARDWARE'))
 				.append($('<option>').attr('value','FLOW_NONE').text('FLOW_NONE')));
@@ -26,6 +31,10 @@ $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',funct
 				.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
 				.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
 				.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')));
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
+				.append($('<option>').attr('value','ASCII ').text('ASCII'))
+				.append($('<option>').attr('value','JS').text('JS'))
+				.append($('<option>').attr('value','HEXA').text('HEXA')));
 		break;
 	}
 })
