@@ -108,6 +108,7 @@ class globalcacheCmd extends cmd {
 				$data=$_options['message'];
 			break;
 			case 'other':
+				$data=$this->getConfiguration('value');
 			break;
 		}
 		$this->getEqLogic()->sendData($socket,$Ip,null,$data);
