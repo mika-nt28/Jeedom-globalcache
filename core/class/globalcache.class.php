@@ -33,10 +33,12 @@ class globalcache extends eqLogic {
 		log::add('globalcache','info','TX : '.$data);
 	}
 	private function readMessage($socket,$from){
-		if (!@socket_recvfrom($socket, $rx_msg, 10000, 0, "", 0)){
+		$from = '';
+		$port = 0;
+		if (!@socket_recvfrom($socket, $rx_msg, 10000, 0, $from,$port)){
 			die();
 		}
-		log::add('globalcache','info','RX: '.$this->rx_msg);
+		log::add('globalcache','info','RX: '.$rx_msg);
 	}
 	private function createSocket($Ip,$Port=4998){ 
 		if (!$Ip){
