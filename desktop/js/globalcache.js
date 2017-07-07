@@ -37,7 +37,7 @@ $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',funct
 				.append($('<option>').attr('value','HEXA').text('HEXA')));
 		break;
 	}
-})
+});
 function addCmdToTable(_cmd) {
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
   	tr.append($('<td>')
@@ -74,7 +74,7 @@ function addCmdToTable(_cmd) {
 				.append($('<input class="cmdAttr form-control input-sm" data-l1key="value">'))
 				.append($('<span class="input-group-btn">')
 					.append($('<a class="btn btn-success btn-sm bt_selectCmdExpression" id="value">')
-						.append($('<i class="fa fa-list-alt">'))))));
+						.append($('<i class="fa fa-list-alt">')))))));
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
