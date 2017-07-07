@@ -1,8 +1,8 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
-	$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=methode]').html('');
-	var paramerter=$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=methode]').parent().parent();
+	var paramerter=$(this).closest('tr').find('.parametre');
+	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
 			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
@@ -39,6 +39,9 @@ $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',funct
 	}
 });
 function addCmdToTable(_cmd) {
+	if (!isset(_cmd)) {
+		var _cmd = {configuration: {}};
+	}
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
   	tr.append($('<td>')
 		.append($('<i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove">'))
@@ -62,8 +65,7 @@ function addCmdToTable(_cmd) {
 				.append($('<option>')
 				      .attr('value','serial')
 				      .text('RS232'))))
-		  .append($('<div>')
-			 .append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')))
+		  .append($('<div class="parametre">'))
 		  .append($('<div>')
 			.append($('<label>')
 				.text('{{Retour d\'état}}')
