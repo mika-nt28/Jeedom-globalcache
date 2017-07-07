@@ -1,7 +1,7 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
-	var paramerter=$(this).closest('tr').find('.parametre');
+	var paramerter=$(this).closest('tr').find('.CmdParametre');
 	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
@@ -65,7 +65,7 @@ function addCmdToTable(_cmd) {
 				.append($('<option>')
 				      .attr('value','serial')
 				      .text('RS232'))))
-		  .append($('<div class="parametre">'))
+		  .append($('<div class="CmdParametre">'))
 		  .append($('<div>')
 			.append($('<label>')
 				.text('{{Retour d\'état}}')
