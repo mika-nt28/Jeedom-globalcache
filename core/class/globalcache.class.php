@@ -7,13 +7,6 @@ class globalcache extends eqLogic {
 	}
 	public function postSave() {		
 	}
-
-	public function Send($data) {	
-		$Ip=$this->getLogicalId();
-		$socket = $this->createSocket($Ip);
-		$this->sendData($socket,$Ip,null,$data);
-		$this->closeSocket($socket);
-	}	
 	private function sendData($socket,$Ip,$Port=4998,$data){
 		if (!$data){
 			log::add('globalcache','error',"Can't send - empty data");
@@ -85,35 +78,38 @@ class globalcache extends eqLogic {
 	private function closeSocket($socket){
 		socket_close($socket);
 	}
-	public static function GetInfo(){
-	/*	setstate,3:2,1¿
-getversion,<moduleaddress>¿
-version,<moduleaddress>,<textversionstring>¿
-blink,<onoff>¿
-<onoff> is |0|1|. A value of 1 starts the power LED blinking, and a value of 0 stops it.
-
-set_NET,0:1,<configlock>,<IP settings>¿
-<configlock> is |LOCKED|UNLOCKED|
-<IP settings> is |DHCP|STATIC,IP address,Subnet,Gateway|
-get_NET,0:1¿
-
-set_IR,<connectoraddress>,<mode>¿
-<mode> is |IR|SENSOR|SENSOR_NOTIFY|IR_NOCARRIER|
-get_IR,<connectoraddress>¿
-set_SERIAL,<connectoraddress>,<baudrate>,<flowcontrol>,<parity>¿
-get_SERIAL,<connectoraddress>¿
-*/
-	}
   }
 class globalcacheCmd extends cmd {
 	
 	public function execute($_options = null){
-		switch($this->getSubType()){
-			case 'slider':
-				$data="setstate,".$this->getLogicalId().",".$_options['slider'];
-				$this->getEqLogic()->Send($data);
+		
+		$Ip=$this->getEqLogic()->getLogicalId();
+		$socket = $this->createSocket($Ip);
+		switch($this->getConfiguration('type')){
+			case 'ir':
+				$data="set_IR,".$this->getLogicalId().",".$this->getConfiguration('mode');
+				$this->getEqLogic()->sendData($socket,$Ip,null,$data);
+			break;
+			case 'serial':
+				$data="set_SERIAL,".$this->getLogicalId().",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
+				$this->getEqLogic()->sendData($socket,$Ip,null,$data);
 			break;
 		}
+		switch($this->getSubType()){
+			case 'slider':
+				$data=$_options['slider'];
+			break;
+			case 'color':
+				$data=$_options['color'];
+			break;
+			case 'message':
+				$data=$_options['message'];
+			break;
+			case 'other':
+			break;
+		}
+		$this->getEqLogic()->sendData($socket,$Ip,null,$data);
+		$this->getEqLogic()->closeSocket($socket);
 	}
 }
 ?>
