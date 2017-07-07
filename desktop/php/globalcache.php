@@ -175,6 +175,7 @@ $eqLogics = eqLogic::byType('globalcache');
 						<tr>
 							<th ></th>
 							<th>Nom</th>
+							<th>Adresse</th>
 							<th>Paramètre</th>
 							<th></th>
 						</tr>
