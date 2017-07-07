@@ -1,4 +1,13 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$('body').on('click','.cmdAttr[data-l1key=subType]',function(){
+	var DefaultValue=$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=value]');
+	DefaultValue.hide();
+	switch($(this).val()){
+		case'other':
+			DefaultValue.show();
+		break;
+	}
+});
 $('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('tr').find('.CmdParametre');
@@ -52,6 +61,7 @@ function addCmdToTable(_cmd) {
 	tr.append($('<td>')
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{Adresse}}" title="Adresse">')));
 	tr.append($('<td>')
+		  .append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))
 		.append($('<div >')
 			.append($('<label>')
 				.text('{{Type de connexion}}')
