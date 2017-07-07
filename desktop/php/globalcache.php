@@ -156,20 +156,6 @@ $eqLogics = eqLogic::byType('globalcache');
 			<div role="tabpanel" class="tab-pane" id="commandtab">
 				<br>
 				<a class="btn btn-success btn-sm cmdAction pull-right" data-action="add"><i class="fa fa-plus-circle"></i> Ajouter une commande</a>
-				<div class="pull-right" >
-					<select class="Template input-sm" data-l1key="type">
-						<option value="">{{Aucun}}</option>
-						<?php
-						foreach (globalcache::devicesParameters() as $id => $info) {
-							echo '<option value="' . $id . '">' . $info['name'] . '</option>';
-						}
-						?>
-					</select>
-					<sup>
-						<i class="fa fa-question-circle tooltips" title="Choisissez si vous le souhaité un model de configuration d'équipement" style="font-size : 1em;color:grey;"></i>
-					</sup>
-					<a class="btn btn-success btn-sm Template" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter le template}}</a>
-				</div>
 				<table id="table_cmd" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
