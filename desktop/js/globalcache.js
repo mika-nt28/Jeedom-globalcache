@@ -8,6 +8,8 @@ function addCmdToTable(_cmd) {
 			.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="id">'))
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name">')));
 	tr.append($('<td>')
+			.append($('<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{Adresse}}" title="Adresse">')));
+	tr.append($('<td>')
 			.append($('<label>')
 				.text('{{Retour d\'état}}')
 				.append($('<sup>')
