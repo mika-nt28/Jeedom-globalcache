@@ -1,4 +1,34 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
+	//Ajout des parametre de configuration spécific a chaque type
+	$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=methode]').html('');
+	var paramerter=$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=methode]').parent().parent();
+	switch($(this).val()){
+	       case 'ir':
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')
+				.append($('<option>').attr('value','sendir').text('sendir'))
+				.append($('<option>').attr('value','completeir').text('completeir'))
+				.append($('<option>').attr('value','stopir').text('stopir')));	
+		break;
+		case 'serial':
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">')
+				.append($('<option>').attr('value','1200').text('1200'))
+				.append($('<option>').attr('value','2400').text('2400'))
+				.append($('<option>').attr('value','4800').text('4800'))
+				.append($('<option>').attr('value','9600').text('9600'))
+				.append($('<option>').attr('value','19200').text('19200'))
+				.append($('<option>').attr('value','38400').text('38400'))
+				.append($('<option>').attr('value','sendir').text('57600')));	
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">')
+				.append($('<option>').attr('value','FLOW_HARDWARE').text('FLOW_HARDWARE'))
+				.append($('<option>').attr('value','FLOW_NONE').text('FLOW_NONE')));
+			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">')
+				.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
+				.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
+				.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')));
+		break;
+	}
+})
 function addCmdToTable(_cmd) {
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
   	tr.append($('<td>')
@@ -10,6 +40,22 @@ function addCmdToTable(_cmd) {
 	tr.append($('<td>')
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{Adresse}}" title="Adresse">')));
 	tr.append($('<td>')
+		.append($('<div >')
+			.append($('<label>')
+				.text('{{Type de connexion}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Choisissez le type de commande'))))
+			.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="type">')
+			       .append($('<option>')
+				      .attr('value','ir')
+				      .text('Infra-rouge'))
+				.append($('<option>')
+				      .attr('value','serial')
+				      .text('RS232'))))
+		  .append($('<div>')
+			 .append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')))
+		  .append($('<div>')
 			.append($('<label>')
 				.text('{{Retour d\'état}}')
 				.append($('<sup>')
@@ -35,23 +81,21 @@ function addCmdToTable(_cmd) {
 		.append($('<i class="fa fa-cogs">')));
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="copy" title="{{Dupliquer}}">')
 		.append($('<i class="fa fa-files-o">')));
-
-		parmetre.append($('<div>')
-			.append($('<span>')
-				.append($('<label class="checkbox-inline">')
-					.append($('<input type="checkbox" class="cmdAttr checkbox-inline" data-size="mini" data-label-text="{{Historiser}}" data-l1key="isHistorized" checked/>'))
-					.append('{{Historiser}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-						.attr('title','Souhaitez vous Historiser les changements de valeur'))))));
-		parmetre.append($('<div>')
-			.append($('<span>')
-				.append($('<label class="checkbox-inline">')
-					.append($('<input type="checkbox" class="cmdAttr checkbox-inline" data-size="mini" data-label-text="{{Afficher}}" data-l1key="isVisible" checked/>'))
-					.append('{{Afficher}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-						.attr('title','Souhaitez vous afficher cette commande sur le dashboard'))))));
+	parmetre.append($('<div>')
+		.append($('<span>')
+			.append($('<label class="checkbox-inline">')
+				.append($('<input type="checkbox" class="cmdAttr checkbox-inline" data-size="mini" data-label-text="{{Historiser}}" data-l1key="isHistorized" checked/>'))
+				.append('{{Historiser}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Souhaitez vous Historiser les changements de valeur'))))));
+	parmetre.append($('<span>')
+			.append($('<label class="checkbox-inline">')
+				.append($('<input type="checkbox" class="cmdAttr checkbox-inline" data-size="mini" data-label-text="{{Afficher}}" data-l1key="isVisible" checked/>'))
+				.append('{{Afficher}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Souhaitez vous afficher cette commande sur le dashboard')))));
 	tr.append(parmetre);
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
