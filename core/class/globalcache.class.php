@@ -8,9 +8,44 @@ class globalcache extends eqLogic {
 	public function postSave() {		
 	}
 
-	public function Send() {		
-		$socket = createSocket($this->getLogicalId(),$Port=4998)
+	public function Send() {	
+		$Ip=$this->getLogicalId();
+		$socket = $this->createSocket($Ip);
+		$data='';
+		$this->closeSocket($socket,$Ip,null,$data);
+		$this->closeSocket($socket);
 	}	
+	private function sendData($socket,$Ip,$Port=4998,$data){
+		if (!$data){
+			log::add('globalcache','error',"Can't send - empty data");
+			die();
+		}
+
+		if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $this->host)){
+			$ip_address = $Ip;
+		}else{
+			$ip_address = gethostbyname($this->host);
+
+			if ($ip_address == $Ip){
+				log::add('globalcache','error',"DNS resolution of ".$Ip." failed");
+				die();
+			}
+		}
+
+		if (!@socket_sendto($socket, $data, strlen($data), 0, $ip_address, $Port)){
+			$err_no = socket_last_error($this->socket);
+			log::add('globalcache','error',"Failed to send data to ".$ip_address.":".$Port.". Source IP ".$Port.", source port: ".$Port.". ".socket_strerror($err_no));
+			die();
+		}
+
+		log::add('globalcache','info','TX : '.$data);
+	}
+	private function readMessage($socket,$from){
+		if (!@socket_recvfrom($socket, $rx_msg, 10000, 0, "", 0)){
+			die();
+		}
+		log::add('globalcache','info','RX: '.$this->rx_msg);
+	}
 	private function createSocket($Ip,$Port=4998){ 
 		if (!$Ip){
 			log::add('globalcache','error',"Source IP not defined.");
