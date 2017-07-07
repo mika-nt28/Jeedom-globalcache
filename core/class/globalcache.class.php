@@ -110,7 +110,7 @@ class globalcacheCmd extends cmd {
 	public function execute($_options = null){
 		switch($this->getSubType()){
 			case 'slider':
-				$data="setstate,"+$this->getLogicalId()+","+$_options['slider'];
+				$data="setstate,".$this->getLogicalId().",".$_options['slider'];
 				$this->getEqLogic()->Send($data);
 			break;
 		}
