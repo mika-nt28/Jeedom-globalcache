@@ -76,82 +76,108 @@ $eqLogics = eqLogic::byType('globalcache');
 		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 			<div role="tabpanel" class="tab-pane active" id="eqlogictab">
 				<br>
-				<form class="form-horizontal">
-					<fieldset>			
-						<div class="form-group">
-							<label class="col-md-2 control-label">
-								{{Nom de l'équipement}}
-								<sup>
-									<i class="fa fa-question-circle tooltips" title="Indiquez le nom de votre équipement" style="font-size : 1em;color:grey;"></i>
-								</sup>
-							</label>
-							<div class="col-md-3">
-								<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
-								<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement KNX}}"/>
-							</div>
-						</div>
-						<div class="form-group expertModeVisible">
-							<label class="col-md-2 control-label ">{{Adresse IP de l'equipement}}
-								<sup>
-									<i class="fa fa-question-circle tooltips" title="Indiquez l'adresse IP de votre équipement. Cette information est obigatoire pour permetre la connexion avec votre equipement" style="font-size : 1em;color:grey;"></i>
-								</sup>
-							</label>
-							<div class="col-md-3">
-								<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId"/>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label" >
-								{{Objet parent}}
-								<sup>
-									<i class="fa fa-question-circle tooltips" title="Indiquez l'objet dans lequel le widget de cette equipement apparaiterai sur le dashboard" style="font-size : 1em;color:grey;"></i>
-								</sup>
-							</label>
-							<div class="col-md-3">
-								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
-									<?php
-									foreach (object::all() as $object) {
-										echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-									}
-									?>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">
-								{{Catégorie}}
-								<sup>
-									<i class="fa fa-question-circle tooltips" title="Choisissez une catégorie
-								Cette information n'est pas obligatoire mais peut etre utile pour filtrer les widget" style="font-size : 1em;color:grey;"></i>
-								</sup>
-							</label>
-							<div class="col-md-8">
-								<?php
-								foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
-									echo '<label class="checkbox-inline">';
-									echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
-									echo '</label>';
-								}
-								?>
+				<div class="row">
+					<div class="col-sm-6">
+						<form class="form-horizontal">
+							<fieldset>			
+								<div class="form-group">
+									<label class="col-md-2 control-label">
+										{{Nom de l'équipement}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Indiquez le nom de votre équipement" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-md-3">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
+										<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement KNX}}"/>
+									</div>
+								</div>
+								<div class="form-group expertModeVisible">
+									<label class="col-md-2 control-label ">{{Adresse IP de l'equipement}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Indiquez l'adresse IP de votre équipement. Cette information est obigatoire pour permetre la connexion avec votre equipement" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-md-3">
+										<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId"/>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label" >
+										{{Objet parent}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Indiquez l'objet dans lequel le widget de cette equipement apparaiterai sur le dashboard" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-md-3">
+										<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
+											<?php
+											foreach (object::all() as $object) {
+												echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+											}
+											?>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-md-2 control-label">
+										{{Catégorie}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Choisissez une catégorie
+										Cette information n'est pas obligatoire mais peut etre utile pour filtrer les widget" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-md-8">
+										<?php
+										foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
+											echo '<label class="checkbox-inline">';
+											echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+											echo '</label>';
+										}
+										?>
 
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-sm-2 control-label" >
-								{{Etat du widget}}
-								<sup>
-									<i class="fa fa-question-circle tooltips" title="Choisissez les options de visibilité et d'activation
-								Si l'equipement n'est pas activé il ne sera pas utilisable dans jeedom, mais visible sur le dashboard
-								Si l'equipement n'est pas visible il ne sera caché sur le dashbord, mais utilisable dans jeedom" style="font-size : 1em;color:grey;"></i>
-								</sup>
-							</label>
-							<div class="col-sm-9">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
-							</div>
-						</div>
-					</fieldset> 
-				</form>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Etat du widget}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Choisissez les options de visibilité et d'activation
+										Si l'equipement n'est pas activé il ne sera pas utilisable dans jeedom, mais visible sur le dashboard
+										Si l'equipement n'est pas visible il ne sera caché sur le dashbord, mais utilisable dans jeedom" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
+									</div>
+								</div>		
+							</fieldset> 
+						</form>
+					</div>
+					<div class="col-sm-6">	
+						<form class="form-horizontal">
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Type de connexion}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner le type d'equipement piloté" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="type">
+											<option value="ir">{{Infra-rouge}}</option>
+											<option value="serial">{{RS232}}</option>
+											<option value="relay">{{Relais}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="EquipementParameter">
+								</div>
+							</fieldset> 
+						</form>
+								
 			</div>
 			<div role="tabpanel" class="tab-pane" id="commandtab">
 				<br>
