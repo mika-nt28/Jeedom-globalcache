@@ -7,12 +7,13 @@ class globalcache extends eqLogic {
 	}
 	public function postSave() {		
 	}
-	public function Send($adresss,$data){
+	public function Send($data){
+		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('mode');
 		$Ip=$this->getLogicalId();
 		$socket = $this->createSocket($Ip);
 		switch($this->getConfiguration('type')){
 			case 'ir':
-				$data="set_IR,".$adresss.",".$this->getConfiguration('mode');
+				$data="set_IR,".$adresss.",".$this->getConfiguration('voie');
 				$this->sendData($socket,$Ip,null,$data);
 			break;
 			case 'serial':
@@ -24,26 +25,20 @@ class globalcache extends eqLogic {
 		$this->closeSocket($socket);
 	}
 	private function sendData($socket,$Ip,$Port=4998,$data){
-		if (!$data){
-			log::add('globalcache','error',"Can't send - empty data");
-			die();
-		}
-
+		if (!$data)
+			throw new Exception(__("Can't send - empty data", __FILE__));
 		if (preg_match('/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/', $this->host)){
 			$ip_address = $Ip;
 		}else{
 			$ip_address = gethostbyname($this->host);
 
-			if ($ip_address == $Ip){
-				log::add('globalcache','error',"DNS resolution of ".$Ip." failed");
-				die();
-			}
+			if ($ip_address == $Ip)
+				throw new Exception(__("DNS resolution of ".$Ip." failed", __FILE__));
 		}
 
 		if (!@socket_sendto($socket, $data, strlen($data), 0, $ip_address, $Port)){
 			$err_no = socket_last_error($this->socket);
-			log::add('globalcache','error',"Failed to send data to ".$ip_address.":".$Port.". Source IP ".$Port.", source port: ".$Port.". ".socket_strerror($err_no));
-			die();
+			throw new Exception(__("Failed to send data to ".$ip_address.":".$Port.". Source IP ".$Port.", source port: ".$Port.". ".socket_strerror($err_no), __FILE__));
 		}
 
 		log::add('globalcache','info','TX : '.$data);
@@ -51,27 +46,21 @@ class globalcache extends eqLogic {
 	private function readMessage($socket,$from){
 		$from = '';
 		$port = 0;
-		if (!@socket_recvfrom($socket, $rx_msg, 10000, 0, $from,$port)){
-			die();
-		}
+		if (!@socket_recvfrom($socket, $rx_msg, 10000, 0, $from,$port))
+			throw new Exception(__("", __FILE__));
 		log::add('globalcache','info','RX: '.$rx_msg);
 	}
 	private function createSocket($Ip,$Port=4998){ 
-		if (!$Ip){
-			log::add('globalcache','error',"Source IP not defined.");
-			die();
-		}
-
+		if (!$Ip)
+			throw new Exception(__("Source IP not defined.", __FILE__));
 		if (!$socket = @socket_create(AF_INET, SOCK_DGRAM, SOL_UDP)){
 			$err_no = socket_last_error($socket);
-			log::add('globalcache','error',socket_strerror($err_no));
-			die();
+			throw new Exception(__(socket_strerror($err_no), __FILE__));
 		}
 
-		if (!@socket_bind($socket, $Ip, $Port)){
+	/*	if (!@socket_bind($socket, $Ip, $Port)){
 			$err_no = socket_last_error($socket);
-			log::add('globalcache','error',"Failed to bind ".$Ip.":".$Port." ".socket_strerror($err_no));
-			die();
+			throw new Exception(__("Failed to bind ".$Ip.":".$Port." ".socket_strerror($err_no), __FILE__));
 		}
 
 		$microseconds = $this->fr_timer * 1000;
@@ -82,15 +71,13 @@ class globalcache extends eqLogic {
 
 		if (!@socket_set_option($socket, SOL_SOCKET, SO_RCVTIMEO, array("sec"=>$sec,"usec"=>$usec))){
 			$err_no = socket_last_error($socket);
-			log::add('globalcache','error',socket_strerror($err_no));
-			die();
+			throw new Exception(__(socket_strerror($err_no), __FILE__));
 		}
 
 		if (!@socket_set_option($socket, SOL_SOCKET, SO_SNDTIMEO, array("sec"=>5,"usec"=>0))){
-			$err_no = socket_last_error($socket);
-			log::add('globalcache','error',socket_strerror($err_no));
-			die();
-		}
+			$err_no = socket_last_error($socket);			
+			throw new Exception(__(socket_strerror($err_no), __FILE__));
+		}*/
 		return $socket;
 	}
 	private function closeSocket($socket){
@@ -113,7 +100,7 @@ class globalcacheCmd extends cmd {
 				$data=$this->getConfiguration('value');
 			break;
 		}
-		$this->getEqLogic()->Send($this->getLogicalId(),$data);
+		$this->getEqLogic()->Send($data);
 	}
 }
 ?>
