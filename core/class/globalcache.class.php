@@ -7,6 +7,18 @@ class globalcache extends eqLogic {
 	}
 	public function postSave() {		
 	}
+	public static function BusMonitor() {
+		$Ip=$this->getLogicalId();
+		$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
+		if (!$socket) 
+			throw new Exception(__("$errstr ($errno)", __FILE__));
+		log::add('globalcache', 'debug', 'Démarrage du démon');
+		while (!feof($socket)) { 
+			$Ligne=stream_get_line($socket, 1000000,"\n");
+			log::add('globalcache', 'debug', $Ligne);
+		}
+		fclose($socket); 
+	}
 	public function Send($data){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		$Ip=$this->getLogicalId();
