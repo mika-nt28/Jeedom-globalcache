@@ -34,6 +34,7 @@ class globalcache extends eqLogic {
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($Ip,4998,$cmd);
+				$data=$this->EncodeData($data);
 			break;
 		}
 		$this->sendData($Ip,4998,$data);
@@ -49,6 +50,20 @@ class globalcache extends eqLogic {
 		}
 		fclose($socket);
 		log::add('globalcache','info','TX : '.$data);
+	}
+	private function EncodeData($data){
+		switch($this->getConfiguration('codage')){
+			case 'ASCII':
+			return iconv("UTF-8", "ASCII", $data);
+			case 'HEXA':
+				$hex='';
+				for ($i=0; $i < strlen($data); $i++){
+					$hex .= dechex(ord($data[$i]));
+				}
+			return $hex;
+			case 'JS':
+			return json_encode($data);
+		}
 	}
   }
 class globalcacheCmd extends cmd {
