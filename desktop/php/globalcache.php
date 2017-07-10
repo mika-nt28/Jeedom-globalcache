@@ -160,6 +160,41 @@ $eqLogics = eqLogic::byType('globalcache');
 							<fieldset>
 								<div class="form-group">
 									<label class="col-sm-2 control-label" >
+										{{Module}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner l'adresse du conneteur de communication" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="module">
+											<option value="1">{{Module 1}}</option>
+											<option value="2">{{Module 2}}</option>
+											<option value="3">{{Module 3}}</option>
+											<option value="4">{{Module 4}}</option>
+											<option value="5">{{Module 5}}</option>
+											<option value="6">{{Module 6}}</option>
+											<option value="7">{{Module 7}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Voies}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner l'adresse du conneteur de communication" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="voie">
+											<option value="1">{{Voie 1}}</option>
+											<option value="2">{{Voie 2}}</option>
+											<option value="3">{{Voie 3}}</option>
+											<option value="4">{{Voie 4}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
 										{{Type de connexion}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Séléctionner le type d'equipement piloté" style="font-size : 1em;color:grey;"></i>
@@ -187,7 +222,6 @@ $eqLogics = eqLogic::byType('globalcache');
 						<tr>
 							<th ></th>
 							<th>Nom</th>
-							<th>Adresse</th>
 							<th>Paramètre</th>
 							<th></th>
 						</tr>
