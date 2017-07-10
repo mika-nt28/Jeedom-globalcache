@@ -8,17 +8,21 @@ class globalcache extends eqLogic {
 	public function postSave() {		
 	}
 	public function Send($data){
-		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('mode');
+		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		$Ip=$this->getLogicalId();
 		$socket = $this->createSocket($Ip);
 		switch($this->getConfiguration('type')){
+			case 'relay':
+				$data="setstate,".$adresss.",".$data;
+			break;
 			case 'ir':
-				$data="set_IR,".$adresss.",".$this->getConfiguration('voie');
-				$this->sendData($socket,$Ip,null,$data);
+				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
+				$this->sendData($socket,$Ip,null,$cmd);
+				$data="sendir,".$adresss.",".$data;
 			break;
 			case 'serial':
-				$data="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->sendData($socket,$Ip,null,$data);
+				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
+				$this->sendData($socket,$Ip,null,$cmd);
 			break;
 		}
 		$this->sendData($socket,$Ip,null,$data);
