@@ -212,7 +212,8 @@ $eqLogics = eqLogic::byType('globalcache');
 								</div>
 							</fieldset> 
 						</form>
-								
+					</div>
+				</div>		
 			</div>
 			<div role="tabpanel" class="tab-pane" id="commandtab">
 				<br>
