@@ -7,6 +7,22 @@ class globalcache extends eqLogic {
 	}
 	public function postSave() {		
 	}
+	public function Send($adresss,$data){
+		$Ip=$this->getLogicalId();
+		$socket = $this->createSocket($Ip);
+		switch($this->getConfiguration('type')){
+			case 'ir':
+				$data="set_IR,".$adresss.",".$this->getConfiguration('mode');
+				$this->sendData($socket,$Ip,null,$data);
+			break;
+			case 'serial':
+				$data="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
+				$this->sendData($socket,$Ip,null,$data);
+			break;
+		}
+		$this->sendData($socket,$Ip,null,$data);
+		$this->closeSocket($socket);
+	}
 	private function sendData($socket,$Ip,$Port=4998,$data){
 		if (!$data){
 			log::add('globalcache','error',"Can't send - empty data");
@@ -82,21 +98,7 @@ class globalcache extends eqLogic {
 	}
   }
 class globalcacheCmd extends cmd {
-	
 	public function execute($_options = null){
-		
-		$Ip=$this->getEqLogic()->getLogicalId();
-		$socket = $this->createSocket($Ip);
-		switch($this->getConfiguration('type')){
-			case 'ir':
-				$data="set_IR,".$this->getLogicalId().",".$this->getConfiguration('mode');
-				$this->getEqLogic()->sendData($socket,$Ip,null,$data);
-			break;
-			case 'serial':
-				$data="set_SERIAL,".$this->getLogicalId().",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->getEqLogic()->sendData($socket,$Ip,null,$data);
-			break;
-		}
 		switch($this->getSubType()){
 			case 'slider':
 				$data=$_options['slider'];
@@ -111,8 +113,7 @@ class globalcacheCmd extends cmd {
 				$data=$this->getConfiguration('value');
 			break;
 		}
-		$this->getEqLogic()->sendData($socket,$Ip,null,$data);
-		$this->getEqLogic()->closeSocket($socket);
+		$this->getEqLogic()->Send($this->getLogicalId(),$data);
 	}
 }
 ?>
