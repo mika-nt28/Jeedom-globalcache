@@ -1,49 +1,66 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-$('body').on('click','.cmdAttr[data-l1key=subType]',function(){
-	var DefaultValue=$(this).closest('tr').find('.cmdAttr[data-l1key=configuration][data-l2key=value]');
-	DefaultValue.hide();
-	switch($(this).val()){
-		case'other':
-			DefaultValue.show();
-		break;
-	}
-});
-$('body').on('click','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
+$('body').on('click','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
-	var paramerter=$(this).closest('tr').find('.CmdParametre');
+	var paramerter=$(this).closest('form-horizontal').find('.EquipementParameter');
 	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
-				.append($('<option>').attr('value','IR').text('IR'))
-				.append($('<option>').attr('value','SENSOR').text('SENSOR'))
-				.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
-				.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')));
-			/*paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="methode">')
-				.append($('<option>').attr('value','sendir').text('sendir'))
-				.append($('<option>').attr('value','completeir').text('completeir'))
-				.append($('<option>').attr('value','stopir').text('stopir')));	*/
+			paramerter.append($('<div class="form-group">')
+				.append($('<label class="col-sm-2 control-label" >')
+					.text('{{Mode de transmission}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le mode de transmission infro-rouge" style="font-size :1em;color:grey;">'))))
+				.append($('<div class="col-sm-9">')
+					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
+						.append($('<option>').attr('value','IR').text('IR'))
+						.append($('<option>').attr('value','SENSOR').text('SENSOR'))
+						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
+						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
 		break;
 		case 'serial':
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">')
-				.append($('<option>').attr('value','1200').text('1200'))
-				.append($('<option>').attr('value','2400').text('2400'))
-				.append($('<option>').attr('value','4800').text('4800'))
-				.append($('<option>').attr('value','9600').text('9600'))
-				.append($('<option>').attr('value','19200').text('19200'))
-				.append($('<option>').attr('value','38400').text('38400'))
-				.append($('<option>').attr('value','57600').text('57600')));	
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">')
-				.append($('<option>').attr('value','FLOW_HARDWARE').text('FLOW_HARDWARE'))
-				.append($('<option>').attr('value','FLOW_NONE').text('FLOW_NONE')));
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">')
-				.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
-				.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
-				.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')));
-			paramerter.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
-				.append($('<option>').attr('value','ASCII ').text('ASCII'))
-				.append($('<option>').attr('value','JS').text('JS'))
-				.append($('<option>').attr('value','HEXA').text('HEXA')));
+			paramerter.append($('<div class="form-group">')
+				.append($('<label class="col-sm-2 control-label" >')
+					.text('{{Baudrate}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le baudrate de la connexion" style="font-size :1em;color:grey;">'))))
+				.append($('<div class="col-sm-9">')
+					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">')
+						.append($('<option>').attr('value','1200').text('1200'))
+						.append($('<option>').attr('value','2400').text('2400'))
+						.append($('<option>').attr('value','4800').text('4800'))
+						.append($('<option>').attr('value','9600').text('9600'))
+						.append($('<option>').attr('value','19200').text('19200'))
+						.append($('<option>').attr('value','38400').text('38400'))
+						.append($('<option>').attr('value','57600').text('57600')))));	
+			paramerter.append($('<div class="form-group">')
+				.append($('<label class="col-sm-2 control-label" >')
+					.text('{{Type de control de flux}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de control de flux de la connexion" style="font-size :1em;color:grey;">'))))
+				.append($('<div class="col-sm-9">')
+				.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">')
+					.append($('<option>').attr('value','FLOW_HARDWARE').text('FLOW_HARDWARE'))
+					.append($('<option>').attr('value','FLOW_NONE').text('FLOW_NONE')))));
+			paramerter.append($('<div class="form-group">')
+				.append($('<label class="col-sm-2 control-label" >')
+					.text('{{Parité}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner la parité de la connexion" style="font-size :1em;color:grey;">'))))
+				.append($('<div class="col-sm-9">')
+					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">')
+						.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
+						.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
+						.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')))));					
+			paramerter.append($('<div class="form-group">')
+				.append($('<label class="col-sm-2 control-label" >')
+					.text('{{Codage}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
+				.append($('<div class="col-sm-9">')
+					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
+					.append($('<option>').attr('value','ASCII ').text('ASCII'))
+					.append($('<option>').attr('value','JS').text('JS'))
+					.append($('<option>').attr('value','HEXA').text('HEXA')))));
 		break;
 	}
 });
@@ -61,21 +78,14 @@ function addCmdToTable(_cmd) {
 	tr.append($('<td>')
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="logicalId" placeholder="{{Adresse}}" title="Adresse">')));
 	tr.append($('<td>')
-		  .append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))
-		.append($('<div >')
+		  .append($('<div>')
 			.append($('<label>')
-				.text('{{Type de connexion}}')
+				.text('{{Valeur}}')
 				.append($('<sup>')
 					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Choisissez le type de commande'))))
-			.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="type">')
-			       .append($('<option>')
-				      .attr('value','ir')
-				      .text('Infra-rouge'))
-				.append($('<option>')
-				      .attr('value','serial')
-				      .text('RS232'))))
-		  .append($('<div class="CmdParametre">'))
+					.attr('title','Saisisser la valeur par defaut de votre commande'))))
+			.append($('<div class="input-group">')
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))))
 		  .append($('<div>')
 			.append($('<label>')
 				.text('{{Retour d\'état}}')
