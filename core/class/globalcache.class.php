@@ -7,7 +7,57 @@ class globalcache extends eqLogic {
 	}
 	public function postSave() {		
 	}
-	public static function BusMonitor() {
+	public static $_widgetPossibility = array('custom' => array(
+	        'visibility' => true,
+	        'displayName' => true,
+	        'displayObjectName' => true,
+	        'optionalParameters' => true,
+	        'background-color' => true,
+	        'text-color' => true,
+	        'border' => true,
+	        'border-radius' => true
+	));
+	public static function deamon_info() {
+		$return = array();
+		$return['log'] = 'globalcache';		
+		$return['launchable'] = 'ok';
+		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
+		if(is_object($cron) && $cron->running())
+			$return['state'] = 'ok';
+		else 
+			$return['state'] = 'nok';
+		return $return;
+	}
+	public static function deamon_start($_debug = false) {
+		log::remove('globalcache');
+		self::deamon_stop();
+		$deamon_info = self::deamon_info();
+		if ($deamon_info['launchable'] != 'ok') 
+			return;
+		if ($deamon_info['state'] == 'ok') 
+			return;
+		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('globalcache');
+			$cron->setFunction('Monitor');
+			$cron->setEnable(1);
+			$cron->setDeamon(1);
+			$cron->setSchedule('* * * * *');
+			$cron->setTimeout('999999');
+			$cron->save();
+		}
+		$cron->start();
+		$cron->run();
+	}
+	public static function deamon_stop() {
+		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
+		if (is_object($cron)) {
+			$cron->stop();
+			$cron->remove();
+		}
+	}
+	public static function Monitor() {
 		$Ip=$this->getLogicalId();
 		$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
 		if (!$socket) 
