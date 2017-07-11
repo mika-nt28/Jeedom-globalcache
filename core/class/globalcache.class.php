@@ -144,8 +144,8 @@ class globalcache extends eqLogic {
 					$byte=ord($data[$i]);
 				break
 				case 'HEXA':
-						$byte=dechex(ord($data[$i]));
-				break
+					$byte=dechex(ord($data[$i]));
+				break;
 				/*case 'JS':
 				return json_encode($data);*/
 			}
