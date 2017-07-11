@@ -132,7 +132,7 @@ class globalcache extends eqLogic {
 				$Port+=$NbPrevModule;
 			break;
 		}			
-		rerun $Port;
+		return $Port;
 	}
 	private function EncodeData($data){
 		for ($i=0; $i < strlen($data); $i++){
