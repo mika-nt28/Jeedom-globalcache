@@ -122,7 +122,7 @@ class globalcache extends eqLogic {
 	}
 	private function getPort(){
 		$Port=4998;
-;		switch($this->getConfiguration('type')){	
+		switch($this->getConfiguration('type')){	
 			case 'serial':
 				$NbPrevModule=0;
 				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
@@ -140,7 +140,7 @@ class globalcache extends eqLogic {
 			switch($this->getConfiguration('codage')){
 				case 'ASCII':
 					$byte=ord($data[$i]);
-				break
+				break;
 				case 'HEXA':
 					$byte=dechex(ord($data[$i]));
 				break;
