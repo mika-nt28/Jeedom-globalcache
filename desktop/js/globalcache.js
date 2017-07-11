@@ -84,17 +84,39 @@ function addCmdToTable(_cmd) {
 					.attr('title','Saisisser la valeur par defaut de votre commande'))))
 			.append($('<div class="input-group">')
 				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))))
-		  .append($('<div>')
+		  .append($('<div class="forIr">')
 			.append($('<label>')
-				.text('{{Retour d\'état}}')
+				.text('{{ID}}')
 				.append($('<sup>')
 					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Choisissez un objet jeedom contenant la valeur de votre commande'))))
+					.attr('title','Saisisser la valeur par defaut de votre commande'))))
 			.append($('<div class="input-group">')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="value">'))
-				.append($('<span class="input-group-btn">')
-					.append($('<a class="btn btn-success btn-sm bt_selectCmdExpression" id="value">')
-						.append($('<i class="fa fa-list-alt">')))))));
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="id">'))))
+		 .append($('<div class="forIr">')
+			.append($('<label>')
+				.text('{{Frequence}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Saisisser la valeur par defaut de votre commande'))))
+			.append($('<div class="input-group">')
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="frequency">'))))
+		 .append($('<div class="forIr">')
+			.append($('<label>')
+				.text('{{Compteur}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Saisisser la valeur par defaut de votre commande'))))
+			.append($('<div class="input-group">')
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="count">'))))
+		 .append($('<div class="forIr">')
+			.append($('<label>')
+				.text('{{Offset}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+					.attr('title','Saisisser la valeur par defaut de votre commande'))))
+			.append($('<div class="input-group">')
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="offset">')))));
+
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
@@ -129,6 +151,8 @@ function addCmdToTable(_cmd) {
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir')
+		$('.forIr').hide();
 	getMonitor(_cmd.id);
 }
 function getMonitor(id) {
