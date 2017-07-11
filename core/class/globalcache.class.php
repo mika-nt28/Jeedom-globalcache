@@ -97,12 +97,10 @@ class globalcache extends eqLogic {
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
-			log::add('globalcache', 'debug', 'Envoie : '.$message);
+			log::add('globalcache','info','TX : '.$data);
 			fwrite($socket, $data."\n");
-			$reponse='';
 		}
 		fclose($socket);
-		log::add('globalcache','info','TX : '.$data);
 	}
 	private function CreateDemon() {
 		$cron =cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $this->getId()));
