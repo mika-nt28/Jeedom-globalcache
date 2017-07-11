@@ -48,16 +48,26 @@ class globalcache extends eqLogic {
 		}
 	}	
 	public static function Monitor() {
-		$Ip=$this->getLogicalId();
-		$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
-		if (!$socket) 
-			throw new Exception(__("$errstr ($errno)", __FILE__));
-		log::add('globalcache', 'debug', 'Démarrage du démon');
-		while (!feof($socket)) { 
-			$Ligne=stream_get_line($socket, 1000000,"\n");
-			log::add('globalcache', 'debug', $Ligne);
+		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
+		$globalcache = globalcache::byId($_option['id']);
+		if (is_object($globalcache) && $globalcache->getIsEnable()) {
+			$Ip=$globalcache->getLogicalId();
+			$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
+			if (!$socket) 
+				throw new Exception(__("$errstr ($errno)", __FILE__));
+			log::add('globalcache', 'debug', 'Démarrage du démon');
+			while (!feof($socket)) { 
+				$Ligne=stream_get_line($socket, 1000000,"\n");
+				$globalcache->addCacheMonitor($Ligne);
+			}
+			fclose($socket); 
 		}
-		fclose($socket); 
+	}
+	private function addCacheMonitor($_monitor) {
+		$cache = cache::byKey('globalcache::Monitor::'.$this->getId());
+		$value = json_decode($cache->getValue('[]'), true);
+		$value[] = array('datetime' => date('d-m-Y H:i:s'), 'monitor' => $_monitor);
+		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($data){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
