@@ -24,20 +24,23 @@ class globalcache extends eqLogic {
 		$Ip=$this->getLogicalId();
 		switch($this->getConfiguration('type')){
 			case 'relay':
-				$data="setstate,".$adresss.",".$data;
+				$cmd="setstate,".$adresss.",".$data;
+				$this->sendData($Ip,4998,$cmd);
 			break;
 			case 'ir':
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
 				$this->sendData($Ip,4998,$cmd);
-				$data="sendir,".$adresss.",".$data;
+				$cmd="sendir,".$adresss.",".$data;
+				$this->sendData($Ip,4998,$cmd);
 			break;
 			case 'serial':
+				$port=4998+$this->getConfiguration('voie');
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->sendData($Ip,4998,$cmd);
-				$data=$this->EncodeData($data);
+				$this->sendData($Ip,$port,$cmd);
+				$cmd=$this->EncodeData($data);
+				$this->sendData($Ip,$port,$cmd);
 			break;
 		}
-		$this->sendData($Ip,4998,$data);
 	}
 	private function sendData($Ip,$Port=4998,$data){
 		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
