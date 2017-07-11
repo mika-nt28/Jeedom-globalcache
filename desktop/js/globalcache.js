@@ -129,4 +129,43 @@ function addCmdToTable(_cmd) {
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
+	getMonitor(_cmd.id);
 }
+function getMonitor(id) {
+	$.ajax({
+		type: 'POST',
+	async: false,
+	url: 'plugins/globalcache/core/ajax/globalcache.ajax.php',
+		data: {
+			action: 'getCacheMonitor',
+			id:id
+		},
+		dataType: 'json',
+		global: false,
+		error: function(request, status, error) {
+			setTimeout(function() {
+				getMonitor(id)
+			}, 100);
+		},
+		success: function(data) {
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({message: data.result, level: 'danger'});
+				return;
+			}
+			$('#table_Monitor tbody').html('');
+			//alert(data.result);
+			var monitors=jQuery.parseJSON(data.result);
+			jQuery.each(monitors.reverse(),function(key, value) {
+			  $('#table_Monitor tbody').append($("<tr>")
+					.append($("<td>").text(value.datetime))
+					.append($("<td>").text(value.monitor)));
+			});				
+			$('#table_Monitor').trigger('update');
+			if ($('#md_modal').dialog('isOpen') === true) {
+				setTimeout(function() {
+					getMonitor(id)
+				}, 100);
+			}
+		}
+	});
+}		   

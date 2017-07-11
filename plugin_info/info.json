@@ -4,5 +4,6 @@
 	"licence" : "AGPL",
 	"author" : "Halbout Michael",
 	"require" : "3.0",
-	"category" : "automation protocol"
+	"category" : "automation protocol",
+	"hasOwnDeamon" : true
 }

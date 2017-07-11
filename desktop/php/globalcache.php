@@ -72,6 +72,10 @@ $eqLogics = eqLogic::byType('globalcache');
 			<a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false">
 				<i class="fa fa-list-alt"></i> Commandes</a>
 		</li>
+		<li role="presentation" class="">
+			<a href="#monitortab" aria-controls="profile" role="tab" data-toggle="tab" aria-expanded="false">
+				<i class="fa fa-list-alt"></i> Moniteur</a>
+		</li>
 	</ul>
 		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 			<div role="tabpanel" class="tab-pane active" id="eqlogictab">
@@ -230,10 +234,20 @@ $eqLogics = eqLogic::byType('globalcache');
 					<tbody></tbody>
 				</table>
 			</div>
+			<div role="tabpanel" class="tab-pane" id="monitortab">
+				<table id="table_Monitor" class="table table-bordered table-condensed tablesorter">
+				    <thead>
+					<tr>
+					    <th>{{Date}}</th>
+					    <th>{{Valeur}}</th>
+					</tr>
+				    </thead>
+				    <tbody></tbody>
+				</table>
+			</div>
 		</div>
 	</div>
 </div>
-
 <?php 
 include_file('desktop', 'globalcache', 'js', 'globalcache');
 include_file('core', 'plugin.template', 'js'); 
