@@ -86,8 +86,7 @@ class globalcache extends eqLogic {
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				$cmd=$this->EncodeData($data);
-				$this->sendData($cmd);
+				$this->EncodeData($data);
 			break;
 		}
 	}
@@ -138,17 +137,19 @@ class globalcache extends eqLogic {
 		rerun $Port;
 	}
 	private function EncodeData($data){
-		switch($this->getConfiguration('codage')){
-			case 'ASCII':
-			return iconv("UTF-8", "ASCII", $data);
-			case 'HEXA':
-				$hex='';
-				for ($i=0; $i < strlen($data); $i++){
-					$hex .= dechex(ord($data[$i]));
-				}
-			return $hex;
-			case 'JS':
-			return json_encode($data);
+		for ($i=0; $i < strlen($data); $i++){
+			$byte=null;
+			switch($this->getConfiguration('codage')){
+				case 'ASCII':
+					$byte=ord($data[$i]);
+				break
+				case 'HEXA':
+						$byte=dechex(ord($data[$i]));
+				break
+				/*case 'JS':
+				return json_encode($data);*/
+			}
+			$this->sendData($byte);
 		}
 	}
   }
