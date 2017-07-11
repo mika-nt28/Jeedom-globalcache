@@ -1,12 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
-	public function preInsert() {
-	}
-	public function preSave() {   
-	}
-	public function postSave() {		
-	}
 	public static $_widgetPossibility = array('custom' => array(
 	        'visibility' => true,
 	        'displayName' => true,
@@ -19,13 +13,17 @@ class globalcache extends eqLogic {
 	));
 	public static function deamon_info() {
 		$return = array();
-		$return['log'] = 'globalcache';		
+		$return['log'] = 'globalcache';
 		$return['launchable'] = 'ok';
-		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
-		if(is_object($cron) && $cron->running())
-			$return['state'] = 'ok';
-		else 
-			$return['state'] = 'nok';
+		$return['state'] = 'nok';
+		foreach(eqLogic::byType('globalcache') as $globalcache){
+			if($globalcache->getIsEnable()){
+				$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
+				if (!is_object($cron)) 	
+					return $return;
+			}
+		}
+		$return['state'] = 'ok';
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
@@ -36,27 +34,19 @@ class globalcache extends eqLogic {
 			return;
 		if ($deamon_info['state'] == 'ok') 
 			return;
-		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('globalcache');
-			$cron->setFunction('Monitor');
-			$cron->setEnable(1);
-			$cron->setDeamon(1);
-			$cron->setSchedule('* * * * *');
-			$cron->setTimeout('999999');
-			$cron->save();
-		}
-		$cron->start();
-		$cron->run();
-	}
-	public static function deamon_stop() {
-		$cron = cron::byClassAndFunction('globalcache', 'Monitor');
-		if (is_object($cron)) {
-			$cron->stop();
-			$cron->remove();
+		foreach(eqLogic::byType('globalcache') as $globalcache){
+			if($globalcache->getIsEnable()){
+				$globalcache->CreateDemon();   
+			}
 		}
 	}
+	public static function deamon_stop() {	
+		foreach(eqLogic::byType('globalcache') as $globalcache){
+			$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
+			if (is_object($cron)) 	
+				$cron->remove();
+		}
+	}	
 	public static function Monitor() {
 		$Ip=$this->getLogicalId();
 		$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
@@ -97,12 +87,30 @@ class globalcache extends eqLogic {
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
-			log::add('mochad', 'debug', 'Envoie : '.$message);
+			log::add('globalcache', 'debug', 'Envoie : '.$message);
 			fwrite($socket, $data."\n");
 			$reponse='';
 		}
 		fclose($socket);
 		log::add('globalcache','info','TX : '.$data);
+	}
+	private function CreateDemon() {
+		$cron =cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $this->getId()));
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('globalcache');
+			$cron->setFunction('Monitor');
+			$cron->setOption(array('id' => $this->getId()));
+			$cron->setEnable(1);
+			$cron->setDeamon(1);
+			$cron->setSchedule('* * * * *');
+			$cron->setTimeout('999999');
+			$cron->save();
+		}
+		$cron->save();
+		$cron->start();
+		$cron->run();
+		return $cron;
 	}
 	private function EncodeData($data){
 		switch($this->getConfiguration('codage')){
