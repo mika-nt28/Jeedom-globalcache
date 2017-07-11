@@ -52,7 +52,8 @@ class globalcache extends eqLogic {
 		$globalcache = globalcache::byId($_option['id']);
 		if (is_object($globalcache) && $globalcache->getIsEnable()) {
 			$Ip=$globalcache->getLogicalId();
-			$socket = stream_socket_client("tcp://$Ip:4998", $errno, $errstr, 100);
+			$Port=$globalcache->getPort();
+			$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 			if (!$socket) 
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug', 'Démarrage du démon');
@@ -71,28 +72,28 @@ class globalcache extends eqLogic {
 	}
 	public function Send($data){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
-		$Ip=$this->getLogicalId();
 		switch($this->getConfiguration('type')){
 			case 'relay':
 				$cmd="setstate,".$adresss.",".$data;
-				$this->sendData($Ip,4998,$cmd);
+				$this->sendData($cmd);
 			break;
 			case 'ir':
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
-				$this->sendData($Ip,4998,$cmd);
+				$this->sendData($cmd);
 				$cmd="sendir,".$adresss.",".$data;
-				$this->sendData($Ip,4998,$cmd);
+				$this->sendData($cmd);
 			break;
 			case 'serial':
-				$port=4998+$this->getConfiguration('voie');
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->sendData($Ip,$port,$cmd);
+				$this->sendData($cmd);
 				$cmd=$this->EncodeData($data);
-				$this->sendData($Ip,$port,$cmd);
+				$this->sendData($cmd);
 			break;
 		}
 	}
-	private function sendData($Ip,$Port=4998,$data){
+	private function sendData($data){		
+		$Ip=$this->getLogicalId();
+		$Port=$this->getPort();
 		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
@@ -121,6 +122,20 @@ class globalcache extends eqLogic {
 		$cron->start();
 		$cron->run();
 		return $cron;
+	}
+	private function getPort(){
+		$Port=4998;
+		switch($this->getConfiguration('type')){	
+			case 'serial':
+				$NbPrevModule=0;
+				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial') as $eqLogic){
+					if($eqLogic->getConfiguration('module') < $this->getConfiguration('module'))
+						$NbPrevModule++;
+				}
+				$Port+=$NbPrevModule;
+			break;
+		}			
+		rerun $Port;
 	}
 	private function EncodeData($data){
 		switch($this->getConfiguration('codage')){
