@@ -97,12 +97,10 @@ class globalcache extends eqLogic {
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
-			log::add('globalcache', 'debug', 'Envoie : '.$message);
+			log::add('globalcache','info','TX : '.$data);
 			fwrite($socket, $data."\n");
-			$reponse='';
 		}
 		fclose($socket);
-		log::add('globalcache','info','TX : '.$data);
 	}
 	private function CreateDemon() {
 		$cron =cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $this->getId()));
@@ -127,14 +125,14 @@ class globalcache extends eqLogic {
 		switch($this->getConfiguration('type')){	
 			case 'serial':
 				$NbPrevModule=0;
-				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial') as $eqLogic){
+				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
 					if($eqLogic->getConfiguration('module') < $this->getConfiguration('module'))
 						$NbPrevModule++;
 				}
 				$Port+=$NbPrevModule;
 			break;
 		}			
-		rerun $Port;
+		return $Port;
 	}
 	private function EncodeData($data){
 		for ($i=0; $i < strlen($data); $i++){
@@ -142,7 +140,7 @@ class globalcache extends eqLogic {
 			switch($this->getConfiguration('codage')){
 				case 'ASCII':
 					$byte=ord($data[$i]);
-				break
+				break;
 				case 'HEXA':
 					$byte=dechex(ord($data[$i]));
 				break;
