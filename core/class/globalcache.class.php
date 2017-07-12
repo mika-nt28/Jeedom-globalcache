@@ -142,17 +142,17 @@ class globalcache extends eqLogic {
 		switch($this->getConfiguration('codage')){
 			case 'ASCII':
 				for ($i=0; $i < strlen($data); $i++)
-					$byte[]='0x'.ord($data[$i]);
+					$byte[]='\x'.ord($data[$i]);
 			break;
 			case 'HEXA':
-				for ($i=0; $i < strlen($data); $i++){
-					$byte[]='0x'.$data[$i].$data[$i++];
+				for ($i=0; $i < strlen($data); $i+2){
+					$byte[]='\x'.$data[$i].$data[$i+1];
 				}
 			break;
 			/*case 'JS':
 			return json_encode($data);*/
 		}
-		$this->sendData(implode(',',$byte).',0x0D,0x0A');
+		$this->sendData(implode(',',$byte).','.0x0D.','.0x0A');
 	}
   }
 class globalcacheCmd extends cmd {
