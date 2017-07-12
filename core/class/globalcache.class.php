@@ -127,7 +127,7 @@ class globalcache extends eqLogic {
 		$Port=4998;
 		switch($this->getConfiguration('type')){	
 			case 'serial':
-				$NbPrevModule=0;
+				$NbPrevModule=1;
 				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
 					if($eqLogic->getConfiguration('module') < $this->getConfiguration('module'))
 						$NbPrevModule++;
