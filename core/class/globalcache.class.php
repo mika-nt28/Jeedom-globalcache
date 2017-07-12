@@ -135,23 +135,20 @@ class globalcache extends eqLogic {
 		return $Port;
 	}
 	private function EncodeData($data){
-		for ($i=0; $i < strlen($data); $i++){
-			$byte='';
-			switch($this->getConfiguration('codage')){
-				case 'ASCII':
-					$byte=ord($data[$i]);
-				break;
-				case 'HEXA':
-					$Msb=$data[$i];
-					$i++;
-					$Lsb=$data[$i];
-					$byte=$Msb.$Lsb;
-				break;
-				/*case 'JS':
-				return json_encode($data);*/
-			}
-			$this->sendData($byte);
+		$byte='';
+		switch($this->getConfiguration('codage')){
+			case 'ASCII':
+				for ($i=0; $i < strlen($data); $i++)
+					$byte.=ord($data[$i]);
+			break;
+			case 'HEXA':
+				for ($i=0; $i < strlen($data); $i++)
+					$byte.="\x".$data[$i].$data[$i++];
+			break;
+			/*case 'JS':
+			return json_encode($data);*/
 		}
+		$this->sendData($byte);
 	}
   }
 class globalcacheCmd extends cmd {
