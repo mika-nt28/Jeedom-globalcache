@@ -152,7 +152,7 @@ class globalcache extends eqLogic {
 			/*case 'JS':
 			return json_encode($data);*/
 		}
-		$this->sendData(implode(',',$byte).','.0x0D.','.0x0A');
+		$this->sendData(implode(',',$byte).',\x0D,\x0A');
 	}
   }
 class globalcacheCmd extends cmd {
