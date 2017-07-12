@@ -136,13 +136,16 @@ class globalcache extends eqLogic {
 	}
 	private function EncodeData($data){
 		for ($i=0; $i < strlen($data); $i++){
-			$byte=null;
+			$byte='';
 			switch($this->getConfiguration('codage')){
 				case 'ASCII':
 					$byte=ord($data[$i]);
 				break;
 				case 'HEXA':
-					$byte=dechex(ord($data[$i]));
+					$Msb=$data[$i];
+					$i++;
+					$Lsb=$data[$i];
+					$byte=$Msb.$Lsb;
 				break;
 				/*case 'JS':
 				return json_encode($data);*/
