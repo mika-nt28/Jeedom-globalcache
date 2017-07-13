@@ -1,4 +1,14 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$('body').on('keyup','.cmdAttr[data-l1key=configuration][data-l2key=value]',function(){
+	var codage=$('.eqLogicAttr[data-l1key=configuration][data-l2key=codage]').val();
+	switch(codage){
+		case 'HEXA':
+			var valeur=$(this).val();  
+			if(valeur.substr(-1,1) != " " && valeur.substr(-2,1) != " ")
+				$(this).val(valeur + " ");
+		break;
+	}
+});
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
