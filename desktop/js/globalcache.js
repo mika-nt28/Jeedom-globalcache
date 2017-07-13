@@ -153,7 +153,7 @@ function addCmdToTable(_cmd) {
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir')
 		$('.forIr').hide();
-	getMonitor(_cmd.id);
+	getMonitor($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val());
 }
 function getMonitor(id) {
 	$.ajax({
@@ -176,15 +176,17 @@ function getMonitor(id) {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
 			}
-			$('#table_Monitor tbody').html('');
-			//alert(data.result);
-			var monitors=jQuery.parseJSON(data.result);
-			jQuery.each(monitors.reverse(),function(key, value) {
-			  $('#table_Monitor tbody').append($("<tr>")
-					.append($("<td>").text(value.datetime))
-					.append($("<td>").text(value.monitor)));
-			});				
-			$('#table_Monitor').trigger('update');
+			if(data.result != false){
+				$('#table_Monitor tbody').html('');
+				//alert(data.result);
+				var monitors=jQuery.parseJSON(data.result);
+				jQuery.each(monitors.reverse(),function(key, value) {
+				  $('#table_Monitor tbody').append($("<tr>")
+						.append($("<td>").text(value.datetime))
+						.append($("<td>").text(value.monitor)));
+				});				
+				$('#table_Monitor').trigger('update');
+			}
 			if ($('#md_modal').dialog('isOpen') === true) {
 				setTimeout(function() {
 					getMonitor(id)
