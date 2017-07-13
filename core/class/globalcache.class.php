@@ -92,7 +92,7 @@ class globalcache extends eqLogic {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName().' TX : '.$data);
-			fwrite($socket, $data."\n");
+			fwrite($socket, $data."\r\n");
 		}
 		fclose($socket);
 	}
@@ -149,8 +149,6 @@ class globalcache extends eqLogic {
 			/*case 'JS':
 			return json_encode($data);*/
 		}
-		$byte[]='0D';
-		$byte[]='0A';
 		$this->sendData(implode(',',$byte));
 	}
   }
