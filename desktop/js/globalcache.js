@@ -3,9 +3,12 @@ $('body').on('keyup','.cmdAttr[data-l1key=configuration][data-l2key=value]',func
 	var codage=$('.eqLogicAttr[data-l1key=configuration][data-l2key=codage]').val();
 	switch(codage){
 		case 'HEXA':
-			var valeur=$(this).val();  
-			if(valeur.substr(-1,1) != " " && valeur.substr(-2,1) != " ")
-				$(this).val(valeur + " ");
+		var valeur=$(this).val();  
+		valeur=valeur.replace("  ", " ");
+		alert(valeur);
+		if(valeur.substr(-1,1) != " " && valeur.substr(-2,1) != " ")
+			valeur=valeur + " ";
+		$(this).val(valeur);
 		break;
 	}
 });
