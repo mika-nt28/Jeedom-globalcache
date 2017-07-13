@@ -11,7 +11,7 @@
 			$eqLogic=eqLogic::byId(init('id'));
 			if(is_object($eqLogic)){
 				$cache = cache::byKey('globalcache::Monitor::'.$eqLogic->getId());
-				$return=$cache->getValue('[]')
+				$return=$cache->getValue('[]');
 			}
 			ajax::success($return);
 		}
