@@ -50,7 +50,9 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'debug',$globalcache->getHumanName().' Démarrage du démon');
 			while (!feof($socket)) { 
 				$Ligne=stream_get_line($socket, 1000000,"\n");
-				$globalcache->addCacheMonitor($Ligne);
+				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
+				if($Ligne!==false)
+					$globalcache->addCacheMonitor($Ligne);
 			}
 			fclose($socket); 
 		}
@@ -59,7 +61,6 @@ class globalcache extends eqLogic {
 		$cache = cache::byKey('globalcache::Monitor::'.$this->getId());
 		$value = json_decode($cache->getValue('[]'), true);
 		$value[] = array('datetime' => date('d-m-Y H:i:s'), 'monitor' => $_monitor);
-		log::add('globalcache', 'debug',$this->getHumanName().' RX: ' . $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($data){
@@ -135,18 +136,22 @@ class globalcache extends eqLogic {
 		$byte=array();
 		switch($this->getConfiguration('codage')){
 			case 'ASCII':
-				for ($i=0; $i < strlen($data); $i++)
-					$byte[]='\x'.ord($data[$i]);
+				$data=str_split($data);
+				foreach ($data as $char)
+					$byte[]=dechex(ord($char));
 			break;
 			case 'HEXA':
-				for ($i=0; $i < strlen($data); $i+2){
-					$byte[]='\x'.$data[$i].$data[$i+1];
+				for ($i=0; $i < strlen($data); $i++){
+					$byte[]=$data[$i].$data[$i+1];
+					$i++;
 				}
 			break;
 			/*case 'JS':
 			return json_encode($data);*/
 		}
-		$this->sendData(implode(',',$byte).',\x0D,\x0A');
+		$byte[]='0D';
+		$byte[]='0A';
+		$this->sendData(implode(',',$byte));
 	}
   }
 class globalcacheCmd extends cmd {
