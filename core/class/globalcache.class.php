@@ -43,11 +43,11 @@ class globalcache extends eqLogic {
 		if (is_object($globalcache) && $globalcache->getIsEnable()) {
 			$Ip=$globalcache->getLogicalId();
 			$Port=$globalcache->getPort();
-			log::add('globalcache', 'debug', "Connexion a l'adresse tcp://$Ip:$Port");
+			log::add('globalcache', 'debug',$globalcache->getHumanName().' : Connexion a l\'adresse tcp://$Ip:$Port');
 			$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 			if (!$socket) 
 				throw new Exception(__("$errstr ($errno)", __FILE__));
-			log::add('globalcache', 'debug', 'Démarrage du démon');
+			log::add('globalcache', 'debug',$globalcache->getHumanName().' Démarrage du démon');
 			while (!feof($socket)) { 
 				$Ligne=stream_get_line($socket, 1000000,"\n");
 				$globalcache->addCacheMonitor($Ligne);
@@ -59,7 +59,7 @@ class globalcache extends eqLogic {
 		$cache = cache::byKey('globalcache::Monitor::'.$this->getId());
 		$value = json_decode($cache->getValue('[]'), true);
 		$value[] = array('datetime' => date('d-m-Y H:i:s'), 'monitor' => $_monitor);
-		log::add('globalcache', 'debug', 'RX: ' . $_monitor);
+		log::add('globalcache', 'debug',$this->getHumanName().' RX: ' . $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($data){
@@ -85,12 +85,12 @@ class globalcache extends eqLogic {
 	private function sendData($data){		
 		$Ip=$this->getLogicalId();
 		$Port=$this->getPort();
-		log::add('globalcache', 'debug', "Connexion a l'adresse tcp://$Ip:$Port");
+		log::add('globalcache', 'debug',$this->getHumanName().' Connexion a l\'adresse tcp://$Ip:$Port');
 		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
-			log::add('globalcache','info','TX : '.$data);
+			log::add('globalcache','info',$this->getHumanName().' TX : '.$data);
 			fwrite($socket, $data."\n");
 		}
 		fclose($socket);
