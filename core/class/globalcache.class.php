@@ -1,16 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
-	public static $_widgetPossibility = array('custom' => array(
-	        'visibility' => true,
-	        'displayName' => true,
-	        'displayObjectName' => true,
-	        'optionalParameters' => true,
-	        'background-color' => true,
-	        'text-color' => true,
-	        'border' => true,
-	        'border-radius' => true
-	));
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'globalcache';
@@ -47,7 +37,7 @@ class globalcache extends eqLogic {
 				$cron->remove();
 		}
 	}	
-	public static function Monitor() {
+	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
 		$globalcache = globalcache::byId($_option['id']);
 		if (is_object($globalcache) && $globalcache->getIsEnable()) {
@@ -125,7 +115,7 @@ class globalcache extends eqLogic {
 	}
 	private function getPort(){
 		$Port=4998;
-		switch($this->getConfiguration('type')){	
+		/*switch($this->getConfiguration('type')){	
 			case 'serial':
 				$NbPrevModule=1;
 				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
@@ -134,7 +124,11 @@ class globalcache extends eqLogic {
 				}
 				$Port+=$NbPrevModule;
 			break;
-		}			
+		}	*/	
+		if($this->getConfiguration('module')== 1)       
+			$Port=4999;
+		if($this->getConfiguration('module')== 2)
+			$Port=5000;	
 		return $Port;
 	}
 	private function EncodeData($data){
