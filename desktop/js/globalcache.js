@@ -58,7 +58,7 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
 				.append($('<div class="col-sm-9">')
 					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
-					.append($('<option>').attr('value','ASCII ').text('ASCII'))
+					.append($('<option>').attr('value','ASCII').text('ASCII'))
 					.append($('<option>').attr('value','JS').text('JS'))
 					.append($('<option>').attr('value','HEXA').text('HEXA')))));
 		break;
