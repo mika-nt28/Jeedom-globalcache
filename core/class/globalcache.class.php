@@ -79,7 +79,7 @@ class globalcache extends eqLogic {
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				$this->EncodeData($data);
+				$this->sendData($data);
 			break;
 		}
 	}
@@ -133,30 +133,12 @@ class globalcache extends eqLogic {
 		}			
 		return $Port;
 	}
-	private function EncodeData($data){
-		$byte=array();
-      		switch($this->getConfiguration('codage')){
-			case 'ASCII':
-				$data=str_split($data);
-				foreach ($data as $char)
-					$byte[]=dechex(ord($char));
-			break;
-			case 'HEXA':
-        	  		$byte=explode(' ',trim($data));
-			break;
-			/*case 'JS':
-			return json_encode($data);*/
-		}
-	      	$byte[]='0D';
-	      	$byte[]='0A';
-		$this->sendData(implode(',',$byte));
-	}
   }
 class globalcacheCmd extends cmd {
 	public function execute($_options = null){
 		switch($this->getSubType()){
 			case 'slider':
-				$data=$_options['slider'];
+				$data=$this->getConfiguration('value') . ' '.$_options['slider'];
 			break;
 			case 'color':
 				$data=$_options['color'];
@@ -168,6 +150,25 @@ class globalcacheCmd extends cmd {
 				$data=$this->getConfiguration('value');
 			break;
 		}
+      		$byte=array();
+      	switch($this->getConfiguration('codage')){
+			case 'ASCII':
+				/*$data=str_split($data);
+				foreach ($data as $char)
+					$byte[]=dechex(ord($char));*/
+            $byte[]=$data;
+		break;
+			case 'HEXA':
+        	    $byte=explode(' ',trim($data));
+            	for($i=0;$i>count($byte);$i++)
+                  $byte[$i]=$byte[$i];
+			break;
+			/*case 'JS':
+			return json_encode($data);*/
+		}
+      $byte[]='0D';
+      $byte[]='0A';
+	$data=implode(',',$byte);
 		$this->getEqLogic()->Send($data);
 	}
 }
