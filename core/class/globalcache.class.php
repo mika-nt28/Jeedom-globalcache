@@ -135,22 +135,20 @@ class globalcache extends eqLogic {
 	}
 	private function EncodeData($data){
 		$byte=array();
-      	switch($this->getConfiguration('codage')){
+      		switch($this->getConfiguration('codage')){
 			case 'ASCII':
 				$data=str_split($data);
 				foreach ($data as $char)
 					$byte[]=dechex(ord($char));
-		break;
+			break;
 			case 'HEXA':
-        	    $byte=explode(' ',trim($data));
-            	for($i=0;$i>count($byte);$i++)
-                  $byte[$i]=$byte[$i];
+        	  		$byte=explode(' ',trim($data));
 			break;
 			/*case 'JS':
 			return json_encode($data);*/
 		}
-      $byte[]='0D';
-      $byte[]='0A';
+	      	$byte[]='0D';
+	      	$byte[]='0A';
 		$this->sendData(implode(',',$byte));
 	}
   }
