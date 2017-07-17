@@ -43,16 +43,16 @@ class globalcache extends eqLogic {
 		if (is_object($globalcache) && $globalcache->getIsEnable()) {
 			$Ip=$globalcache->getLogicalId();
 			$Port=$globalcache->getPort();
-			log::add('globalcache', 'debug',$globalcache->getHumanName().' : Connexion a l\'adresse tcp://$Ip:$Port');
+			log::add('globalcache', 'debug',$globalcache->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
 			$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 			if (!$socket) 
 				throw new Exception(__("$errstr ($errno)", __FILE__));
-			log::add('globalcache', 'debug',$globalcache->getHumanName().' Démarrage du démon');
-			while (!feof($socket)) { 
-				$Ligne=stream_get_line($socket, 1000000,"\n");
+			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
+			while (!feof($socket)) {
+            	$Ligne = fgets($socket, 1024);
 				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
 				if($Ligne!==false)
-					$globalcache->addCacheMonitor($Ligne);
+             		 $globalcache->addCacheMonitor($Ligne);
 			}
 			fclose($socket); 
 		}
@@ -86,13 +86,13 @@ class globalcache extends eqLogic {
 	private function sendData($data){		
 		$Ip=$this->getLogicalId();
 		$Port=$this->getPort();
-		log::add('globalcache', 'debug',$this->getHumanName().' Connexion a l\'adresse tcp://$Ip:$Port');
+		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
 		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
-			log::add('globalcache','info',$this->getHumanName().' TX : '.$data);
-			fwrite($socket, $data."\r\n");
+			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
+			fwrite($socket, $data/*."\r\n"*/);
 		}
 		fclose($socket);
 	}
@@ -116,36 +116,41 @@ class globalcache extends eqLogic {
 	}
 	private function getPort(){
 		$Port=4998;
-		/*switch($this->getConfiguration('type')){	
+		switch($this->getConfiguration('type')){	
 			case 'serial':
-				$NbPrevModule=1;
+				/*$NbPrevModule=1;
 				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
 					if($eqLogic->getConfiguration('module') < $this->getConfiguration('module'))
 						$NbPrevModule++;
 				}
-				$Port+=$NbPrevModule;
+				$Port+=$NbPrevModule;*/
+            if($this->getConfiguration('module')== 1)       
+              $Port=4999;
+            if($this->getConfiguration('module')== 2)
+              $Port=5000;
+            
 			break;
-		}	*/	
-		if($this->getConfiguration('module')== 1)       
-			$Port=4999;
-		if($this->getConfiguration('module')== 2)
-			$Port=5000;	
+		}			
 		return $Port;
 	}
 	private function EncodeData($data){
 		$byte=array();
-		switch($this->getConfiguration('codage')){
+      	switch($this->getConfiguration('codage')){
 			case 'ASCII':
 				$data=str_split($data);
 				foreach ($data as $char)
 					$byte[]=dechex(ord($char));
-			break;
+		break;
 			case 'HEXA':
-        			$byte=explode(' ',trim($data));
+        	    $byte=explode(' ',trim($data));
+            	for($i=0;$i>count($byte);$i++)
+                  $byte[$i]=$byte[$i];
 			break;
 			/*case 'JS':
 			return json_encode($data);*/
 		}
+      $byte[]='0D';
+      $byte[]='0A';
 		$this->sendData(implode(',',$byte));
 	}
   }
