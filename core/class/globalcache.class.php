@@ -32,6 +32,8 @@ class globalcache extends eqLogic {
 	}
 	public static function deamon_stop() {	
 		foreach(eqLogic::byType('globalcache') as $globalcache){
+			$cache = cache::byKey('globalcache::Monitor::'.$globalcache->getId());	
+			$cache->remove();
 			$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
 			if (is_object($cron)) 	
 				$cron->remove();
@@ -49,10 +51,11 @@ class globalcache extends eqLogic {
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
-            	$Ligne = fgets($socket, 1024);
+				$Ligne=stream_get_line($socket, 1000000,"\n");
+            			//$Ligne = fgets($socket, 1024);
 				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
 				if($Ligne!==false)
-             		 $globalcache->addCacheMonitor($Ligne);
+             				$globalcache->addCacheMonitor($Ligne);
 			}
 			fclose($socket); 
 		}
