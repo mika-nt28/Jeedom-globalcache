@@ -76,8 +76,10 @@ class globalcache extends eqLogic {
 			case 'ir':
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
 				$this->sendData($cmd);
-				$cmd="sendir,".$adresss.",".$data;
+				$id=rand(0,65535);
+				$cmd="sendir,".$adresss.",".$id.",".$data;
 				$this->sendData($cmd);
+				$cmd="completeir,".$adresss.",".$id;
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
@@ -154,24 +156,17 @@ class globalcacheCmd extends cmd {
 			break;
 		}
       		$byte=array();
-      	switch($this->getConfiguration('codage')){
+    	  	switch($this->getConfiguration('codage')){
 			case 'ASCII':
-				/*$data=str_split($data);
-				foreach ($data as $char)
-					$byte[]=dechex(ord($char));*/
-            $byte[]=$data;
-		break;
-			case 'HEXA':
-        	    $byte=explode(' ',trim($data));
-            	for($i=0;$i>count($byte);$i++)
-                  $byte[$i]=$byte[$i];
+         			$byte[]=$data;
 			break;
-			/*case 'JS':
-			return json_encode($data);*/
+			case 'HEXA':
+        		    $byte=explode(' ',trim($data));
+			break;
 		}
-      $byte[]='0D';
-      $byte[]='0A';
-	$data=implode(',',$byte);
+		$byte[]='0D';
+		$byte[]='0A';
+		$data=implode(',',$byte);
 		$this->getEqLogic()->Send($data);
 	}
 }
