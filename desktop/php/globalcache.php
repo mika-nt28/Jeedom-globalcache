@@ -227,6 +227,7 @@ $eqLogics = eqLogic::byType('globalcache');
 						<tr>
 							<th ></th>
 							<th>Nom</th>
+							<th>Commande</th>
 							<th>Paramètre</th>
 							<th></th>
 						</tr>

@@ -1,6 +1,6 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('body').on('keyup','.cmdAttr[data-l1key=configuration][data-l2key=value]',function(){
-  var codage=$('.eqLogicAttr[data-l1key=configuration][data-l2key=codage]').val();
+  var codage=$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val();
   switch(codage){
     case 'HEXA':
       var valeur=$(this).val();  
@@ -11,7 +11,7 @@ $('body').on('keyup','.cmdAttr[data-l1key=configuration][data-l2key=value]',func
       break;
   }
 });
-$('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
+$('body').on('change','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
 	paramerter.html('');
@@ -63,7 +63,7 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
 						.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
 						.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')))));					
-			paramerter.append($('<div class="form-group">')
+			/*paramerter.append($('<div class="form-group">')
 				.append($('<label class="col-sm-2 control-label" >')
 					.text('{{Codage}}')
 					.append($('<sup>')
@@ -72,7 +72,7 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
 					.append($('<option>').attr('value','ASCII').text('ASCII'))
 					.append($('<option>').attr('value','JS').text('JS'))
-					.append($('<option>').attr('value','HEXA').text('HEXA')))));
+					.append($('<option>').attr('value','HEXA').text('HEXA')))));*/
 		break;
 	}
 });
@@ -87,24 +87,26 @@ function addCmdToTable(_cmd) {
 	tr.append($('<td>')
 			.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="id">'))
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name">')));
-	tr.append($('<td>')
-		  .append($('<div>')
-			.append($('<label>')
-				.text('{{Valeur}}')
-				.append($('<sup>')
-					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div class="input-group">')
+	tr.append($('<td>')					
+			.append($('<div>')
+				.append($('<label>')
+					.text('{{Codage}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
+				.append($('<div>')
+					.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
+					.append($('<option>').attr('value','ASCII').text('ASCII'))
+					.append($('<option>').attr('value','JS').text('JS'))
+					.append($('<option>').attr('value','HEXA').text('HEXA')))))
+			.append($('<div>')
+				.append($('<label >')
+					.text('{{Valeur}}')
+					.append($('<sup>')
+						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+						.attr('title','Saisisser la valeur par defaut de votre commande'))))
+			.append($('<div>')
 				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))))
 		  .append($('<div class="forIr">')
-			.append($('<label>')
-				.text('{{ID}}')
-				.append($('<sup>')
-					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div class="input-group">')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="id">'))))
-		 .append($('<div class="forIr">')
 			.append($('<label>')
 				.text('{{Frequence}}')
 				.append($('<sup>')
@@ -205,4 +207,4 @@ function getMonitor(id) {
 			}
 		}
 	});
-}
+}		   

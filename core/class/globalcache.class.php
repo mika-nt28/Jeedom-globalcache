@@ -32,6 +32,8 @@ class globalcache extends eqLogic {
 	}
 	public static function deamon_stop() {	
 		foreach(eqLogic::byType('globalcache') as $globalcache){
+			$cache = cache::byKey('globalcache::Monitor::'.$globalcache->getId());	
+			$cache->remove();
 			$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
 			if (is_object($cron)) 	
 				$cron->remove();
@@ -49,10 +51,11 @@ class globalcache extends eqLogic {
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
-            	$Ligne = fgets($socket, 1024);
+				$Ligne=stream_get_line($socket, 1000000,"\n");
+            			//$Ligne = fgets($socket, 1024);
 				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
 				if($Ligne!==false)
-             		 $globalcache->addCacheMonitor($Ligne);
+             				$globalcache->addCacheMonitor($Ligne);
 			}
 			fclose($socket); 
 		}
@@ -73,13 +76,15 @@ class globalcache extends eqLogic {
 			case 'ir':
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
 				$this->sendData($cmd);
-				$cmd="sendir,".$adresss.",".$data;
+				$id=rand(0,65535);
+				$cmd="sendir,".$adresss.",".$id.",".$data;
 				$this->sendData($cmd);
+				$cmd="completeir,".$adresss.",".$id;
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				$this->EncodeData($data);
+				$this->sendData($data);
 			break;
 		}
 	}
@@ -133,30 +138,12 @@ class globalcache extends eqLogic {
 		}			
 		return $Port;
 	}
-	private function EncodeData($data){
-		$byte=array();
-      		switch($this->getConfiguration('codage')){
-			case 'ASCII':
-				$data=str_split($data);
-				foreach ($data as $char)
-					$byte[]=dechex(ord($char));
-			break;
-			case 'HEXA':
-        	  		$byte=explode(' ',trim($data));
-			break;
-			/*case 'JS':
-			return json_encode($data);*/
-		}
-	      	$byte[]='0D';
-	      	$byte[]='0A';
-		$this->sendData(implode(',',$byte));
-	}
   }
 class globalcacheCmd extends cmd {
 	public function execute($_options = null){
 		switch($this->getSubType()){
 			case 'slider':
-				$data=$_options['slider'];
+				$data=$this->getConfiguration('value') . ' '.$_options['slider'];
 			break;
 			case 'color':
 				$data=$_options['color'];
@@ -168,6 +155,18 @@ class globalcacheCmd extends cmd {
 				$data=$this->getConfiguration('value');
 			break;
 		}
+      		$byte=array();
+    	  	switch($this->getConfiguration('codage')){
+			case 'ASCII':
+         			$byte[]=$data;
+			break;
+			case 'HEXA':
+        		    $byte=explode(' ',trim($data));
+			break;
+		}
+		$byte[]='0D';
+		$byte[]='0A';
+		$data=implode(',',$byte);
 		$this->getEqLogic()->Send($data);
 	}
 }
