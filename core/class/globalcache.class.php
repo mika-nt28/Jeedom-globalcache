@@ -66,10 +66,13 @@ class globalcache extends eqLogic {
 		$value[] = array('datetime' => date('d-m-Y H:i:s'), 'monitor' => $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
-	public function Send($data){
+	public function Send($byte){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
+				$byte[]='0D';
+				$byte[]='0A';
+				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
 				$this->sendData($cmd);
 			break;
@@ -77,13 +80,24 @@ class globalcache extends eqLogic {
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
 				$this->sendData($cmd);
 				$id=rand(0,65535);
-				$cmd="sendir,".$adresss.",".$id.",".$data;
+				$freq=$byte[1];
+				$freq=round(10000/(dechex($freq) * 0.241246),0)*100;
+				unset($byte[0]);
+				unset($byte[1]);
+				unset($byte[2]);
+				unset($byte[3]);
+				array_shift($byte);
+				$data=implode(',',$byte);
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
 				$this->sendData($cmd);
 				$cmd="completeir,".$adresss.",".$id;
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
+				$byte[]='0D';
+				$byte[]='0A';
+				$data=implode(',',$byte);
 				$this->sendData($data);
 			break;
 		}
@@ -164,10 +178,7 @@ class globalcacheCmd extends cmd {
         		    $byte=explode(' ',trim($data));
 			break;
 		}
-		$byte[]='0D';
-		$byte[]='0A';
-		$data=implode(',',$byte);
-		$this->getEqLogic()->Send($data);
+		$this->getEqLogic()->Send($byte);
 	}
 }
 ?>
