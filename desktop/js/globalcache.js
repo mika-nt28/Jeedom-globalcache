@@ -95,7 +95,7 @@ function addCmdToTable(_cmd) {
 						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
 						.attr('title','Saisisser la valeur par defaut de votre commande'))))
 			.append($('<div>')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))));
+				.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))));
 
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
