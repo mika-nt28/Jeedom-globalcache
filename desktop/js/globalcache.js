@@ -62,17 +62,7 @@ $('body').on('change','.cmdAttr[data-l1key=configuration][data-l2key=type]',func
 					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">')
 						.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
 						.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
-						.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')))));					
-			/*paramerter.append($('<div class="form-group">')
-				.append($('<label class="col-sm-2 control-label" >')
-					.text('{{Codage}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
-				.append($('<div class="col-sm-9">')
-					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
-					.append($('<option>').attr('value','ASCII').text('ASCII'))
-					.append($('<option>').attr('value','JS').text('JS'))
-					.append($('<option>').attr('value','HEXA').text('HEXA')))));*/
+						.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')))));
 		break;
 	}
 });
@@ -105,31 +95,7 @@ function addCmdToTable(_cmd) {
 						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
 						.attr('title','Saisisser la valeur par defaut de votre commande'))))
 			.append($('<div>')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">'))))
-		  .append($('<div class="forIr">')
-			.append($('<label>')
-				.text('{{Frequence}}')
-				.append($('<sup>')
-					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div class="input-group">')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="frequency">'))))
-		 .append($('<div class="forIr">')
-			.append($('<label>')
-				.text('{{Compteur}}')
-				.append($('<sup>')
-					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div class="input-group">')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="count">'))))
-		 .append($('<div class="forIr">')
-			.append($('<label>')
-				.text('{{Offset}}')
-				.append($('<sup>')
-					.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-					.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div class="input-group">')
-				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="offset">')))));
+				.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))));
 
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
@@ -165,9 +131,7 @@ function addCmdToTable(_cmd) {
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir')
-		$('.forIr').hide();
-  getMonitor($('.eqLogicAttr[data-l1key=id]').val());
+ 	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
 }
 function getMonitor(id) {
 	$.ajax({
