@@ -81,7 +81,7 @@ class globalcache extends eqLogic {
 				$this->sendData($cmd);
 				$id=rand(0,65535);
 				$freq=$byte[1];
-				$freq=round(1000000/($freq * 0.241246),0);
+           			$freq=round(1000/($freq*0.241246),0)*1000;
 				unset($byte[0]);
 				unset($byte[1]);
 				unset($byte[2]);
