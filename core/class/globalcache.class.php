@@ -81,7 +81,7 @@ class globalcache extends eqLogic {
 				$this->sendData($cmd);
 				$id=rand(0,65535);
 				$freq=$byte[1];
-				$freq=round(10000/(dechex($freq) * 0.241246),0)*100;
+				$freq=round(1000000/($freq * 0.241246),0);
 				unset($byte[0]);
 				unset($byte[1]);
 				unset($byte[2]);
@@ -169,16 +169,18 @@ class globalcacheCmd extends cmd {
 				$data=$this->getConfiguration('value');
 			break;
 		}
-      		$byte=array();
+      		$bytes=array();
     	  	switch($this->getConfiguration('codage')){
 			case 'ASCII':
-         			$byte[]=$data;
+         			$bytes[]=$data;
 			break;
 			case 'HEXA':
-        		    $byte=explode(' ',trim($data));
+				foreach(explode(' ',trim($data)) as $byte){
+					$bytes[]=0x00+$byte;
+				}
 			break;
 		}
-		$this->getEqLogic()->Send($byte);
+		$this->getEqLogic()->Send($bytes);
 	}
 }
 ?>
