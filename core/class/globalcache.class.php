@@ -87,8 +87,9 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd);
+				$this->sendData($cmd."\r\n");
 				$cmd="completeir,".$adresss.",".$id;
+				$this->sendData($cmd."\r\n");
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
@@ -109,7 +110,7 @@ class globalcache extends eqLogic {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data/*."\r\n"*/);
+			fwrite($socket, $data);
 		}
 		fclose($socket);
 	}
