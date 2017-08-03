@@ -51,15 +51,13 @@ class globalcache extends eqLogic {
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
-              	//$Ligne = fgets($socket, 1024);
-              //OYIX;END
-				$Ligne=stream_get_line($socket, 1024,"\n");
-              	$Zone=substr(substr_replace('LINK:','',$Ligne),1,1);
-                $Source==substr(substr_replace('LINK:','',$Ligne),3,1);
-
-				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . json_encode($Ligne));
-				if($Ligne!==false)
-             				$globalcache->addCacheMonitor($Ligne);
+              			$Ligne = fgets($socket, 1024);
+				//$Ligne=stream_get_line($socket, 1024,"\n");
+				$Zone=substr($Ligne,6,1);
+				$Source==substr($Ligne,8,1);
+				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: Zone '.$Zone.' - Source ' . $Source );
+				/*if($Ligne!==false)
+             				$globalcache->addCacheMonitor($Ligne);*/
 			}
 			fclose($socket); 
 		}
