@@ -67,6 +67,11 @@ class globalcache extends eqLogic {
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($byte){
+		if($this->getConfiguration('blink');
+			$cmd="blink,1";
+		   else
+			$cmd="blink,0";
+		$this->sendData($cmd);
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
