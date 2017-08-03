@@ -11,7 +11,7 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 		break;
 	}
 });*/
-$('body').on('change','.cmdAttr[data-l1key=configuration][data-l2key=type]',function(){
+$('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
 	paramerter.html('');

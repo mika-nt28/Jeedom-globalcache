@@ -80,12 +80,10 @@ class globalcache extends eqLogic {
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
 				$this->sendData($cmd);
 				$id=rand(0,65535);
-				$freq=$byte[1];
-           			$freq=round(1000/($freq*0.241246),0)*1000;
+				$freq=round(1000/($byte[1]*0.241246),0)*1000;
 				unset($byte[0]);
 				unset($byte[1]);
 				unset($byte[2]);
-				unset($byte[3]);
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
@@ -176,7 +174,7 @@ class globalcacheCmd extends cmd {
 			break;
 			case 'HEXA':
 				foreach(explode(' ',trim($data)) as $byte){
-					$bytes[]=0x00+$byte;
+					$bytes[]=hexdec($byte);
 				}
 			break;
 		}
