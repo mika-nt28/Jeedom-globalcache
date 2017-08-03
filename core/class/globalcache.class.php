@@ -75,8 +75,6 @@ class globalcache extends eqLogic {
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
-				$byte[]='0D';
-				$byte[]='0A';
 				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
 				$this->sendData($cmd);
@@ -92,15 +90,13 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd);
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd);
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				$byte[]='0D';
-				$byte[]='0A';
 				$data=implode(',',$byte);
 				$this->sendData($data);
 			break;
@@ -115,7 +111,7 @@ class globalcache extends eqLogic {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data);
+			fwrite($socket, $data."\r\n");
 		}
 		fclose($socket);
 	}
