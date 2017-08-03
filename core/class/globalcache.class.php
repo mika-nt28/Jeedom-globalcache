@@ -176,7 +176,7 @@ class globalcacheCmd extends cmd {
 			break;
 			case 'HEXA':
 				foreach(explode(' ',trim($data)) as $byte){
-					$bytes[]=0x00+$byte;
+					$bytes[]=hexdec($byte);
 				}
 			break;
 		}
