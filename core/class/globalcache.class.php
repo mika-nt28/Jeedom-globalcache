@@ -7,7 +7,7 @@ class globalcache extends eqLogic {
 		$return['launchable'] = 'ok';
 		$return['state'] = 'nok';
 		foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
+			if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 				$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
 				if (!is_object($cron)) 	
 					return $return;
@@ -25,7 +25,7 @@ class globalcache extends eqLogic {
 		if ($deamon_info['state'] == 'ok') 
 			return;
 		foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
+			if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 				$globalcache->CreateDemon();   
 			}
 		}
@@ -41,8 +41,8 @@ class globalcache extends eqLogic {
 	}	
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
-		$globalcache = globalcache::byId($_option['id']);
-		if (is_object($globalcache) && $globalcache->getIsEnable()) {
+		$globalcache = eqLogic::byId($_option['id']);
+		if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 			$Ip=$globalcache->getLogicalId();
 			$Port=$globalcache->getPort();
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
@@ -51,9 +51,13 @@ class globalcache extends eqLogic {
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
-				$Ligne=stream_get_line($socket, 1000000,"\n");
-            			//$Ligne = fgets($socket, 1024);
-				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
+              	//$Ligne = fgets($socket, 1024);
+              //OYIX;END
+				$Ligne=stream_get_line($socket, 1024,"\n");
+              	$Zone=substr(substr_replace('LINK:','',$Ligne),1,1);
+                $Source==substr(substr_replace('LINK:','',$Ligne),3,1);
+
+				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . json_encode($Ligne));
 				if($Ligne!==false)
              				$globalcache->addCacheMonitor($Ligne);
 			}
