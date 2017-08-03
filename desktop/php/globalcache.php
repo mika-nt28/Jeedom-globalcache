@@ -85,35 +85,35 @@ $eqLogics = eqLogic::byType('globalcache');
 						<form class="form-horizontal">
 							<fieldset>			
 								<div class="form-group">
-									<label class="col-md-2 control-label">
+									<label class="col-md-4 control-label">
 										{{Nom de l'équipement}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Indiquez le nom de votre équipement" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-md-3">
+									<div class="col-md-6">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
 										<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement KNX}}"/>
 									</div>
 								</div>
 								<div class="form-group expertModeVisible">
-									<label class="col-md-2 control-label ">{{Adresse IP de l'equipement}}
+									<label class="col-md-4 control-label ">{{Adresse IP de l'equipement}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Indiquez l'adresse IP de votre équipement. Cette information est obigatoire pour permetre la connexion avec votre equipement" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-md-3">
+									<div class="col-md-6">
 										<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId"/>
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-2 control-label" >
+									<label class="col-md-4 control-label" >
 										{{Objet parent}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Indiquez l'objet dans lequel le widget de cette equipement apparaiterai sur le dashboard" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-md-3">
+									<div class="col-md-6">
 										<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 											<?php
 											foreach (object::all() as $object) {
@@ -124,7 +124,7 @@ $eqLogics = eqLogic::byType('globalcache');
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-md-2 control-label">
+									<label class="col-md-4 control-label">
 										{{Catégorie}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Choisissez une catégorie
@@ -143,7 +143,7 @@ $eqLogics = eqLogic::byType('globalcache');
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-sm-2 control-label" >
+									<label class="col-sm-4 control-label" >
 										{{Etat du widget}}
 										<sup>
 											<i class="fa fa-question-circle tooltips" title="Choisissez les options de visibilité et d'activation
@@ -151,7 +151,7 @@ $eqLogics = eqLogic::byType('globalcache');
 										Si l'equipement n'est pas visible il ne sera caché sur le dashbord, mais utilisable dans jeedom" style="font-size : 1em;color:grey;"></i>
 										</sup>
 									</label>
-									<div class="col-sm-9">
+									<div class="col-sm-6">
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked/>{{Activer}}</label>
 										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked/>{{Visible}}</label>
 									</div>
