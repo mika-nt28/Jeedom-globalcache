@@ -7,7 +7,7 @@ class globalcache extends eqLogic {
 		$return['launchable'] = 'ok';
 		$return['state'] = 'nok';
 		foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
+			if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 				$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
 				if (!is_object($cron)) 	
 					return $return;
@@ -25,7 +25,7 @@ class globalcache extends eqLogic {
 		if ($deamon_info['state'] == 'ok') 
 			return;
 		foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
+			if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 				$globalcache->CreateDemon();   
 			}
 		}
@@ -41,8 +41,8 @@ class globalcache extends eqLogic {
 	}	
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
-		$globalcache = globalcache::byId($_option['id']);
-		if (is_object($globalcache) && $globalcache->getIsEnable()) {
+		$globalcache = eqLogic::byId($_option['id']);
+		if (is_object($globalcache) && $globalcache->getIsEnable() && $globalcache->getConfiguration('type') == "serial") {
 			$Ip=$globalcache->getLogicalId();
 			$Port=$globalcache->getPort();
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
@@ -51,11 +51,13 @@ class globalcache extends eqLogic {
 				throw new Exception(__("$errstr ($errno)", __FILE__));
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
-				$Ligne=stream_get_line($socket, 1000000,"\n");
-            			//$Ligne = fgets($socket, 1024);
-				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
-				if($Ligne!==false)
-             				$globalcache->addCacheMonitor($Ligne);
+              			$Ligne = fgets($socket, 1024);
+				//$Ligne=stream_get_line($socket, 1024,"\n");
+				$Zone=substr($Ligne,6,1);
+				$Source==substr($Ligne,8,1);
+				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: Zone '.$Zone.' - Source ' . $Source );
+				/*if($Ligne!==false)
+             				$globalcache->addCacheMonitor($Ligne);*/
 			}
 			fclose($socket); 
 		}
@@ -67,11 +69,14 @@ class globalcache extends eqLogic {
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($byte){
+		if($this->getConfiguration('blink'))
+			$cmd="blink,1";
+		   else
+			$cmd="blink,0";
+		$this->sendData($cmd);
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
-				$byte[]='0D';
-				$byte[]='0A';
 				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
 				$this->sendData($cmd);
@@ -87,15 +92,13 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd);
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd);
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				$byte[]='0D';
-				$byte[]='0A';
 				$data=implode(',',$byte);
 				$this->sendData($data);
 			break;
@@ -110,7 +113,7 @@ class globalcache extends eqLogic {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data);
+			fwrite($socket, $data."\r\n");
 		}
 		fclose($socket);
 	}

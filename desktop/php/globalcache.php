@@ -198,6 +198,12 @@ $eqLogics = eqLogic::byType('globalcache');
 									</div>
 								</div>
 								<div class="form-group">
+									<label class="col-sm-4 control-label" >{{Led d'activitée}}</label>
+									<div class="col-sm-6">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="blink" checked/>{{Activer}}</label>
+									</div>
+								</div>
+								<div class="form-group">
 									<label class="col-sm-2 control-label" >
 										{{Type de connexion}}
 										<sup>
