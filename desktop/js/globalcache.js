@@ -98,11 +98,11 @@ function addCmdToTable(_cmd) {
 				.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))
               .append($('<div>')
                       .append($('<label class="checkbox-inline">')
-                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="CR" checked=""/>'))
-                              .text('{{Retour à la ligne}}'))
+                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="CR" checked>'))
+                              .append('{{Retour à la ligne}}'))
                       .append($('<label class="checkbox-inline">')
-                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="LF" checked=""/>'))
-                              .text('{{Fin de ligne}}')))));
+                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="LF" checked>'))
+                              .append('{{Fin de ligne}}')))));
 
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
@@ -178,4 +178,4 @@ function getMonitor(id) {
 			}
 		}
 	});
-}
+}		   
