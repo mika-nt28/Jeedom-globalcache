@@ -70,10 +70,8 @@ class globalcache extends eqLogic {
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
-            	if($this->getConfiguration('CR'))
-					$byte[]='0D';
-            	if($this->getConfiguration('LF'))
-					$byte[]='0A';
+				$byte[]='0D';
+				$byte[]='0A';
 				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
 				$this->sendData($cmd);
@@ -89,25 +87,15 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-            	if($this->getConfiguration('CR'))
-					$cmd.='\r';
-            	if($this->getConfiguration('LF'))
-					$cmd.='\n';
-				$this->sendData($cmd);
+				$this->sendData($cmd."\r\n");
 				$cmd="completeir,".$adresss.",".$id;
-            	if($this->getConfiguration('CR'))
-					$cmd.='\r';
-            	if($this->getConfiguration('LF'))
-					$cmd.='\n';
-				$this->sendData($cmd);
+				$this->sendData($cmd."\r\n");
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-            	if($this->getConfiguration('CR'))
-					$byte[]='0D';
-            	if($this->getConfiguration('LF'))
-					$byte[]='0A';
+				/*$byte[]='0D';
+				$byte[]='0A';*/
 				$data=implode(',',$byte);
 				$this->sendData($data);
 			break;
@@ -194,7 +182,13 @@ class globalcacheCmd extends cmd {
 				}
 			break;
 		}
-		$this->getEqLogic()->Send($bytes);
+      if($this->getEqLogic()->getConfiguration('type') == "serial"){
+        if($this->getConfiguration('CR'))
+          $bytes[]='0D';
+        if($this->getConfiguration('LF'))
+          $bytes[]='0A';
+      }
+      $this->getEqLogic()->Send($bytes);
 	}
 }
 ?>
