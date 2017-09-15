@@ -95,7 +95,14 @@ function addCmdToTable(_cmd) {
 						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
 						.attr('title','Saisisser la valeur par defaut de votre commande'))))
 			.append($('<div>')
-				.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))));
+				.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))
+              .append($('<div>')
+                      .append($('<label class="checkbox-inline">')
+                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="CR" checked=""/>'))
+                              .text('{{Retour à la ligne}}'))
+                      .append($('<label class="checkbox-inline">')
+                              .append($('<input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="LF" checked=""/>'))
+                              .text('{{Fin de ligne}}')))));
 
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
@@ -171,4 +178,4 @@ function getMonitor(id) {
 			}
 		}
 	});
-}		   
+}
