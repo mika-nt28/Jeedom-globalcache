@@ -1,0 +1,11 @@
+= Globale cache
+
+== Description
+
+Ce plugin a pour but de conneter jeedom a vos equipements global cache
+
+== Installation et configuration
+
+== Paramétrage des equipements et des commandes
+
+== FAQ
