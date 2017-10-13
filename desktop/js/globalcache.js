@@ -86,7 +86,7 @@ function addCmdToTable(_cmd) {
 				.append($('<div>')
 					.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
 					.append($('<option>').attr('value','ASCII').text('ASCII'))
-					.append($('<option>').attr('value','JS').text('JS'))
+					.append($('<option>').attr('value','DEC').text('DEC'))
 					.append($('<option>').attr('value','HEXA').text('HEXA')))))
 			.append($('<div>')
 				.append($('<label >')
@@ -109,7 +109,10 @@ function addCmdToTable(_cmd) {
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
 				.append(jeedom.cmd.availableType()))
 			.append($('<span class="subType" subType="'+init(_cmd.subType)+'">'))));
-		var parmetre=$('<td>');
+	var parmetre=$('<td>');
+	parmetre.append($('<label class="checkbox-inline">')
+	      .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="reponse">'))
+	      .append('{{Attendre la réponse}}'));
 	if (is_numeric(_cmd.id)) {
 		parmetre.append($('<a class="btn btn-default btn-xs cmdAction" data-action="test">')
 			.append($('<i class="fa fa-rss">')
