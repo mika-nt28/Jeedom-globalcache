@@ -5,14 +5,14 @@ class globalcache extends eqLogic {
 		$return = array();
 		$return['log'] = 'globalcache';
 		$return['launchable'] = 'ok';
-		$return['state'] = 'nok';
+		/*$return['state'] = 'nok';
 		foreach(eqLogic::byType('globalcache') as $globalcache){
 			if($globalcache->getIsEnable()){
 				$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
 				if (!is_object($cron)) 	
 					return $return;
 			}
-		}
+		}*/
 		$return['state'] = 'ok';
 		return $return;
 	}
@@ -24,11 +24,11 @@ class globalcache extends eqLogic {
 			return;
 		if ($deamon_info['state'] == 'ok') 
 			return;
-		foreach(eqLogic::byType('globalcache') as $globalcache){
+		/*foreach(eqLogic::byType('globalcache') as $globalcache){
 			if($globalcache->getIsEnable()){
 				$globalcache->CreateDemon();   
 			}
-		}
+		}*/
 	}
 	public static function deamon_stop() {	
 		foreach(eqLogic::byType('globalcache') as $globalcache){
@@ -70,11 +70,9 @@ class globalcache extends eqLogic {
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
-				$byte[]='0D';
-				$byte[]='0A';
 				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
-				$this->sendData($cmd);
+				$this->sendData($cmd,$this->getConfiguration('reponse'));
 			break;
 			case 'ir':
 				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
@@ -86,22 +84,20 @@ class globalcache extends eqLogic {
 				unset($byte[2]);
 				array_shift($byte);
 				$data=implode(',',$byte);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd."\r\n");
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data."\r\n";
+				$this->sendData($cmd,$this->getConfiguration('reponse'));
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd,$this->getConfiguration('reponse'));
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
 				$this->sendData($cmd);
-				/*$byte[]='0D';
-				$byte[]='0A';*/
 				$data=implode(',',$byte);
-				$this->sendData($data);
+				$this->sendData($data,$this->getConfiguration('reponse'));
 			break;
 		}
 	}
-	private function sendData($data){		
+	private function sendData($data,$reponse=false){		
 		$Ip=$this->getLogicalId();
 		$Port=$this->getPort();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
@@ -111,6 +107,12 @@ class globalcache extends eqLogic {
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
 			fwrite($socket, $data);
+			if($reponse){
+            			$Ligne = fgets($socket);
+				log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
+				if($Ligne!==false)
+             				$this->addCacheMonitor($Ligne);
+			}
 		}
 		fclose($socket);
 	}
@@ -171,24 +173,30 @@ class globalcacheCmd extends cmd {
       		$bytes=array();
     	  	switch($this->getConfiguration('codage')){
 			case 'ASCII':
-                $bytes[]=trim($data);
-				/*foreach(str_split(trim($data)) as $byte){
-					$bytes[]=hexdec(ord($byte));
-				}*/
+               			$bytes[]=trim($data);
+				$CR="\r";
+				$LF="\n";
 			break;
-			case 'HEXA':
+			case 'DEC':
 				foreach(explode(' ',trim($data)) as $byte){
 					$bytes[]=hexdec($byte);
 				}
+				$CR=hexdec(0x0D);
+				$LF=hexdec(0x0A);
+			break;
+			case 'HEXA':
+				foreach(explode(' ',trim($data)) as $byte){
+					$bytes[]=dechex(hexdec($byte));
+				}
+				$CR=dechex(hexdec(0x0D));
+				$LF=dechex(hexdec(0x0A));
 			break;
 		}
-      if($this->getEqLogic()->getConfiguration('type') == "serial"){
-        if($this->getConfiguration('CR'))
-          $bytes[]='0D';
-        if($this->getConfiguration('LF'))
-          $bytes[]='0A';
-      }
-      $this->getEqLogic()->Send($bytes);
+		if($this->getConfiguration('CR'))
+			$bytes[]=$CR;
+		if($this->getConfiguration('LF'))
+			$bytes[]=$LF;
+		$this->getEqLogic()->Send($bytes);
 	}
 }
 ?>
