@@ -109,7 +109,10 @@ function addCmdToTable(_cmd) {
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
 				.append(jeedom.cmd.availableType()))
 			.append($('<span class="subType" subType="'+init(_cmd.subType)+'">'))));
-		var parmetre=$('<td>');
+	var parmetre=$('<td>');
+	parmetre.append($('<label class="checkbox-inline">')
+	      .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="reponse">'))
+	      .append('{{Attendre la réponse}}'));
 	if (is_numeric(_cmd.id)) {
 		parmetre.append($('<a class="btn btn-default btn-xs cmdAction" data-action="test">')
 			.append($('<i class="fa fa-rss">')
