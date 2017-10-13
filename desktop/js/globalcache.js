@@ -86,7 +86,7 @@ function addCmdToTable(_cmd) {
 				.append($('<div>')
 					.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
 					.append($('<option>').attr('value','ASCII').text('ASCII'))
-					.append($('<option>').attr('value','JS').text('JS'))
+					.append($('<option>').attr('value','DEC').text('DEC'))
 					.append($('<option>').attr('value','HEXA').text('HEXA')))))
 			.append($('<div>')
 				.append($('<label >')
