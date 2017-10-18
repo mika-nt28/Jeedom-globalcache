@@ -2,10 +2,10 @@
 
 == Description
 
-Ce plugin a pour but de conneter jeedom a vos equipements global cache
+Ce plugin a pour but de connecter jeedom à vos équipements __global cache__.
 
 == Installation et configuration
 
-== Paramétrage des equipements et des commandes
+== Paramétrage des équipements et des commandes
 
 == FAQ
