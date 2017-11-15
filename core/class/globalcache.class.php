@@ -156,7 +156,7 @@ class globalcache extends eqLogic {
   }
 class globalcacheCmd extends cmd {
 	
-	public function postSave() {
+	public function preSave() {
 		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
 			$this->setConfiguration('codage','DEC');
 		}
