@@ -155,6 +155,12 @@ class globalcache extends eqLogic {
 	}
   }
 class globalcacheCmd extends cmd {
+	
+	public function preSave() {
+		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
+			$this->setConfiguration('codage','DEC');
+		}
+	}
 	public function execute($_options = null){
 		switch($this->getSubType()){
 			case 'slider':
