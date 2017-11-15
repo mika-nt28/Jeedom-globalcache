@@ -14,6 +14,7 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
+	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
 	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
@@ -28,6 +29,7 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<option>').attr('value','SENSOR').text('SENSOR'))
 						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
 						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
+			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
 		break;
 		case 'serial':
 			paramerter.append($('<div class="form-group">')
@@ -77,33 +79,35 @@ function addCmdToTable(_cmd) {
 	tr.append($('<td>')
 			.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="id">'))
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name">')));
-	tr.append($('<td>')					
+	var td=$('<td>');
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){			
+		td.append($('<div>')
+			.append($('<label>')
+				.text('{{Codage}}')
+				.append($('<sup>')
+					.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
 			.append($('<div>')
-				.append($('<label>')
-					.text('{{Codage}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de codage" style="font-size :1em;color:grey;">'))))
-				.append($('<div>')
-					.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
-					.append($('<option>').attr('value','ASCII').text('ASCII'))
-					.append($('<option>').attr('value','DEC').text('DEC'))
-					.append($('<option>').attr('value','HEXA').text('HEXA')))))
-			.append($('<div>')
-				.append($('<label >')
-					.text('{{Valeur}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
-						.attr('title','Saisisser la valeur par defaut de votre commande'))))
-			.append($('<div>')
-				.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')))
-              .append($('<div>')
-                      .append($('<label class="checkbox-inline">')
-                              .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="CR" checked>'))
-                              .append('{{Retour à la ligne}}'))
-                      .append($('<label class="checkbox-inline">')
-                              .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="LF" checked>'))
-                              .append('{{Fin de ligne}}')))));
-
+				.append($('<select class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="codage">')
+				.append($('<option>').attr('value','ASCII').text('ASCII'))
+				.append($('<option>').attr('value','DEC').text('DEC'))
+					.append($('<option>').attr('value','HEXA').text('HEXA')))));
+	}
+	td.append($('<div>')
+		.append($('<label >')
+			.text('{{Valeur}}')
+			.append($('<sup>')
+				.append($('<i class="fa fa-question-circle tooltips" style="font-size : 1em;color:grey;">')
+				.attr('title','Saisisser la valeur par defaut de votre commande'))))
+		.append($('<div>')
+			.append($('<textarea class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="value">')));
+	td.append($('<div>')
+		.append($('<label class="checkbox-inline">')
+			.append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="CR" checked>'))
+			.append('{{Retour à la ligne}}'))
+		.append($('<label class="checkbox-inline">')
+			.append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="LF" checked>'))
+			.append('{{Fin de ligne}}')));
+	tr.append(td);	
 	tr.append($('<td>')	
 		.append($('<div class="parametre">')
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
