@@ -15,6 +15,8 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
+	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').show(); 
+	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').show(); 
 	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
@@ -30,8 +32,8 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
 						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
-			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').attr('checked',false).hide(); 
-			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').attr('checked',false).hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').hide(); 
 		break;
 		case 'serial':
 			paramerter.append($('<div class="form-group">')
