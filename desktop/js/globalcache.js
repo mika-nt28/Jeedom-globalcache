@@ -30,6 +30,8 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
 						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').attr('checked',false).hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').attr('checked',false).hide(); 
 		break;
 		case 'serial':
 			paramerter.append($('<div class="form-group">')

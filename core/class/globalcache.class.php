@@ -86,7 +86,7 @@ class globalcache extends eqLogic {
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data."\r\n";
 				$this->sendData($cmd,$this->getConfiguration('reponse'));
-				$cmd="completeir,".$adresss.",".$id;
+				$cmd="completeir,".$adresss.",".$id."\r\n";
 				$this->sendData($cmd,$this->getConfiguration('reponse'));
 			break;
 			case 'serial':
@@ -198,10 +198,12 @@ class globalcacheCmd extends cmd {
 				$LF=dechex(hexdec(0x0A));
 			break;
 		}
-		if($this->getConfiguration('CR'))
-			$bytes[]=$CR;
-		if($this->getConfiguration('LF'))
-			$bytes[]=$LF;
+		if($this->getEqLogic()->getConfiguration('type') != 'ir'){
+			if($this->getConfiguration('CR'))
+				$bytes[]=$CR;
+			if($this->getConfiguration('LF'))
+				$bytes[]=$LF;
+		}
 		$this->getEqLogic()->Send($bytes);
 	}
 }
