@@ -15,8 +15,9 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
-	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').show(); 
-	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').show(); 
+	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().show(); 
+	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().show(); 
+	$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().show(); 
 	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
@@ -32,8 +33,9 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
 						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
-			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').hide(); 
-			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
+			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
 		break;
 		case 'serial':
 			paramerter.append($('<div class="form-group">')
@@ -149,6 +151,7 @@ function addCmdToTable(_cmd) {
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
+ 	$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').trigger('change');
  	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
 }
 function getMonitor(id) {
