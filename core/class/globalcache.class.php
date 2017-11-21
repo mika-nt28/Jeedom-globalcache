@@ -84,10 +84,10 @@ class globalcache extends eqLogic {
 				unset($byte[2]);
 				array_shift($byte);
 				$data=implode(',',$byte);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data."\r\n";
-				$this->sendData($cmd,$this->getConfiguration('reponse'));
-				$cmd="completeir,".$adresss.",".$id."\r\n";
-				$this->sendData($cmd,$this->getConfiguration('reponse'));
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
+				$this->sendData($cmd."\r\n");
+				$cmd="completeir,".$adresss.",".$id;
+				$this->sendData($cmd."\r\n");
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
@@ -144,10 +144,10 @@ class globalcache extends eqLogic {
 						$NbPrevModule++;
 				}
 				$Port+=$NbPrevModule;*/
-            if($this->getConfiguration('module')== 1)       
-              $Port=4999;
-            if($this->getConfiguration('module')== 2)
-              $Port=5000;
+			    if($this->getConfiguration('module')== 1)       
+			      $Port=4999;
+			    if($this->getConfiguration('module')== 2)
+			      $Port=5000;
             
 			break;
 		}			
