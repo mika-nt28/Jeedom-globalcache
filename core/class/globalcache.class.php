@@ -84,8 +84,8 @@ class globalcache extends eqLogic {
 				unset($byte[2]);
 				array_shift($byte);
 				$data=implode(',',$byte);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd."\r");
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data.0x0D;
+				$this->sendData($cmd);
 				$cmd="completeir,".$adresss.",".$id;
 				$this->sendData($cmd);
 			break;
