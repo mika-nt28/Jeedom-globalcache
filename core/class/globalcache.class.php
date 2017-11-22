@@ -85,9 +85,9 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd."\r");
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData($cmd."\r\n");
+				$this->sendData($cmd);
 			break;
 			case 'serial':
 				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
