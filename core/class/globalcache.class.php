@@ -56,7 +56,6 @@ class globalcache extends eqLogic {
 		}
 	}	
 	public function postSave(){
-		$this->sendData("getdevices",true);
 		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 			switch($this->getConfiguration('type')){
