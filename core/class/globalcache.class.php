@@ -103,13 +103,9 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
 		}
 		socket_set_timeout($sock,60);
-		//Do some communication, this loop can handle multiple clients
-		while(1)
-		{
-		   	//Receive some data
-		    	$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
-			log::add('globalcache', 'debug', "$remote_ip : $remote_port -- " . $buf);
-		}
+		//Receive some data
+		$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
+		log::add('globalcache', 'debug', "$remote_ip : $remote_port -- " . $buf);
 		socket_close($sock);
 		return $buf;
 	}
