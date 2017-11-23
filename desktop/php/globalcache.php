@@ -28,24 +28,24 @@ $eqLogics = eqLogic::byType('globalcache');
 				if (config::byKey('include_mode', 'globalcache', 0) == 1) {
 					echo '<div class="cursor changeIncludeState include card" data-mode="1" data-state="0" style="background-color : #8000FF; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
 					echo '<center class="includeicon">';
-					echo '<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#94ca02;"></i>';
+					echo '<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#406E88;"></i>';
 					echo '</center>';
-					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Arrêter Scan}}</center></span>';
+					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#406E88"><center>{{Arrêter Scan}}</center></span>';
 					echo '</div>';
 				} else {
 					echo '<div class="cursor changeIncludeState include card" data-mode="1" data-state="1" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
 					echo '<center class="includeicon">';
-					echo '<i class="fa fa-bullseye" style="font-size : 6em;color:#94ca02;"></i>';
+					echo '<i class="fa fa-bullseye" style="font-size : 6em;color:#406E88;"></i>';
 					echo '</center>';
-					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#94ca02"><center>{{Lancer Scan}}</center></span>';
+					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#406E88"><center>{{Lancer Scan}}</center></span>';
 					echo '</div>';
 				}
 			?>
 			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
 				<center>
-					<i class="fa fa-plus-circle" style="font-size : 5em;color:#0049A7;"></i>
+					<i class="fa fa-plus-circle" style="font-size : 5em;color:#406E88;"></i>
 				</center>
-				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#0049A7"><center>{{Ajouter}}</center></span>
+				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#406E88"><center>{{Ajouter}}</center></span>
 			</div>
 			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="height: 120px; margin-bottom: 10px; padding: 5px; border-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px; background-color: rgb(255, 255, 255);">
 				<center>
