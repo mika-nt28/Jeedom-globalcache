@@ -181,6 +181,7 @@ function getMonitor(id) {
 			jQuery.each(monitors.reverse(),function(key, value) {
 			  $('#table_Monitor tbody').append($("<tr>")
 					.append($("<td>").text(value.datetime))
+					.append($("<td>").text(value.sense))
 					.append($("<td>").text(value.monitor)));
 			});				
 			$('#table_Monitor').trigger('update');
