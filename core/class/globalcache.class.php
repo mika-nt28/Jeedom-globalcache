@@ -74,7 +74,6 @@ class globalcache extends eqLogic {
 			}
 		}
 		$this->sendData(4998,"endlistdevices");
-	}$this->sendData(4998,"endlistdevices");
 	}
 	public static function Discovery() {
 		//Reduce errors
