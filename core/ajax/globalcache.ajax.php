@@ -20,15 +20,6 @@
 			}
 			ajax::success($return);
 		}
-		if (init('action') == 'getdevices') {
-			$return = false;
-			$eqLogic=eqLogic::byId(init('id'));
-			if(is_object($eqLogic)){
-				$cmd="getdevices";
-				$return=$eqLogic->sendData($cmd,true);
-			}
-			ajax::success($return);
-		}
 		throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	} catch (Exception $e) {
 		ajax::error(displayExeption($e), $e->getCode());
