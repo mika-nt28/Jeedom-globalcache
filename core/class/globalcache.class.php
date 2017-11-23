@@ -79,6 +79,35 @@ class globalcache extends eqLogic {
 		}
 		$this->sendData("endlistdevices");
 	}
+	public static function Discovery() {
+		$result=array();
+		$ServerPort=9131;
+		$ServerAddr=config::byKey('internalAddr');
+		set_time_limit(0); 
+		$BroadcastSocket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
+		if (!$BroadcastSocket) {
+			log::add('globalcache', 'debug', "socket_create() failed: reason: " . socket_strerror(socket_last_error($BroadcastSocket)));
+			return false;
+		}
+		while(!socket_bind($BroadcastSocket, '0.0.0.0', $ServerPort)) 
+			$ServerPort++;
+		if (!socket_set_option($BroadcastSocket, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) {
+			log::add('globalcache', 'debug', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($BroadcastSocket)));
+			return false;
+		}
+		while(true) { 
+			$buf = '';
+			socket_recvfrom($BroadcastSocket, $buf , 2048, 0, $name, $port);
+			/*$ReadFrame= unpack("C*", $buf);
+			$dataBrute='0x';
+			foreach ($ReadFrame as $Byte)
+				$dataBrute.=sprintf('%02x',$Byte).' ';*/
+			log::add('globalcache', 'debug', 'Data recus: ' . $buf);		
+			
+		}
+		socket_close($BroadcastSocket);
+		return $result;
+	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
 		$globalcache = globalcache::byId($_option['id']);
