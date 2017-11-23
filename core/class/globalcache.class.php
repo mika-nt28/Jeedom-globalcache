@@ -102,6 +102,7 @@ class globalcache extends eqLogic {
 		$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 		log::add('globalcache', 'debug', "$remote_ip : $remote_port -- " . $buf);
 		socket_close($sock);
+		config::save('include_mode', 0, 'globalcache');
 		return $buf;
 	}
 	public static function Monitor($_option) {
