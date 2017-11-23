@@ -8,7 +8,7 @@
 		}
 		if (init('action') == 'changeIncludeState') {
 			config::save('include_mode', 1, 'globalcache');
-			//globalcache::Discovery();
+			globalcache::Discovery();
 			ajax::success();
 		}
 		if (init('action') == 'getCacheMonitor') {
