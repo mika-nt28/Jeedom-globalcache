@@ -197,7 +197,7 @@ class globalcache extends eqLogic {
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
 			fwrite($socket, $data."\r");
-             		$globalcache->addCacheMonitor("TX",$data);
+             		$this->addCacheMonitor("TX",$data);
 			if($reponse){
             			$Ligne = fgets($socket);
 				log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
