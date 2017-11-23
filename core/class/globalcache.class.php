@@ -109,10 +109,10 @@ class globalcache extends eqLogic {
 		$Equipement = self::AddEquipement($result['Config-Name'],$result['Config-URL']);
 		$Equipement->setConfiguration('type','ir');
 		$Equipement->setConfiguration('module','1');
-		$Equipement->setConfiguration('voie','1');*/
-		$return=$eqLogic->sendData("getdevices",true);
+		$Equipement->setConfiguration('voie','1');
+		$return=$Equipement->sendData("getdevices",true);
 		
-		log::add('globalcache', 'debug', $return);
+		log::add('globalcache', 'debug', $return);*/
 		config::save('include_mode', 0, 'globalcache');
 		return $buf;
 	}
