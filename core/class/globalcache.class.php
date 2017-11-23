@@ -52,18 +52,18 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
 			while (!feof($socket)) {
 				//$Ligne=stream_get_line($socket, 1000000,"\n");
-            	$Ligne = fgets($socket);
+            			$Ligne = fgets($socket);
 				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
 				if($Ligne!==false)
-             				$globalcache->addCacheMonitor($Ligne);
+             				$globalcache->addCacheMonitor("TX",$Ligne);
 			}
 			fclose($socket); 
 		}
 	}
-	private function addCacheMonitor($_monitor) {
+	private function addCacheMonitor($sense="TX",$_monitor) {
 		$cache = cache::byKey('globalcache::Monitor::'.$this->getId());
 		$value = json_decode($cache->getValue('[]'), true);
-		$value[] = array('datetime' => date('d-m-Y H:i:s'), 'monitor' => $_monitor);
+		$value[] = array('datetime' => date('d-m-Y H:i:s'),'sense' => $sense, 'monitor' => $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
 	public function Send($byte){
@@ -84,7 +84,7 @@ class globalcache extends eqLogic {
 				unset($byte[2]);
 				array_shift($byte);
 				$data=implode(',',$byte);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data.0x0D;
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
 				$this->sendData($cmd);
 				$cmd="completeir,".$adresss.",".$id;
 				$this->sendData($cmd);
@@ -106,12 +106,13 @@ class globalcache extends eqLogic {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data);
+			fwrite($socket, $data."\r");
+             		$globalcache->addCacheMonitor("TX",$data);
 			if($reponse){
             			$Ligne = fgets($socket);
 				log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
 				if($Ligne!==false)
-             				$this->addCacheMonitor($Ligne);
+             				$this->addCacheMonitor("RX",$Ligne);
 			}
 		}
 		fclose($socket);
