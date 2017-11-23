@@ -56,28 +56,26 @@ class globalcache extends eqLogic {
 		}
 	}	
 	public function postSave(){
-		if ($this->getConfiguration('version') !=''){
-			$cmd="getversion,".$this->getConfiguration('module');
-			$this->setConfiguration('version',$this->sendData($cmd,true));
-		}
+		$this->sendData("getdevices",true);
 		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 			switch($this->getConfiguration('type')){
 				case 'relay':	
-					$this->sendData("device",$this->getConfiguration('module'),"3 RELAY");
+					$this->sendData("device,".$this->getConfiguration('module').",3 RELAY");
 				break;
 				case 'ir':
-					$this->sendData("device",$this->getConfiguration('module'),"3 IR");
+					$this->sendData("device,".$this->getConfiguration('module').",3 IR");
 					$this->sendData("set_IR,".$adresss.",".$this->getConfiguration('mode'));
 
 				break;
 				case 'serial':
-					$this->sendData("device",$this->getConfiguration('module'),"1 SERIAL");
+					$this->sendData("device,".$this->getConfiguration('module').",1 SERIAL");
 					$this->sendData("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
 				break;
 			}
 		}
 		$this->sendData("endlistdevices");
+	}$this->sendData("endlistdevices");
 	}
 	public static function Discovery() {
 		//Reduce errors
@@ -111,7 +109,8 @@ class globalcache extends eqLogic {
 		$Equipement->setConfiguration('module','1');
 		$Equipement->setConfiguration('voie','1');
 		$return=$Equipement->sendData("getdevices",true);
-		
+		$Equipement->setConfiguration('version',$this->sendData(getversion,".$Equipement->getConfiguration('module'),true));
+		$Equipement->save();
 		log::add('globalcache', 'debug', $return);*/
 		config::save('include_mode', 0, 'globalcache');
 		return $buf;
