@@ -60,21 +60,21 @@ class globalcache extends eqLogic {
 			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 			switch($this->getConfiguration('type')){
 				case 'relay':	
-					$this->sendData("device,".$this->getConfiguration('module').",3 RELAY");
+					$this->sendData(4998,"device,".$this->getConfiguration('module').",3 RELAY");
 				break;
 				case 'ir':
-					$this->sendData("device,".$this->getConfiguration('module').",3 IR");
-					$this->sendData("set_IR,".$adresss.",".$this->getConfiguration('mode'));
+					$this->sendData(4998,"device,".$this->getConfiguration('module').",3 IR");
+					$this->sendData(4998,"set_IR,".$adresss.",".$this->getConfiguration('mode'));
 
 				break;
 				case 'serial':
-					$this->sendData("device,".$this->getConfiguration('module').",1 SERIAL");
-					$this->sendData("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
+					$this->sendData(4998,"device,".$this->getConfiguration('module').",1 SERIAL");
+					$this->sendData(4998,"set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
 				break;
 			}
 		}
-		$this->sendData("endlistdevices");
-	}$this->sendData("endlistdevices");
+		$this->sendData(4998,"endlistdevices");
+	}$this->sendData(4998,"endlistdevices");
 	}
 	public static function Discovery() {
 		//Reduce errors
@@ -107,8 +107,8 @@ class globalcache extends eqLogic {
 		$Equipement->setConfiguration('type','ir');
 		$Equipement->setConfiguration('module','1');
 		$Equipement->setConfiguration('voie','1');
-		$return=$Equipement->sendData("getdevices",true);
-		$Equipement->setConfiguration('version',$this->sendData(getversion,".$Equipement->getConfiguration('module'),true));
+		$return=$Equipement->sendData(4998,"getdevices",true);
+		$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
 		$Equipement->save();
 		log::add('globalcache', 'debug', $return);*/
 		config::save('include_mode', 0, 'globalcache');
@@ -164,7 +164,7 @@ class globalcache extends eqLogic {
 			case 'relay':
 				$data=implode(',',$byte);
 				$cmd="setstate,".$adresss.",".$data;
-				$this->sendData($cmd,$this->getConfiguration('reponse'));
+				$this->sendData(4998,$cmd,$this->getConfiguration('reponse'));
 			break;
 			case 'ir':
 				$id=rand(0,65535);
@@ -175,19 +175,18 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData($cmd);
+				$this->sendData(4998,$cmd);
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData($cmd);
+				$this->sendData(4998,$cmd);
 			break;
 			case 'serial':
 				$data=implode(',',$byte);
-				$this->sendData($data,$this->getConfiguration('reponse'));
+				$this->sendData($this->getPort(),$data,$this->getConfiguration('reponse'));
 			break;
 		}
 	}
-	public function sendData($data,$reponse=false){		
+	public function sendData($Port,$data,$reponse=false){		
 		$Ip=$this->getLogicalId();
-		$Port=$this->getPort();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
 		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
