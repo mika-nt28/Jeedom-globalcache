@@ -16,7 +16,7 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 	var state = $(this).attr('data-state');
 	changeIncludeState(state, mode);
 });
-('body').on('globalcache::includeState', function (_event,_options) {
+$('body').on('globalcache::includeState', function (_event,_options) {
 	if (_options['mode'] == 'learn') {
 		if (_options['state'] == 1) {
 			if($('.include').attr('data-state') != 0){
