@@ -23,9 +23,9 @@ $('body').on('globalcache::includeState', function (_event,_options) {
 				$.hideAlert();
 				$('.include:not(.card)').removeClass('btn-default').addClass('btn-success');
 				$('.include').attr('data-state', 0);
-				$('.include.card').css('background-color','#8000FF');
+				$('.include.card').css('background-color','#ffffff');
 				$('.include.card span center').text('{{Arrêter le scan}}');
-				$('.includeicon').empty().append('<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#94ca02;"></i>');
+				$('.includeicon').empty().append('<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#406E88;"></i>');
 				$('#div_inclusionAlert').showAlert({message: '{{Vous êtes en mode scan. Recliquez sur le bouton scan pour sortir de ce mode (sinon le mode restera actif une minute)}}', level: 'warning'});
 			}
 		} else {
@@ -33,7 +33,7 @@ $('body').on('globalcache::includeState', function (_event,_options) {
 				$.hideAlert();
 				$('.include:not(.card)').addClass('btn-default').removeClass('btn-success btn-danger');
 				$('.include').attr('data-state', 1);
-				$('.includeicon').empty().append('<i class="fa fa-bullseye" style="font-size : 6em;color:#94ca02;"></i>');
+				$('.includeicon').empty().append('<i class="fa fa-bullseye" style="font-size : 6em;color:#406E88;"></i>');
 				$('.include.card span center').text('{{Lancer Scan}}');
 				$('.include.card').css('background-color','#ffffff');
 			}
