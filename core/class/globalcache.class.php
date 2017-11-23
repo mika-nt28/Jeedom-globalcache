@@ -100,10 +100,38 @@ class globalcache extends eqLogic {
 		socket_set_timeout($sock,60);
 		//Receive some data
 		$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
-		log::add('globalcache', 'debug', "$remote_ip : $remote_port -- " . $buf);
+		log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
 		socket_close($sock);
+		/*
+		$result=array();
+		foreach(explode('<-',str_replace('>','',$buf)) as $param)
+			array_push($result,explode('=',$param));
+		$Equipement = self::AddEquipement($result['Config-Name'],$result['Config-URL']);
+		$Equipement->setConfiguration('type','ir');
+		$Equipement->setConfiguration('module','1');
+		$Equipement->setConfiguration('voie','1');*/
+		$return=$eqLogic->sendData("getdevices",true);
+		
+		log::add('globalcache', 'debug', $return);
 		config::save('include_mode', 0, 'globalcache');
 		return $buf;
+	}
+	public static function AddEquipement($Name,$_logicalId) 	{
+		$Equipement = self::byLogicalId($_logicalId, 'globalcache');
+		if (is_object($Equipement)) {
+			$Equipement->setIsEnable(1);
+			$Equipement->save();
+		} else {
+			$Equipement = new globalcache();
+			$Equipement->setName($Name);
+			$Equipement->setLogicalId($_logicalId);
+			$Equipement->setObject_id(null);
+			$Equipement->setEqType_name('globalcache');
+			$Equipement->setIsEnable(1);
+			$Equipement->setIsVisible(1);
+			$Equipement->save();
+		}
+		return $Equipement;
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
