@@ -39,6 +39,22 @@ class globalcache extends eqLogic {
 				$cron->remove();
 		}
 	}	
+	public function postSave(){
+		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
+		switch($this->getConfiguration('type')){
+			case 'relay':
+			break;
+			case 'ir':
+				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
+				$this->sendData($cmd);
+				
+			break;
+			case 'serial':
+				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
+				$this->sendData($cmd);
+			break;
+		}
+	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
 		$globalcache = globalcache::byId($_option['id']);
@@ -75,8 +91,6 @@ class globalcache extends eqLogic {
 				$this->sendData($cmd,$this->getConfiguration('reponse'));
 			break;
 			case 'ir':
-				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
-				$this->sendData($cmd);
 				$id=rand(0,65535);
 				$freq=round(1000/($byte[1]*0.241246),0)*1000;
 				unset($byte[0]);
@@ -90,14 +104,12 @@ class globalcache extends eqLogic {
 				$this->sendData($cmd);
 			break;
 			case 'serial':
-				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->sendData($cmd);
 				$data=implode(',',$byte);
 				$this->sendData($data,$this->getConfiguration('reponse'));
 			break;
 		}
 	}
-	private function sendData($data,$reponse=false){		
+	public function sendData($data,$reponse=false){		
 		$Ip=$this->getLogicalId();
 		$Port=$this->getPort();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
