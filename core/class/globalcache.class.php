@@ -79,6 +79,14 @@ class globalcache extends eqLogic {
 		}
 		$this->sendData("endlistdevices");
 	}
+	public static function changeIncludeState($_state, $_mode) {
+		if ($_mode == 1) {
+			self::Discovery();
+			if ($_state == 1) {
+			} else {
+			}
+		}
+	}
 	public static function Discovery() {
 		$result=array();
 		$ServerPort=9131;
@@ -106,7 +114,7 @@ class globalcache extends eqLogic {
 			
 		}
 		socket_close($BroadcastSocket);
-		return $result;
+		return $buf;
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
