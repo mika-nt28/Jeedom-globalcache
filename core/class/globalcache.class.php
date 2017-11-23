@@ -79,11 +79,6 @@ class globalcache extends eqLogic {
 		}
 		$this->sendData("endlistdevices");
 	}
-	public static function changeIncludeState($_state, $_mode) {
-		if ($_mode == 1) {
-			self::Discovery();
-		}
-	}
 	public static function Discovery() {
 		//Reduce errors
 		error_reporting(~E_WARNING);
