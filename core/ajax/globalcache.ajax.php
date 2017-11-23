@@ -7,7 +7,8 @@
 			throw new Exception(__('401 - Accès non autorisé', __FILE__));
 		}
 		if (init('action') == 'changeIncludeState') {
-			globalcache::changeIncludeState(init('state'), init('mode'));
+			config::save('include_mode', 1, 'globalcache');
+			globalcache::Discovery();
 			ajax::success();
 		}
 		if (init('action') == 'getCacheMonitor') {
