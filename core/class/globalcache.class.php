@@ -1,6 +1,22 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
+	public static $_GlobalCache=array(
+		"GC-100"=> array(
+			1 => "Serial",
+			2 => "Serial",
+			3 => "Relay",
+			4 => "IR",
+			5 => "IR",
+			6 => "",
+			7 =>""),
+		"iTach IR"=> array(
+			1 => "IR"),
+		"iTach Serial "=> array(
+			1 => "Serial"),
+		"iTach Relay "=> array(
+			1 => "Relay")
+	);
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'globalcache';
@@ -40,20 +56,28 @@ class globalcache extends eqLogic {
 		}
 	}	
 	public function postSave(){
-		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
-		switch($this->getConfiguration('type')){
-			case 'relay':
-			break;
-			case 'ir':
-				$cmd="set_IR,".$adresss.",".$this->getConfiguration('mode');
-				$this->sendData($cmd);
-				
-			break;
-			case 'serial':
-				$cmd="set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity');
-				$this->sendData($cmd);
-			break;
+		if ($this->getConfiguration('version') !=''){
+			$cmd="getversion,".$this->getConfiguration('module');
+			$this->setConfiguration('version',$this->sendData($cmd,true));
 		}
+		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
+			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
+			switch($this->getConfiguration('type')){
+				case 'relay':	
+					$this->sendData("device",$this->getConfiguration('module'),"3 RELAY");
+				break;
+				case 'ir':
+					$this->sendData("device",$this->getConfiguration('module'),"3 IR");
+					$this->sendData("set_IR,".$adresss.",".$this->getConfiguration('mode'));
+
+				break;
+				case 'serial':
+					$this->sendData("device",$this->getConfiguration('module'),"1 SERIAL");
+					$this->sendData("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
+				break;
+			}
+		}
+		$this->sendData("endlistdevices");
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
