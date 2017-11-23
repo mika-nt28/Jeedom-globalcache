@@ -246,6 +246,7 @@ $eqLogics = eqLogic::byType('globalcache');
 				    <thead>
 					<tr>
 					    <th>{{Date}}</th>
+					    <th>{{TX/RX}}</th>
 					    <th>{{Valeur}}</th>
 					</tr>
 				    </thead>
