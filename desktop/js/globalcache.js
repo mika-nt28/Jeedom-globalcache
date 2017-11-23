@@ -11,6 +11,70 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 		break;
 	}
 });*/
+ $('.changeIncludeState').on('click', function () {
+	var mode = $(this).attr('data-mode');
+	var state = $(this).attr('data-state');
+	changeIncludeState(state, mode);
+});
+('body').on('globalcache::includeState', function (_event,_options) {
+	if (_options['mode'] == 'learn') {
+		if (_options['state'] == 1) {
+			if($('.include').attr('data-state') != 0){
+				$.hideAlert();
+				$('.include:not(.card)').removeClass('btn-default').addClass('btn-success');
+				$('.include').attr('data-state', 0);
+				$('.include.card').css('background-color','#8000FF');
+				$('.include.card span center').text('{{Arrêter le scan}}');
+				$('.includeicon').empty().append('<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#94ca02;"></i>');
+				$('#div_inclusionAlert').showAlert({message: '{{Vous êtes en mode scan. Recliquez sur le bouton scan pour sortir de ce mode (sinon le mode restera actif une minute)}}', level: 'warning'});
+			}
+		} else {
+			if($('.include').attr('data-state') != 1){
+				$.hideAlert();
+				$('.include:not(.card)').addClass('btn-default').removeClass('btn-success btn-danger');
+				$('.include').attr('data-state', 1);
+				$('.includeicon').empty().append('<i class="fa fa-bullseye" style="font-size : 6em;color:#94ca02;"></i>');
+				$('.include.card span center').text('{{Lancer Scan}}');
+				$('.include.card').css('background-color','#ffffff');
+			}
+		}
+	}
+});
+
+$('body').on('globalcache::includeDevice', function (_event,_options) {
+    if (modifyWithoutSave) {
+        $('#div_inclusionAlert').showAlert({message: '{{Un périphérique vient d\'être inclu/exclu. Veuillez réactualiser la page}}', level: 'warning'});
+    } else {
+        if (_options == '') {
+            window.location.reload();
+        } else {
+            window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
+        }
+    }
+});
+
+
+function changeIncludeState(_state,_mode,_type='') {
+    $.ajax({// fonction permettant de faire de l'ajax
+        type: "POST", // methode de transmission des données au fichier php
+        url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+        data: {
+            action: "changeIncludeState",
+            state: _state,
+            mode: _mode,
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) { // si l'appel a bien fonctionné
+        if (data.state != 'ok') {
+            $('#div_alert').showAlert({message: data.result, level: 'danger'});
+            return;
+        }
+    }
+});
+}
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	//Ajout des parametre de configuration spécific a chaque type
 	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
