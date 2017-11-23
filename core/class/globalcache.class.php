@@ -82,38 +82,35 @@ class globalcache extends eqLogic {
 	public static function changeIncludeState($_state, $_mode) {
 		if ($_mode == 1) {
 			self::Discovery();
-			if ($_state == 1) {
-			} else {
-			}
 		}
 	}
 	public static function Discovery() {
-		$result=array();
-		$ServerPort=9131;
-		$ServerAddr=config::byKey('internalAddr');
-		set_time_limit(0); 
-		$BroadcastSocket = socket_create(AF_INET, SOCK_DGRAM, SOL_UDP);
-		if (!$BroadcastSocket) {
-			log::add('globalcache', 'debug', "socket_create() failed: reason: " . socket_strerror(socket_last_error($BroadcastSocket)));
-			return false;
+		//Reduce errors
+		error_reporting(~E_WARNING);
+
+		//Create a UDP socket
+		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0)))
+		{
+		   	$errorcode = socket_last_error();
+		    	$errormsg = socket_strerror($errorcode);
+			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
 		}
-		while(!socket_bind($BroadcastSocket, '0.0.0.0', $ServerPort)) 
-			$ServerPort++;
-		if (!socket_set_option($BroadcastSocket, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) {
-			log::add('globalcache', 'debug', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($BroadcastSocket)));
-			return false;
+		// Bind the source address
+		if( !socket_bind($sock, "239.255.250.250" , 9131) )
+		{
+		   	$errorcode = socket_last_error();
+		    	$errormsg = socket_strerror($errorcode);
+			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
 		}
-		while(true) { 
-			$buf = '';
-			socket_recvfrom($BroadcastSocket, $buf , 2048, 0, $name, $port);
-			/*$ReadFrame= unpack("C*", $buf);
-			$dataBrute='0x';
-			foreach ($ReadFrame as $Byte)
-				$dataBrute.=sprintf('%02x',$Byte).' ';*/
-			log::add('globalcache', 'debug', 'Data recus: ' . $buf);		
-			
+		socket_set_timeout($sock,60);
+		//Do some communication, this loop can handle multiple clients
+		while(1)
+		{
+		   	//Receive some data
+		    	$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
+			log::add('globalcache', 'debug', "$remote_ip : $remote_port -- " . $buf);
 		}
-		socket_close($BroadcastSocket);
+		socket_close($sock);
 		return $buf;
 	}
 	public static function Monitor($_option) {
