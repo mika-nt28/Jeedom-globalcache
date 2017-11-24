@@ -55,6 +55,10 @@ class globalcache extends eqLogic {
 				$cron->remove();
 		}
 	}	
+	public function preSave(){
+		if(!self::url_exists($this->getLogicalId()))
+				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
+	}
 	public function postSave(){
 		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
@@ -74,6 +78,14 @@ class globalcache extends eqLogic {
 			}
 		}
 		$this->sendData(4998,"endlistdevices");
+	}
+	public static function url_exists($url) {
+		$ch = curl_init ($url) ;
+		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
+		curl_setopt($ch, CURLOPT_PORT, 4998);
+		$res = curl_exec ($ch) ;
+		curl_close ($ch) ;
+			return $res;
 	}
 	public static function Discovery() {
 		//Reduce errors
