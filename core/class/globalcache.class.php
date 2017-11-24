@@ -56,7 +56,7 @@ class globalcache extends eqLogic {
 		}
 	}	
 	public function preSave(){
-		if(!self::url_exists($this->getLogicalId()))
+		if(self::url_exists($this->getLogicalId()) === false)
 				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
 	}
 	public function postSave(){
