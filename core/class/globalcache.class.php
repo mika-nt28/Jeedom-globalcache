@@ -197,7 +197,8 @@ class globalcache extends eqLogic {
 	public function sendData($Port,$data,$reponse=false){		
 		$Ip=$this->getLogicalId();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
-		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
+      		$socket = fsockopen($this->getLogicalId(), $Port, $errno, $errstr, 30);
+		//$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
