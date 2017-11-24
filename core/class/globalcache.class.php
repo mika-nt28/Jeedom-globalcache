@@ -2,20 +2,147 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
 	public static $_GlobalCache=array(
-		"GC-100"=> array(
-			1 => "Serial",
-			2 => "Serial",
-			3 => "Relay",
-			4 => "IR",
-			5 => "IR",
-			6 => "",
-			7 =>""),
-		"iTach IR"=> array(
-			1 => "IR"),
-		"iTach Serial "=> array(
-			1 => "Serial"),
-		"iTach Relay "=> array(
-			1 => "Relay")
+		"GC-100"=>array(
+			"Nom" => "GC-100",
+			"Module" => array(
+				1 => array(
+					"Type" => "Serial",
+					"Voie" => 1,
+					"Port" => 4999
+				),
+				2 => array(
+					"Type" => "Serial",
+					"Voie" => 1,
+					"Port" => 5000
+				),
+				3 => array(
+					"Type" => "Relay",
+					"Voie" => 3,
+					"Port" => 4998
+				),
+				4 =>array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				),
+				5 => array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachWF2IR"=> array(
+			"Nom" => "iTach IR",
+			"Module" => array(
+				1 => array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachIP2IR"=> array(
+			"Nom" => "iTach IR",
+			"Module" => array(
+				1 => array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachIP2IR-P"=> array(
+			"Nom" => "iTach IR",
+			"Module" => array(
+				1 => array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachWF2SL"=> array(
+			"Nom" => "iTach Serial",
+			"Module" => array(
+				1 => array(
+					"Type" => "Serial",
+					"Voie" => 1,
+					"Port" => 4999
+				)
+			)
+			
+		),
+		"iTachIP2SL"=> array(
+			"Nom" => "iTach Serial",
+			"Module" => array(
+				1 => array(
+					"Type" => "Serial",
+					"Voie" => 1,
+					"Port" => 4999
+				)
+			)
+			
+		),
+		"iTachIP2SL-P"=> array(
+			"Nom" => "iTach Serial",
+			"Module" => array(
+				1 => array(
+					"Type" => "Serial",
+					"Voie" => 1,
+					"Port" => 4999
+				)
+			)
+			
+		),
+		"iTachWF2CC"=> array(
+			"Nom" => "iTach Relay",
+			"Module" => array(
+				1 => array(
+					"Type" => "Relay",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachIP2CC"=> array(
+			"Nom" => "iTach Relay",
+			"Module" => array(
+				1 => array(
+					"Type" => "Relay",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"iTachIP2CC-P"=> array(
+			"Nom" => "iTach Relay",
+			"Module" => array(
+				1 => array(
+					"Type" => "Relay",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		),
+		"Simple Blaster Ethernet"=> array(
+			"Nom" => "Simple Blaster Ethernet",
+			"Module" => array(
+				1 => array(
+					"Type" => "IR",
+					"Voie" => 3,
+					"Port" => 4998
+				)
+			)
+			
+		)
 	);
 	public static function deamon_info() {
 		$return = array();
@@ -60,6 +187,9 @@ class globalcache extends eqLogic {
 				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
 	}
 	public function postSave(){
+      	//$return=$Equipement->sendData(4998,"getdevices",true);
+		//$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
+					
 		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 			switch($this->getConfiguration('type')){
@@ -86,59 +216,71 @@ class globalcache extends eqLogic {
 		return true;
 	}
 	public static function Discovery() {
-		//Reduce errors
-		error_reporting(~E_WARNING);
-
-		//Create a UDP socket
+	//	error_reporting(~E_WARNING);
 		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0)))
 		{
 		   	$errorcode = socket_last_error();
 		    	$errormsg = socket_strerror($errorcode);
 			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
 		}
-		// Bind the source address
-		if( !socket_bind($sock, "239.255.250.250" , 9131) )
+		if( !socket_bind($sock, "0.0.0.0" , 9131) )
 		{
 		   	$errorcode = socket_last_error();
 		    	$errormsg = socket_strerror($errorcode);
 			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
 		}
+      
+		if (!socket_set_option($sock, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) 
+			{
+			log::add('globalcache', 'debug', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)));
+			return false;
+			}
 		socket_set_timeout($sock,60);
-		//Receive some data
-		$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
-		log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
-		socket_close($sock);
-		/*
-		$result=array();
-		foreach(explode('<-',str_replace('>','',$buf)) as $param)
-			array_push($result,explode('=',$param));
-		$Equipement = self::AddEquipement($result['Config-Name'],$result['Config-URL']);
-		$Equipement->setConfiguration('type','ir');
-		$Equipement->setConfiguration('module','1');
-		$Equipement->setConfiguration('voie','1');
-		$return=$Equipement->sendData(4998,"getdevices",true);
-		$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
-		$Equipement->save();
-		log::add('globalcache', 'debug', $return);*/
-		config::save('include_mode', 0, 'globalcache');
-		return $buf;
-	}
-	public static function AddEquipement($Name,$_logicalId) 	{
-		$Equipement = self::byLogicalId($_logicalId, 'globalcache');
-		if (is_object($Equipement)) {
-			$Equipement->setIsEnable(1);
-			$Equipement->save();
-		} else {
-			$Equipement = new globalcache();
-			$Equipement->setName($Name);
-			$Equipement->setLogicalId($_logicalId);
-			$Equipement->setObject_id(null);
-			$Equipement->setEqType_name('globalcache');
-			$Equipement->setIsEnable(1);
-			$Equipement->setIsVisible(1);
-			$Equipement->save();
+		$GlobalCache=false;
+		while($GlobalCache === false){
+			$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
+			log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
+			$GlobalCache=self::byLogicalId($remote_ip, 'globalcache');
 		}
-		return $Equipement;
+		socket_close($sock);
+		foreach(explode('<-',str_replace('>','',$buf)) as $param){
+			$test=explode('=',$param);
+		  	if($test[0]=="Model"){
+				$Type=$test[1];
+            }
+		}
+		foreach(globalcache::$_GlobalCache[$Type] as $GlobalCache){
+			foreach($GlobalCache['Module'] as $Module => $Param){		
+				for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
+					self::AddEquipement($GlobalCache['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				}
+			}
+		}
+		log::add('globalcache', 'debug', $return);
+		config::save('include_mode', 0, 'globalcache');
+	}
+	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie) 	{      
+		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){
+          		if (is_object($Equipement)
+                    && $Equipement->getConfiguration('type') == $Type
+                    && $Equipement->getConfiguration('module') == $Module
+                    && $Equipement->getConfiguration('voie') == $Voie) {
+			} 
+          		return $Equipement;
+        }
+        $Equipement = new globalcache();
+        $Equipement->setName($Name."-".$Module."-".$Voie);
+        $Equipement->setLogicalId($_logicalId);
+        $Equipement->setObject_id(null);
+        $Equipement->setEqType_name('globalcache');
+        $Equipement->setIsEnable(1);
+        $Equipement->setIsVisible(1);
+        $Equipement->setConfiguration('type',$Type);
+        $Equipement->setConfiguration('module',$Module);
+        $Equipement->setConfiguration('voie',$Voie);
+        $Equipement->save();
+			
+          		return $Equipement;
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
@@ -197,13 +339,13 @@ class globalcache extends eqLogic {
 	public function sendData($Port,$data,$reponse=false){		
 		$Ip=$this->getLogicalId();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
-      		$socket = fsockopen($this->getLogicalId(), $Port, $errno, $errstr, 30);
-		//$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
+      		//$socket = fsockopen($this->getLogicalId(), $Port, $errno, $errstr, 30);
+		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
 		} else {
 			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data."\r");
+			fwrite($socket, $data."\r\n");
              		$this->addCacheMonitor("TX",$data);
 			if($reponse){
             			$Ligne = fgets($socket);
