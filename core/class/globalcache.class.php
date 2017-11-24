@@ -82,7 +82,7 @@ class globalcache extends eqLogic {
 	public static function url_exists($url) {
 		$ch = curl_init ($url) ;
 		curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1) ;
-		curl_setopt($ch, CURLOPT_PORT, 4998);
+		//curl_setopt($ch, CURLOPT_PORT, 4998);
 		$res = curl_exec ($ch) ;
 		curl_close ($ch) ;
 			return $res;
