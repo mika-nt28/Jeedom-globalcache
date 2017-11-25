@@ -48,7 +48,7 @@ $('body').on('globalcache::includeDevice', function (_event,_options) {
         if (_options == '') {
             window.location.reload();
         } else {
-            window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
+		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
         }
     }
 });
@@ -93,6 +93,7 @@ $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',
 				.append($('<div class="col-sm-9">')
 					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
 						.append($('<option>').attr('value','IR').text('IR'))
+						.append($('<option>').attr('value','IR_BLASTER').text('IR_BLASTER'))
 						.append($('<option>').attr('value','SENSOR').text('SENSOR'))
 						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
 						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
