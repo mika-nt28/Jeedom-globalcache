@@ -6,6 +6,11 @@
 		if (!isConnect('admin')) {
 			throw new Exception(__('401 - Accès non autorisé', __FILE__));
 		}
+		if (init('action') == 'changeIncludeState') {
+			config::save('include_mode', 1, 'globalcache');
+			globalcache::Discovery();
+			ajax::success();
+		}
 		if (init('action') == 'getCacheMonitor') {
 			$return = false;
 			$eqLogic=eqLogic::byId(init('id'));
