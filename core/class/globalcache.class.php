@@ -187,27 +187,28 @@ class globalcache extends eqLogic {
 				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
 	}*/
 	public function postSave(){
-      	//$return=$Equipement->sendData(4998,"getdevices",true);
-		//$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
-					
-		if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
-			$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
-			switch($this->getConfiguration('type')){
-				case 'relay':	
-					$this->sendData(4998,"device,".$this->getConfiguration('module').",3 RELAY");
-				break;
-				case 'ir':
-					$this->sendData(4998,"device,".$this->getConfiguration('module').",3 IR");
-					$this->sendData(4998,"set_IR,".$adresss.",".$this->getConfiguration('mode'));
+		if($this->getLogicalId()!='' && self::url_exists($this->getLogicalId()) === false){
+			//$return=$Equipement->sendData(4998,"getdevices",true);
+				//$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
+			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
+				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
+				switch($this->getConfiguration('type')){
+					case 'relay':	
+						$this->sendData(4998,"device,".$this->getConfiguration('module').",3 RELAY");
+					break;
+					case 'ir':
+						$this->sendData(4998,"device,".$this->getConfiguration('module').",3 IR");
+						$this->sendData(4998,"set_IR,".$adresss.",".$this->getConfiguration('mode'));
 
-				break;
-				case 'serial':
-					$this->sendData(4998,"device,".$this->getConfiguration('module').",1 SERIAL");
-					$this->sendData(4998,"set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
-				break;
+					break;
+					case 'serial':
+						$this->sendData(4998,"device,".$this->getConfiguration('module').",1 SERIAL");
+						$this->sendData(4998,"set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
+					break;
+				}
 			}
+			$this->sendData(4998,"endlistdevices");
 		}
-		$this->sendData(4998,"endlistdevices");
 	}
 	public static function url_exists($url) {
 		$fp = fsockopen($url, 4998, $errno, $errstr, 30);
