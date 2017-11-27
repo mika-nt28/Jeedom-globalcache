@@ -182,10 +182,10 @@ class globalcache extends eqLogic {
 				$cron->remove();
 		}
 	}	
-	public function preSave(){
+	/*public function preSave(){
 		if(self::url_exists($this->getLogicalId()) === false)
 				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
-	}
+	}*/
 	public function postSave(){
       	//$return=$Equipement->sendData(4998,"getdevices",true);
 		//$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
