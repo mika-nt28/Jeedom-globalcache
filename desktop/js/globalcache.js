@@ -76,66 +76,22 @@ function changeIncludeState(_state,_mode,_type='') {
 });
 }
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
-	//Ajout des parametre de configuration spécific a chaque type
-	var paramerter=$(this).closest('.form-horizontal').find('.EquipementParameter');
+	$(this).closest('.form-horizontal').find('.SerialParameter').hide();
+	$(this).closest('.form-horizontal').find('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().show(); 
-	paramerter.html('');
 	switch($(this).val()){
 	       case 'ir':
-			paramerter.append($('<div class="form-group">')
-				.append($('<label class="col-sm-2 control-label" >')
-					.text('{{Mode de transmission}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le mode de transmission infro-rouge" style="font-size :1em;color:grey;">'))))
-				.append($('<div class="col-sm-9">')
-					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">')
-						.append($('<option>').attr('value','IR').text('IR'))
-						.append($('<option>').attr('value','IR_BLASTER').text('IR_BLASTER'))
-						.append($('<option>').attr('value','SENSOR').text('SENSOR'))
-						.append($('<option>').attr('value','SENSOR_NOTIFY').text('SENSOR_NOTIFY'))
-						.append($('<option>').attr('value','IR_NOCARRIER').text('IR_NOCARRIER')))));
+			$(this).closest('.form-horizontal').find('.IrParameter').show();
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
 		break;
 		case 'serial':
-			paramerter.append($('<div class="form-group">')
-				.append($('<label class="col-sm-2 control-label" >')
-					.text('{{Baudrate}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le baudrate de la connexion" style="font-size :1em;color:grey;">'))))
-				.append($('<div class="col-sm-9">')
-					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">')
-						.append($('<option>').attr('value','1200').text('1200'))
-						.append($('<option>').attr('value','2400').text('2400'))
-						.append($('<option>').attr('value','4800').text('4800'))
-						.append($('<option>').attr('value','9600').text('9600'))
-						.append($('<option>').attr('value','19200').text('19200'))
-						.append($('<option>').attr('value','38400').text('38400'))
-						.append($('<option>').attr('value','57600').text('57600')))));	
-			paramerter.append($('<div class="form-group">')
-				.append($('<label class="col-sm-2 control-label" >')
-					.text('{{Type de control de flux}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner le type de control de flux de la connexion" style="font-size :1em;color:grey;">'))))
-				.append($('<div class="col-sm-9">')
-				.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">')
-					.append($('<option>').attr('value','FLOW_HARDWARE').text('FLOW_HARDWARE'))
-					.append($('<option>').attr('value','FLOW_NONE').text('FLOW_NONE')))));
-			paramerter.append($('<div class="form-group">')
-				.append($('<label class="col-sm-2 control-label" >')
-					.text('{{Parité}}')
-					.append($('<sup>')
-						.append($('<i class="fa fa-question-circle tooltips" title="Séléctionner la parité de la connexion" style="font-size :1em;color:grey;">'))))
-				.append($('<div class="col-sm-9">')
-					.append($('<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">')
-						.append($('<option>').attr('value','PARITY_NO').text('PARITY_NO'))
-						.append($('<option>').attr('value','PARITY_ODD').text('PARITY_ODD'))
-						.append($('<option>').attr('value','PARITY_EVEN').text('PARITY_EVEN')))));
+			$(this).closest('.form-horizontal').find('.SerialParameter').show();
 		break;
 	}
 });
