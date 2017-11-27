@@ -235,7 +235,82 @@ $eqLogics = eqLogic::byType('globalcache');
 										</select>
 									</div>
 								</div>
-								<div class="EquipementParameter">
+							</fieldset> 
+						</form>
+					</div>
+					<div class="col-sm-6 IrParameter">	
+						<form class="form-horizontal">
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Mode de transmission}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner le mode de transmission infro-rouge" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="mode">
+											<option value="IR">{{Infra-rouge}}</option>
+											<option value="IR_BLASTER">{{Infra-rouge blaster}}</option>
+											<option value="IR_NOCARRIER">{{IR_NOCARRIER}}</option>
+											<option value="SENSOR">{{SENSOR}}</option>
+											<option value="SENSOR_NOTIFY">{{SENSOR_NOTIFY}}</option>
+										</select>
+									</div>
+								</div>
+							</fieldset> 
+						</form>
+					</div>
+					<div class="col-sm-6 SerialParameter">	
+						<form class="form-horizontal">
+							<fieldset>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Baudrate}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner le baudrate de la connexion" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="baudrate">
+											<option value="1200">{{1200}}</option>
+											<option value="2400">{{2400}}</option>
+											<option value="4800">{{4800}}</option>
+											<option value="9600">{{9600}}</option>
+											<option value="19200">{{19200}}</option>
+											<option value="38400">{{38400}}</option>
+											<option value="57600">{{57600}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Type de control de flux}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner le type de control de flux de la connexion" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="flowcontrol">
+											<option value="FLOW_HARDWARE">{{FLOW_HARDWARE}}</option>
+											<option value="FLOW_NONE">{{FLOW_NONE}}</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-2 control-label" >
+										{{Parité}}
+										<sup>
+											<i class="fa fa-question-circle tooltips" title="Séléctionner la parité de la connexion" style="font-size : 1em;color:grey;"></i>
+										</sup>
+									</label>
+									<div class="col-sm-9">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="parity">
+											<option value="PARITY_NO">{{PARITY_NO}}</option>
+											<option value="PARITY_ODD">{{PARITY_ODD}}</option>
+											<option value="PARITY_EVEN">{{PARITY_EVEN}}</option>
+										</select>
+									</div>
 								</div>
 							</fieldset> 
 						</form>
