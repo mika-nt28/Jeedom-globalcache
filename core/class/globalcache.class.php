@@ -217,39 +217,32 @@ class globalcache extends eqLogic {
 	}
 	public static function Discovery() {
 	//	error_reporting(~E_WARNING);
-		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0)))
-		{
-		   	$errorcode = socket_last_error();
-		    	$errormsg = socket_strerror($errorcode);
-			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
+		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0))){
+			log::add('globalcache', 'error', "Couldn't create socket: " . socket_strerror(socket_last_error($sock)));
+			return false;
 		}
-		if( !socket_bind($sock, "0.0.0.0" , 9131) )
-		{
-		   	$errorcode = socket_last_error();
-		    	$errormsg = socket_strerror($errorcode);
-			log::add('globalcache', 'debug', "Couldn't create socket: [$errorcode] $errormsg");
+		if( !socket_bind($sock, "0.0.0.0" , 9131) ){
+			log::add('globalcache', 'error', "Couldn't bind port: " . socket_strerror(socket_last_error($sock)));
+			return false;
 		}
-      
-		if (!socket_set_option($sock, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) 
-			{
-			log::add('globalcache', 'debug', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)));
+		if (!socket_set_option($sock, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) {
+			log::add('globalcache', 'error', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)));
 			return false;
 			}
 		socket_set_timeout($sock,60);
-		$GlobalCache=false;
-		while($GlobalCache === false){
+		$GlobalCache=0;
+		while($GlobalCache == 0){
 			$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 			log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
-			$GlobalCache=self::byLogicalId($remote_ip, 'globalcache');
+			$GlobalCache=self::byLogicalId($remote_ip, 'globalcache',true);
 		}
 		socket_close($sock);
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
-			$test=explode('=',$param);
-		  	if($test[0]=="Model"){
-				$Type=$test[1];
-            }
+			$Model=explode('=',$param);
+		  	if($Model[0]=="Model")
+				$Type=$Model[1];
 		}
-		foreach(globalcache::$_GlobalCache[$Type] as $GlobalCache){
+		foreach(globalcache::_GlobalCache[$Type] as $GlobalCache){
 			foreach($GlobalCache['Module'] as $Module => $Param){		
 				for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
 					self::AddEquipement($GlobalCache['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
