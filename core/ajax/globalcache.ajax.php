@@ -11,6 +11,15 @@
 			globalcache::Discovery();
 			ajax::success();
 		}
+		if (init('action') == 'IrLearn') {
+			$return = false;
+			$cmd=cmd::byId(init('id'));
+			if(is_object($cmd)){
+				$cmd->Learn();
+				ajax::success(true);
+			}
+			ajax::success(false);
+		}
 		if (init('action') == 'getCacheMonitor') {
 			$return = false;
 			$eqLogic=eqLogic::byId(init('id'));

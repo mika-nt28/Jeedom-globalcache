@@ -1,16 +1,4 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-/*$('body').on('keyup','.cmdAttr[data-l1key=configuration][data-l2key=value]',function(){
-	var codage=$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val();
-	switch(codage){
-		case 'HEXA':
-			var valeur=$(this).val();  
-			valeur=valeur.replace("  ", " ");
-			if(valeur.substr(-1,1) != " " && valeur.substr(-2,1) != " ")
-				valeur=valeur + " ";
-			$(this).val(valeur);
-		break;
-	}
-});*/
  $('.changeIncludeState').on('click', function () {
 	var mode = $(this).attr('data-mode');
 	var state = $(this).attr('data-state');
@@ -42,18 +30,11 @@ $('body').on('globalcache::includeState', function (_event,_options) {
 });
 
 $('body').on('globalcache::includeDevice', function (_event,_options) {
-    if (modifyWithoutSave) {
-        $('#div_inclusionAlert').showAlert({message: '{{Un périphérique vient d\'être inclu/exclu. Veuillez réactualiser la page}}', level: 'warning'});
-    } else {
-        if (_options == '') {
-            window.location.reload();
-        } else {
+	if (_options == '')
+		window.location.reload();
+	else
 		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
-        }
-    }
 });
-
-
 function changeIncludeState(_state,_mode,_type='') {
     $.ajax({// fonction permettant de faire de l'ajax
         type: "POST", // methode de transmission des données au fichier php
@@ -67,13 +48,34 @@ function changeIncludeState(_state,_mode,_type='') {
         error: function (request, status, error) {
             handleAjaxError(request, status, error);
         },
-        success: function (data) { // si l'appel a bien fonctionné
-        if (data.state != 'ok') {
-            $('#div_alert').showAlert({message: data.result, level: 'danger'});
-            return;
-        }
-    }
-});
+	success: function (data) { // si l'appel a bien fonctionné
+		if (data.state != 'ok') {
+		    $('#div_alert').showAlert({message: data.result, level: 'danger'});
+		    return;
+		}
+	    }
+	});
+}
+function changeIncludeState(_state,_mode,_type='') {
+    $.ajax({// fonction permettant de faire de l'ajax
+        type: "POST", // methode de transmission des données au fichier php
+        url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+        data: {
+            action: "changeIncludeState",
+            state: _state,
+            mode: _mode,
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+	success: function (data) { // si l'appel a bien fonctionné
+		if (data.state != 'ok') {
+		    $('#div_alert').showAlert({message: data.result, level: 'danger'});
+		    return;
+		}
+	    }
+	});
 }
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	$(this).closest('.form-horizontal').find('.SerialParameter').hide();
@@ -149,6 +151,10 @@ function addCmdToTable(_cmd) {
 			.append($('<i class="fa fa-rss">')
 				.text('{{Tester}}')));
 	}
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
+		parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="learn">')
+			.append($('<i class="fa fa-cogs">')));
+	}
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="configure">')
 		.append($('<i class="fa fa-cogs">')));
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="copy" title="{{Dupliquer}}">')
@@ -174,6 +180,28 @@ function addCmdToTable(_cmd) {
 	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
  	$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').trigger('change');
  	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
+	$('.cmdAction[data-action=learn]').off().on('click',function() {
+		var id = $(this).closest('.cmd').attr('data-cmd_id');
+		$.ajax({// fonction permettant de faire de l'ajax
+			type: "POST", // methode de transmission des données au fichier php
+			url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+			data: {
+				action: "IrLearn",
+				id: id
+			},
+			dataType: 'json',
+			error: function (request, status, error) {
+				handleAjaxError(request, status, error);
+			},
+			success: function (data) { // si l'appel a bien fonctionné
+				if (data.state != 'ok') {
+					$('#div_alert').showAlert({message: data.result, level: 'danger'});
+					return;
+				}
+				window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + $('.eqLogicAttr[data-l1key=id]').val();
+			}
+		});
+	}
 }
 function getMonitor(id) {
 	$.ajax({
