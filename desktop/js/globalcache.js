@@ -201,7 +201,7 @@ function addCmdToTable(_cmd) {
 				window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + $('.eqLogicAttr[data-l1key=id]').val();
 			}
 		});
-	}
+	});
 }
 function getMonitor(id) {
 	$.ajax({
