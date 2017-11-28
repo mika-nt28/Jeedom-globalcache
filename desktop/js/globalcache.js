@@ -78,22 +78,22 @@ function changeIncludeState(_state,_mode,_type='') {
 	});
 }
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
-	$(this).closest('.form-horizontal').find('.SerialParameter').hide();
-	$(this).closest('.form-horizontal').find('.IrParameter').hide();
+	$(this).closest('.SerialParameter').hide();
+	$(this).closest('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().show(); 
 	switch($(this).val()){
 	       case 'ir':
-			$(this).closest('.form-horizontal').find('.IrParameter').show();
+			$(this).closest('.IrParameter').show();
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
 		break;
 		case 'serial':
-			$(this).closest('.form-horizontal').find('.SerialParameter').show();
+			$(this).closest('.SerialParameter').show();
 		break;
 	}
 });
