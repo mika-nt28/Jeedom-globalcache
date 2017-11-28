@@ -261,20 +261,19 @@ class globalcache extends eqLogic {
                     && $Equipement->getConfiguration('voie') == $Voie) {
 			} 
           		return $Equipement;
-        }
-        $Equipement = new globalcache();
-        $Equipement->setName($Name."-".$Module."-".$Voie);
-        $Equipement->setLogicalId($_logicalId);
-        $Equipement->setObject_id(null);
-        $Equipement->setEqType_name('globalcache');
-        $Equipement->setIsEnable(1);
-        $Equipement->setIsVisible(1);
-        $Equipement->setConfiguration('type',$Type);
-        $Equipement->setConfiguration('module',$Module);
-        $Equipement->setConfiguration('voie',$Voie);
-        $Equipement->save();
-			
-          		return $Equipement;
+		}
+		$Equipement = new globalcache();
+		$Equipement->setName($Name."-".$Module."-".$Voie);
+		$Equipement->setLogicalId($_logicalId);
+		$Equipement->setObject_id(null);
+		$Equipement->setEqType_name('globalcache');
+		$Equipement->setIsEnable(1);
+		$Equipement->setIsVisible(1);
+		$Equipement->setConfiguration('type',$Type);
+		$Equipement->setConfiguration('module',$Module);
+		$Equipement->setConfiguration('voie',$Voie);
+		$Equipement->save();
+		return $Equipement;
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
@@ -302,6 +301,11 @@ class globalcache extends eqLogic {
 		$value = json_decode($cache->getValue('[]'), true);
 		$value[] = array('datetime' => date('d-m-Y H:i:s'),'sense' => $sense, 'monitor' => $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
+	}
+	public function Learn(){
+		$data=$this->sendData(4998,"get_IRL",true);
+		$this->setConfiguration('value',$data);
+		$this->sendData(4998,"stop_IRL");
 	}
 	public function Send($byte){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
