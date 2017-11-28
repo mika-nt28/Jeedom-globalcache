@@ -302,11 +302,6 @@ class globalcache extends eqLogic {
 		$value[] = array('datetime' => date('d-m-Y H:i:s'),'sense' => $sense, 'monitor' => $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
-	public function Learn(){
-		$data=$this->sendData(4998,"get_IRL",true);
-		$this->setConfiguration('value',$data);
-		$this->sendData(4998,"stop_IRL");
-	}
 	public function Send($byte){
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
@@ -393,7 +388,12 @@ class globalcache extends eqLogic {
 	}
   }
 class globalcacheCmd extends cmd {
-	
+	public function Learn(){
+		$data=$this->getEqLogic()->sendData(4998,"get_IRL",true);
+		$this->setConfiguration('value',$data);
+		$this->save();
+		$this->getEqLogic()->sendData(4998,"stop_IRL");
+	}
 	public function preSave() {
 		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
 			$this->setConfiguration('codage','DEC');
