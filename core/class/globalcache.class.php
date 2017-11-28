@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
-	public static $_GlobalCache=array(
+	protected static $_GlobalCache=array(
 		"GC-100"=>array(
 			"Nom" => "GC-100",
 			"Module" => array(
@@ -132,7 +132,7 @@ class globalcache extends eqLogic {
 			)
 			
 		),
-		"Simple Blaster Ethernet"=> array(
+		"Simple_Blaster_Ethernet"=> array(
 			"Nom" => "Simple Blaster Ethernet",
 			"Module" => array(
 				1 => array(
@@ -241,26 +241,24 @@ class globalcache extends eqLogic {
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
 			$Model=explode('=',$param);
 		  	if($Model[0]=="Model")
-				$Type=$Model[1];
-		}
-		foreach(globalcache::_GlobalCache[$Type] as $GlobalCache){
-			foreach($GlobalCache['Module'] as $Module => $Param){		
-				for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
-					self::AddEquipement($GlobalCache['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
-				}
+				$Type=str_replace(' ','_',$Model[1]);
+		}	
+		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
+			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
+				self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
 			}
 		}
-		log::add('globalcache', 'debug', $return);
 		config::save('include_mode', 0, 'globalcache');
+		event::add('globalcache::includeDevice', utils::o2a($this));
 	}
-	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie) 	{      
-		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){
+	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
+		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       
           		if (is_object($Equipement)
                     && $Equipement->getConfiguration('type') == $Type
                     && $Equipement->getConfiguration('module') == $Module
                     && $Equipement->getConfiguration('voie') == $Voie) {
-			} 
           		return $Equipement;
+			} 
 		}
 		$Equipement = new globalcache();
 		$Equipement->setName($Name."-".$Module."-".$Voie);
