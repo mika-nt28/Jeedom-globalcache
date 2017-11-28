@@ -13,9 +13,9 @@
 		}
 		if (init('action') == 'IrLearn') {
 			$return = false;
-			$eqLogic=eqLogic::byId(init('id'));
-			if(is_object($eqLogic)){
-				$eqLogic->Learn();
+			$cmd=cmd::byId(init('id'));
+			if(is_object($cmd)){
+				$cmd->Learn();
 				ajax::success(true);
 			}
 			ajax::success(false);
