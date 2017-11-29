@@ -78,22 +78,22 @@ function changeIncludeState(_state,_mode,_type='') {
 	});
 }
 $('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
-	$(this).closest('.form-horizontal').find('.SerialParameter').hide();
-	$(this).closest('.form-horizontal').find('.IrParameter').hide();
+	$('.SerialParameter').hide();
+	$('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().show(); 
 	switch($(this).val()){
 	       case 'ir':
-			$(this).closest('.form-horizontal').find('.IrParameter').show();
+			$('.IrParameter').show();
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
 		break;
 		case 'serial':
-			$(this).closest('.form-horizontal').find('.SerialParameter').show();
+			$('.SerialParameter').show();
 		break;
 	}
 });
@@ -151,9 +151,9 @@ function addCmdToTable(_cmd) {
 			.append($('<i class="fa fa-rss">')
 				.text('{{Tester}}')));
 	}
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir'){
 		parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="learn">')
-			.append($('<i class="fa fa-cogs">')));
+			.append($('<i class="fa fa-signal">')));
 	}
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="configure">')
 		.append($('<i class="fa fa-cogs">')));
@@ -242,4 +242,4 @@ function getMonitor(id) {
 			}
 		}
 	});
-}		   
+}
