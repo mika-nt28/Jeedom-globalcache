@@ -406,8 +406,8 @@ class globalcacheCmd extends cmd {
 	public function Learn(){
 		$this->getEqLogic()->Connect(4998);
 		$this->getEqLogic()->Write("get_IRL");
-		event::add('globalcache::Learn', $this->Read());
-		$data=$this->Read();
+		event::add('globalcache::Learn', $this->getEqLogic()->Read());
+		$data=$this->getEqLogic()->Read();
 		$this->setConfiguration('value',$data);
 		$this->save();
 		$this->getEqLogic()->Write("stop_IRL");
