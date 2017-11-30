@@ -1,6 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
+	protected $_socket=null;
 	protected static $_GlobalCache=array(
 		"GC-100"=>array(
 			"Nom" => "GC-100",
@@ -188,26 +189,30 @@ class globalcache extends eqLogic {
 	}*/
 	public function postSave(){
 		if($this->getLogicalId()!='' && self::url_exists($this->getLogicalId()) === false){
-			//$return=$Equipement->sendData(4998,"getdevices",true);
-				//$Equipement->setConfiguration('version',$this->sendData(4998,getversion,".$Equipement->getConfiguration('module'),true));
+			$this->Connect(4998);
+			//$this->Write("getdevices");
+			//$this->Read();
+			//$this->setConfiguration('version',$this->Write(getversion,".$this->getConfiguration('module')));
+			//$this->Read();
 			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 				switch($this->getConfiguration('type')){
 					case 'relay':	
-						$this->sendData(4998,"device,".$this->getConfiguration('module').",3 RELAY");
+						$this->Write("device,".$this->getConfiguration('module').",3 RELAY");
 					break;
 					case 'ir':
-						$this->sendData(4998,"device,".$this->getConfiguration('module').",3 IR");
-						$this->sendData(4998,"set_IR,".$adresss.",".$this->getConfiguration('mode'));
+						$this->Write("device,".$this->getConfiguration('module').",3 IR");
+						$this->Write("set_IR,".$adresss.",".$this->getConfiguration('mode'));
 
 					break;
 					case 'serial':
-						$this->sendData(4998,"device,".$this->getConfiguration('module').",1 SERIAL");
-						$this->sendData(4998,"set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
+						$this->Write("device,".$this->getConfiguration('module').",1 SERIAL");
+						$this->Write("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
 					break;
 				}
 			}
-			$this->sendData(4998,"endlistdevices");
+			$this->Write("endlistdevices");
+			$this->Disconnect();
 		}
 	}
 	public static function url_exists($url) {
@@ -304,9 +309,12 @@ class globalcache extends eqLogic {
 		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 		switch($this->getConfiguration('type')){
 			case 'relay':
+				$this->Connect(4998);
 				$data=implode(',',$byte);
-				$cmd="setstate,".$adresss.",".$data;
-				$this->sendData(4998,$cmd,$this->getConfiguration('reponse'));
+				$this->Write("setstate,".$adresss.",".$data);
+				if($this->getConfiguration('reponse'))
+					$this->Read();
+				$this->Disconnect();
 			break;
 			case 'ir':
 				$id=rand(0,65535);
@@ -317,35 +325,46 @@ class globalcache extends eqLogic {
 				array_shift($byte);
 				$data=implode(',',$byte);
 				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->sendData(4998,$cmd);
+				$this->Connect(4998);
+				$this->Write($cmd);
+				$this->Read();
 				$cmd="completeir,".$adresss.",".$id;
-				$this->sendData(4998,$cmd);
+				$this->Write($cmd);
+				$this->Disconnect();
 			break;
 			case 'serial':
+				$this->Connect($this->getPort());
 				$data=implode(',',$byte);
-				$this->sendData($this->getPort(),$data,$this->getConfiguration('reponse'));
+				$this->Write($data);
+				if($this->getConfiguration('reponse'))
+					$this->Read();
+				$this->Disconnect();
 			break;
 		}
 	}
-	public function sendData($Port,$data,$reponse=false){		
+	public function Connect($Port){		
 		$Ip=$this->getLogicalId();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
-      		//$socket = fsockopen($this->getLogicalId(), $Port, $errno, $errstr, 30);
-		$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
-		if (!$socket) {
+		$this->_socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
+		if (!$this->_socket) {
 			throw new Exception(__("$errstr ($errno)", __FILE__));
-		} else {
-			log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-			fwrite($socket, $data."\r\n");
-             		$this->addCacheMonitor("TX",$data);
-			if($reponse){
-            			$Ligne = fgets($socket);
-				log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
-				if($Ligne!==false)
-             				$this->addCacheMonitor("RX",$Ligne);
-			}
-		}
-		fclose($socket);
+		} 
+	}
+	public function Write($data){		
+		log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
+		fwrite($this->_socket, $data."\r");
+		$this->addCacheMonitor("TX",$data);
+	}
+	public function Read(){	
+		$Ligne = fgets($this->_socket);
+		log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
+		if($Ligne===false) 
+			retrun false;
+		$this->addCacheMonitor("RX",$Ligne);
+		return $Ligne;
+	}
+	public function Disconnect(){		
+		fclose($this->_socket);
 	}
 	private function CreateDemon() {
 		$cron =cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $this->getId()));
@@ -387,10 +406,14 @@ class globalcache extends eqLogic {
   }
 class globalcacheCmd extends cmd {
 	public function Learn(){
-		$data=$this->getEqLogic()->sendData(4998,"get_IRL",true);
+		$this->getEqLogic()->Connect(4998);
+		$this->getEqLogic()->Write("get_IRL");
+		event::add('globalcache::Learn', $this->Read(););
+		$data=$this->Read();
 		$this->setConfiguration('value',$data);
 		$this->save();
-		$this->getEqLogic()->sendData(4998,"stop_IRL");
+		$this->getEqLogic()->Write("stop_IRL");
+		$this->getEqLogic()->Disconnect();
 	}
 	public function preSave() {
 		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
