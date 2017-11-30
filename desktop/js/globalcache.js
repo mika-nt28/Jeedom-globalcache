@@ -28,7 +28,9 @@ $('body').on('globalcache::includeState', function (_event,_options) {
 		}
 	}
 });
-
+$('body').on('globalcache::Learn', function (_event,_options) {
+	alert("Mode apprentissage actif, vous pouvez presser le bouton de votre telecommande pour une copie");
+});
 $('body').on('globalcache::includeDevice', function (_event,_options) {
 	if (_options == '')
 		window.location.reload();
