@@ -279,7 +279,7 @@ class globalcache extends eqLogic {
 		return $Equipement;
 	}
 	public function IrLearnStart() {
-		$this->->Connect(4998);
+		$this->Connect(4998);
 		$this->Write("get_IRL");
 		event::add('globalcache::IRL', $this->Read());
 	}
