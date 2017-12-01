@@ -1,7 +1,7 @@
-$('.eqLogicAction[data-action=learnStop]').hide();
 $('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('.eqLogicAction[data-action=learnStart]').on('click', function () {
+	var _this = this;
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
 		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
@@ -18,12 +18,17 @@ $('.eqLogicAction[data-action=learnStart]').on('click', function () {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
 			}
-			$('.eqLogicAction[data-action=learnStart]').hide();
-			$('.eqLogicAction[data-action=learnStop]').show();
+			$(_this).parents()
+				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStop">')
+					.append($('<i class="fa fa-pulse">'))
+					.append('{{Mode apprentissage}}'));
+			$(_this).remove();
+			
 		}
 	});
 });
 $('.eqLogicAction[data-action=learnStop]').on('click', function () {
+	var _this = this;
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
 		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
@@ -41,8 +46,11 @@ $('.eqLogicAction[data-action=learnStop]').on('click', function () {
 				return;
 			}
 			$('.cmdAction[data-action=learn]').hide();
-			$('.eqLogicAction[data-action=learnStart]').show();
-			$('.eqLogicAction[data-action=learnStop]').hide();
+			$(_this).parents()
+				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart">')
+					.append($('<i class="fa fa-pulse">'))
+					.append('{{Mode apprentissage}}'));
+			$(_this).remove();
 		}
 	});
 });
