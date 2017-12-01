@@ -290,7 +290,7 @@ class globalcache extends eqLogic {
 			$this->Connect(4998);
 		$return = $this->Read();
 		$this->Disconnect();
-		return = $return;
+		return $return;
 	}
 	public function IrLearnStop() {
 		if($_socket == null)
