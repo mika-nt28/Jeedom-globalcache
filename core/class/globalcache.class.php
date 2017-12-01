@@ -250,11 +250,11 @@ class globalcache extends eqLogic {
 		}	
 		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
 			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
-				self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				$Equipement=self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				event::add('globalcache::includeDevice',$Equipement->getId());
 			}
 		}
 		config::save('include_mode', 0, 'globalcache');
-		event::add('globalcache::includeDevice', utils::o2a($this));
 	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
 		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       
