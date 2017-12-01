@@ -154,8 +154,9 @@ function addCmdToTable(_cmd) {
 				.text('{{Tester}}')));
 	}
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir'){
-		parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="learn">')
-			.append($('<i class="fa fa-signal">')));
+		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
+			.append($('<i class="fa fa-signal">')
+				.text('{{Apprentissage}}')));
 	}
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="configure">')
 		.append($('<i class="fa fa-cogs">')));
