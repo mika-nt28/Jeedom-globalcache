@@ -2,9 +2,10 @@ $('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 	var _this = this;
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST", 
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "IrLearn",
 			id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -13,7 +14,7 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) { 
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
@@ -29,9 +30,10 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 });
 $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 	var _this = this;
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "IrLearn",
 			id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -40,7 +42,7 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) {
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
@@ -55,9 +57,10 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 	});
 });
 $('.changeIncludeState').off().on('click', function () {
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "changeIncludeState"
 		},
@@ -65,7 +68,7 @@ $('.changeIncludeState').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) {
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
@@ -194,9 +197,10 @@ function addCmdToTable(_cmd) {
  	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
 	$('.cmdAction[data-action=learn]').off().on('click',function() {
 		var _cmd = $(this).closest('.cmd');
-		$.ajax({// fonction permettant de faire de l'ajax
-			type: "POST", // methode de transmission des données au fichier php
-			url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+		$.ajax({
+			type: "POST", 
+			async: false,
+			url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 			data: {
 				action: "getCode",
 				id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -205,7 +209,7 @@ function addCmdToTable(_cmd) {
 			error: function (request, status, error) {
 				handleAjaxError(request, status, error);
 			},
-			success: function (data) { // si l'appel a bien fonctionné
+			success: function (data) {
 				if (data.state != 'ok') {
 					$('#div_alert').showAlert({message: data.result, level: 'danger'});
 					return;
@@ -219,8 +223,8 @@ function addCmdToTable(_cmd) {
 function getMonitor(id) {
 	$.ajax({
 		type: 'POST',
-	async: false,
-	url: 'plugins/globalcache/core/ajax/globalcache.ajax.php',
+		async: false,
+		url: 'plugins/globalcache/core/ajax/globalcache.ajax.php',
 		data: {
 			action: 'getCacheMonitor',
 			id:id
