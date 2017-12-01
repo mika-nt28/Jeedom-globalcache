@@ -1,4 +1,50 @@
+$('.eqLogicAction[data-action=learnStop]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$('.eqLogicAction[data-action=learnStart]').on('click', function () {
+	$.ajax({// fonction permettant de faire de l'ajax
+		type: "POST", // methode de transmission des données au fichier php
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+		data: {
+			action: "IrLearn",
+			id:$('.eqLogicAttr[data-l1key=id]').val()
+		},
+		dataType: 'json',
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+		},
+		success: function (data) { // si l'appel a bien fonctionné
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({message: data.result, level: 'danger'});
+				return;
+			}
+			$('.eqLogicAction[data-action=learnStart]').hide();
+			$('.eqLogicAction[data-action=learnStop]').show();
+		}
+	});
+});
+$('.eqLogicAction[data-action=learnStop]').on('click', function () {
+	$.ajax({// fonction permettant de faire de l'ajax
+		type: "POST", // methode de transmission des données au fichier php
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+		data: {
+			action: "IrLearn",
+			id:$('.eqLogicAttr[data-l1key=id]').val()
+		},
+		dataType: 'json',
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+		},
+		success: function (data) { // si l'appel a bien fonctionné
+			if (data.state != 'ok') {
+				$('#div_alert').showAlert({message: data.result, level: 'danger'});
+				return;
+			}
+			$('.cmdAction[data-action=learn]').hide();
+			$('.eqLogicAction[data-action=learnStart]').show();
+			$('.eqLogicAction[data-action=learnStop]').hide();
+		}
+	});
+});
 $('.changeIncludeState').on('click', function () {
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
@@ -19,8 +65,9 @@ $('.changeIncludeState').on('click', function () {
 	});
 });
 
-$('body').on('globalcache::Learn', function (_event,_options) {
-	alert("Mode apprentissage actif, vous pouvez presser le bouton de votre telecommande pour une copie");
+$('body').on('globalcache::IRL', function (_event,_options) {
+	alert("Mode apprentissage actif");
+	$('.cmdAction[data-action=learn]').show();
 });
 $('body').on('globalcache::includeDevice', function (_event,_options) {
 	if (_options == '')
@@ -137,13 +184,13 @@ function addCmdToTable(_cmd) {
  	$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').trigger('change');
  	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
 	$('.cmdAction[data-action=learn]').off().on('click',function() {
-		var id = $(this).closest('.cmd').attr('data-cmd_id');
+		var _cmd = $(this).closest('.cmd');
 		$.ajax({// fonction permettant de faire de l'ajax
 			type: "POST", // methode de transmission des données au fichier php
 			url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
 			data: {
-				action: "IrLearn",
-				id: id
+				action: "getCode",
+				id:$('.eqLogicAttr[data-l1key=id]').val()
 			},
 			dataType: 'json',
 			error: function (request, status, error) {
@@ -154,7 +201,8 @@ function addCmdToTable(_cmd) {
 					$('#div_alert').showAlert({message: data.result, level: 'danger'});
 					return;
 				}
-				window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + $('.eqLogicAttr[data-l1key=id]').val();
+				_cmd.find('.cmdAttr[data-l1key=configuration][data-l2key=value]').text(data.result);
+				//window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + $('.eqLogicAttr[data-l1key=id]').val();
 			}
 		});
 	});
@@ -182,15 +230,15 @@ function getMonitor(id) {
 			}
 			$('#table_Monitor tbody').html('');
 			if(data.result != false){
-			var monitors=jQuery.parseJSON(data.result);
-			jQuery.each(monitors.reverse(),function(key, value) {
-			  $('#table_Monitor tbody').append($("<tr>")
-					.append($("<td>").text(value.datetime))
-					.append($("<td>").text(value.sense))
-					.append($("<td>").text(value.monitor)));
-			});				
-			$('#table_Monitor').trigger('update');
-            }
+				var monitors=jQuery.parseJSON(data.result);
+				jQuery.each(monitors.reverse(),function(key, value) {
+				 	$('#table_Monitor tbody').append($("<tr>")
+						.append($("<td>").text(value.datetime))
+						.append($("<td>").text(value.sense))
+						.append($("<td>").text(value.monitor)));
+				});				
+				$('#table_Monitor').trigger('update');
+            		}
 			if ($('#md_modal').dialog('isOpen') === true) {
 				setTimeout(function() {
 					getMonitor(id)
