@@ -284,6 +284,8 @@ class globalcache extends eqLogic {
 		event::add('globalcache::IRL', $this->Read());
 	}
 	public function Learn(){
+		if($_socket == null)
+			$this->Connect(4998);
 		return $this->Read();
 	}
 	public function IrLearnStop() {
