@@ -75,10 +75,10 @@ $eqLogics = eqLogic::byType('globalcache');
 	<a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
 	<a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i></a>
 	<?php
-		if (config::byKey('include_mode', 'globalcache', 0) == 1)
-			echo '<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart"><i class="fa fa-pulse"></i> {{Mode apprentissage}}</a>';
+		if (config::byKey('learn_mode', 'globalcache', 0) == 0)
+			echo '<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart"><i class="fa fa-bullseye"></i> {{Mode apprentissage}}</a>';
 		else
-			echo '<a class="btn btn-warning eqLogicAction pull-right" data-action="learnStop"><i class="fa fa-pulse"></i> {{Stop apprentissage}}</a>';
+			echo '<a class="btn btn-warning eqLogicAction pull-right" data-action="learnStop"><i class="fa fa-bullseye"></i> {{Stop apprentissage}}</a>';
 	
 	?>
 	<ul class="nav nav-tabs" role="tablist">
