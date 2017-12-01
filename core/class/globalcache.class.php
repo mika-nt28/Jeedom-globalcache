@@ -7,27 +7,27 @@ class globalcache extends eqLogic {
 			"Nom" => "GC-100",
 			"Module" => array(
 				1 => array(
-					"Type" => "Serial",
+					"Type" => "serial",
 					"Voie" => 1,
 					"Port" => 4999
 				),
 				2 => array(
-					"Type" => "Serial",
+					"Type" => "serial",
 					"Voie" => 1,
 					"Port" => 5000
 				),
 				3 => array(
-					"Type" => "Relay",
+					"Type" => "relay",
 					"Voie" => 3,
 					"Port" => 4998
 				),
 				4 =>array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				),
 				5 => array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -38,7 +38,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach IR",
 			"Module" => array(
 				1 => array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -49,7 +49,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach IR",
 			"Module" => array(
 				1 => array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -60,7 +60,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach IR",
 			"Module" => array(
 				1 => array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -71,7 +71,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Serial",
 			"Module" => array(
 				1 => array(
-					"Type" => "Serial",
+					"Type" => "serial",
 					"Voie" => 1,
 					"Port" => 4999
 				)
@@ -82,7 +82,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Serial",
 			"Module" => array(
 				1 => array(
-					"Type" => "Serial",
+					"Type" => "serial",
 					"Voie" => 1,
 					"Port" => 4999
 				)
@@ -93,7 +93,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Serial",
 			"Module" => array(
 				1 => array(
-					"Type" => "Serial",
+					"Type" => "serial",
 					"Voie" => 1,
 					"Port" => 4999
 				)
@@ -104,7 +104,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Relay",
 			"Module" => array(
 				1 => array(
-					"Type" => "Relay",
+					"Type" => "relay",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -115,7 +115,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Relay",
 			"Module" => array(
 				1 => array(
-					"Type" => "Relay",
+					"Type" => "relay",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -126,7 +126,7 @@ class globalcache extends eqLogic {
 			"Nom" => "iTach Relay",
 			"Module" => array(
 				1 => array(
-					"Type" => "Relay",
+					"Type" => "relay",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -137,7 +137,7 @@ class globalcache extends eqLogic {
 			"Nom" => "Simple Blaster Ethernet",
 			"Module" => array(
 				1 => array(
-					"Type" => "IR",
+					"Type" => "ir",
 					"Voie" => 3,
 					"Port" => 4998
 				)
@@ -250,11 +250,11 @@ class globalcache extends eqLogic {
 		}	
 		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
 			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
-				self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				$Equipement=self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				event::add('globalcache::includeDevice',$Equipement->getId());
 			}
 		}
 		config::save('include_mode', 0, 'globalcache');
-		event::add('globalcache::includeDevice', utils::o2a($this));
 	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
 		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       
