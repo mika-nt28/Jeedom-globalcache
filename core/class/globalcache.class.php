@@ -278,6 +278,18 @@ class globalcache extends eqLogic {
 		$Equipement->save();
 		return $Equipement;
 	}
+	public function IrLearnStart() {
+		$this->->Connect(4998);
+		$this->Write("get_IRL");
+		event::add('globalcache::IRL', $this->Read());
+	}
+	public function Learn(){
+		return $this->Read();
+	}
+	public function IrLearnStop() {
+		$this->Write("stop_IRL");
+		$this->->Disconnect();
+	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
 		$globalcache = globalcache::byId($_option['id']);
@@ -406,16 +418,6 @@ class globalcache extends eqLogic {
 	}
   }
 class globalcacheCmd extends cmd {
-	public function Learn(){
-		$this->getEqLogic()->Connect(4998);
-		$this->getEqLogic()->Write("get_IRL");
-		event::add('globalcache::Learn', $this->getEqLogic()->Read());
-		$data=$this->getEqLogic()->Read();
-		$this->setConfiguration('value',$data);
-		$this->save();
-		$this->getEqLogic()->Write("stop_IRL");
-		$this->getEqLogic()->Disconnect();
-	}
 	public function preSave() {
 		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
 			$this->setConfiguration('codage','DEC');
