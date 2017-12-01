@@ -288,7 +288,7 @@ class globalcache extends eqLogic {
 	}
 	public function IrLearnStop() {
 		$this->Write("stop_IRL");
-		$this->->Disconnect();
+		$this->Disconnect();
 	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
