@@ -1,6 +1,6 @@
 $('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-$('.eqLogicAction[data-action=learnStart]').on('click', function () {
+$('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 	var _this = this;
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
@@ -27,7 +27,7 @@ $('.eqLogicAction[data-action=learnStart]').on('click', function () {
 		}
 	});
 });
-$('.eqLogicAction[data-action=learnStop]').on('click', function () {
+$('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 	var _this = this;
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
@@ -54,7 +54,7 @@ $('.eqLogicAction[data-action=learnStop]').on('click', function () {
 		}
 	});
 });
-$('.changeIncludeState').on('click', function () {
+$('.changeIncludeState').off().on('click', function () {
 	$.ajax({// fonction permettant de faire de l'ajax
 		type: "POST", // methode de transmission des données au fichier php
 		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
@@ -74,17 +74,17 @@ $('.changeIncludeState').on('click', function () {
 	});
 });
 
-$('body').on('globalcache::IRL', function (_event,_options) {
+$('body').off().on('globalcache::IRL', function (_event,_options) {
 	alert("Mode apprentissage actif");
 	$('.cmdAction[data-action=learn]').show();
 });
-$('body').on('globalcache::includeDevice', function (_event,_options) {
+$('body').off().on('globalcache::includeDevice', function (_event,_options) {
 	if (_options == '')
 		window.location.reload();
 	else
 		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
 });
-$('body').on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
+$('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	$('.SerialParameter').hide();
 	$('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
