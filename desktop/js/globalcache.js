@@ -1,4 +1,5 @@
 $('.eqLogicAction[data-action=learnStop]').hide();
+$('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('.eqLogicAction[data-action=learnStart]').on('click', function () {
 	$.ajax({// fonction permettant de faire de l'ajax
