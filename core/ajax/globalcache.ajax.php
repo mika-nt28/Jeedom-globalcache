@@ -14,7 +14,7 @@
 		if (init('action') == 'IrLearn') {
 			$eqLogic=eqLogic::byId(init('id'));
 			if(is_object($eqLogic)){
-				if (config::byKey('learn_mode', 'globalcache', 0) == 1) {
+				if (config::byKey('learn_mode', 'globalcache') == 1) {
 					config::save('learn_mode', 1, 'globalcache');
 					$eqLogic->IrLearnStart();
 				}else{
