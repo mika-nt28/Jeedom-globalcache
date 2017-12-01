@@ -20,7 +20,7 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 			}
 			$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStop">')
-					.append($('<i class="fa fa-pulse">'))
+					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));
 			$(_this).remove();
 			
@@ -48,7 +48,7 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 			$('.cmdAction[data-action=learn]').hide();
 			$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart">')
-					.append($('<i class="fa fa-pulse">'))
+					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));
 			$(_this).remove();
 		}
