@@ -89,28 +89,32 @@ function addCmdToTable(_cmd) {
 			.append('{{Fin de ligne}}')));
 	tr.append(td);	
 	tr.append($('<td>')	
-		.append($('<div class="parametre">')
 			.append($('<span class="type" type="' + init(_cmd.type) + '">')
 				.append(jeedom.cmd.availableType()))
-			.append($('<span class="subType" subType="'+init(_cmd.subType)+'">'))));
+			.append($('<span class="subType" subType="'+init(_cmd.subType)+'">')));
 	var parmetre=$('<td>');
-	parmetre.append($('<label class="checkbox-inline">')
-	      .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="reponse">'))
-	      .append('{{Attendre la réponse}}'));
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir' && init(_cmd.id)!=''){
+		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
+			.append($('<i class="fa fa-signal">')
+				.text('{{Apprentissage}}')));
+		parmetre.append($('</br>'));
+	}
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
+		parmetre.append($('<label class="checkbox-inline">')
+		      .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="reponse">'))
+		      .append('{{Attendre la réponse}}'));
+	}
 	if (is_numeric(_cmd.id)) {
 		parmetre.append($('<a class="btn btn-default btn-xs cmdAction" data-action="test">')
 			.append($('<i class="fa fa-rss">')
 				.text('{{Tester}}')));
 	}
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir'){
-		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
-			.append($('<i class="fa fa-signal">')
-				.text('{{Apprentissage}}')));
-	}
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="configure">')
 		.append($('<i class="fa fa-cogs">')));
-	parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="copy" title="{{Dupliquer}}">')
-		.append($('<i class="fa fa-files-o">')));
+	if(init(_cmd.id)!=''){
+		parmetre.append($('<a class="btn btn-default btn-xs cmdAction tooltips" data-action="copy" title="{{Dupliquer}}">')
+			.append($('<i class="fa fa-files-o">')));
+	}
 	parmetre.append($('<div>')
 		.append($('<span>')
 			.append($('<label class="checkbox-inline">')
