@@ -278,6 +278,26 @@ class globalcache extends eqLogic {
 		$Equipement->save();
 		return $Equipement;
 	}
+	public function IrLearnStart() {
+		if($_socket == null)
+			$this->Connect(4998);
+		$this->Write("get_IRL");
+		event::add('globalcache::IRL', $this->Read());
+		$this->Disconnect();
+	}
+	public function Learn(){
+		if($_socket == null)
+			$this->Connect(4998);
+		$return = $this->Read();
+		$this->Disconnect();
+		return $return;
+	}
+	public function IrLearnStop() {
+		if($_socket == null)
+			$this->Connect(4998);
+		$this->Write("stop_IRL");
+		$this->Disconnect();
+	}
 	public static function Monitor($_option) {
 		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
 		$globalcache = globalcache::byId($_option['id']);
@@ -356,10 +376,10 @@ class globalcache extends eqLogic {
 		$this->addCacheMonitor("TX",$data);
 	}
 	public function Read(){	
-		$Ligne='';
-		while(!feof($this->_socket) && strrchr($Ligne,'\r') === false){
-			$Ligne .= fgets($this->_socket,1);
-		}
+	//	$Ligne='';
+		//while(!feof($this->_socket) && strrchr($Ligne,'\r') === false){
+			$Ligne = fgets($this->_socket);
+		//}
 		log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
 		$this->addCacheMonitor("RX",$Ligne);
 		return $Ligne;
@@ -406,16 +426,6 @@ class globalcache extends eqLogic {
 	}
   }
 class globalcacheCmd extends cmd {
-	public function Learn(){
-		$this->getEqLogic()->Connect(4998);
-		$this->getEqLogic()->Write("get_IRL");
-		event::add('globalcache::Learn', $this->getEqLogic()->Read());
-		$data=$this->getEqLogic()->Read();
-		$this->setConfiguration('value',$data);
-		$this->save();
-		$this->getEqLogic()->Write("stop_IRL");
-		$this->getEqLogic()->Disconnect();
-	}
 	public function preSave() {
 		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
 			$this->setConfiguration('codage','DEC');

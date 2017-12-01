@@ -12,12 +12,23 @@
 			ajax::success();
 		}
 		if (init('action') == 'IrLearn') {
-			$return = false;
-			$cmd=cmd::byId(init('id'));
-			if(is_object($cmd)){
-				$cmd->Learn();
+			$eqLogic=eqLogic::byId(init('id'));
+			if(is_object($eqLogic)){
+				if (config::byKey('learn_mode', 'globalcache') == 0) {
+					config::save('learn_mode', 1, 'globalcache');
+					$eqLogic->IrLearnStart();
+				}else{
+					config::save('learn_mode', 0, 'globalcache');
+					$eqLogic->IrLearnStop();
+				}
 				ajax::success(true);
 			}
+			ajax::success(false);
+		}
+		if (init('action') == 'getCode') {
+			$eqLogic=eqLogic::byId(init('id'));
+			if(is_object($eqLogic))
+				ajax::success($eqLogic->Learn());
 			ajax::success(false);
 		}
 		if (init('action') == 'getCacheMonitor') {
