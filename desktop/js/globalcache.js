@@ -24,7 +24,7 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));*/
 			$(_this).removeClass('btn-primary');
-			$(_this).attr('','');
+			$(_this).attr('data-action','');
 			
 		}
 	});
@@ -56,7 +56,7 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 			$(_this).remove();
 		}
 	});
-});
+});learnStop
 $('.changeIncludeState').off().on('click', function () {
 	$.ajax({
 		type: "POST",
