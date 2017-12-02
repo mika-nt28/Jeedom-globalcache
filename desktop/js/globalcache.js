@@ -24,7 +24,8 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));*/
 			$(_this).removeClass('btn-primary');
-			$(_this).attr('data-action','');
+			$(_this).addClass('btn-warning ');
+			$(_this).attr('data-action','learnStop');
 			
 		}
 	});
@@ -49,14 +50,17 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 				return;
 			}
 			$('.cmdAction[data-action=learn]').hide();
-			$(_this).parents()
+			/*$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart">')
 					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));
-			$(_this).remove();
+			$(_this).remove();*/
+			$(_this).removeClass('btn-warning');
+			$(_this).addClass('btn-primary');
+			$(_this).attr('data-action','learnStart');
 		}
 	});
-});learnStop
+});
 $('.changeIncludeState').off().on('click', function () {
 	$.ajax({
 		type: "POST",
