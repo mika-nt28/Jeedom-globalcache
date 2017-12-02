@@ -19,11 +19,12 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
 			}
-			$(_this).parents()
+			/*$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStop">')
 					.append($('<i class="fa fa-bullseye">'))
-					.append('{{Mode apprentissage}}'));
-			$(_this).remove();
+					.append('{{Mode apprentissage}}'));*/
+			$(_this).removeClass('btn-primary');
+			$(_this).attr('','');
 			
 		}
 	});
@@ -252,11 +253,10 @@ function getMonitor(id) {
 				});				
 				$('#table_Monitor').trigger('update');
             		}
-			if ($('#md_modal').dialog('isOpen') === true) {
-				setTimeout(function() {
-					getMonitor(id)
-				}, 100);
-			}
+			setTimeout(function() {
+				getMonitor(id)
+			}, 100);
+			
 		}
 	});
 }
