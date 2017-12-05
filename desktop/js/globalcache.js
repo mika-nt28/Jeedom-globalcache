@@ -1,4 +1,3 @@
-$('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 	var _this = this;
@@ -93,6 +92,7 @@ $('body').off().on('globalcache::includeDevice', function (_event,_options) {
 		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
 });
 $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
+	$('.eqLogicAction[data-action=learnStart]').hide();
 	$('.SerialParameter').hide();
 	$('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
@@ -106,6 +106,7 @@ $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=t
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
+			$('.eqLogicAction[data-action=learnStart]').show();
 		break;
 		case 'serial':
 			$('.SerialParameter').show();
@@ -160,7 +161,7 @@ function addCmdToTable(_cmd) {
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir' && init(_cmd.id)!=''){
 		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
 			.append($('<i class="fa fa-signal">')
-				.text('{{Apprentissage}}')));
+				.text('{{Apprentissage}}'))).hide();
 		parmetre.append($('</br>'));
 	}
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
