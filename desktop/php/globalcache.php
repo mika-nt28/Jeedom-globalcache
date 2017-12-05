@@ -193,7 +193,7 @@ $eqLogics = eqLogic::byType('globalcache');
 										</sup>
 									</label>
 									<div class="col-sm-9">
-										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="module">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="module" disabled>
 											<option value="1">{{Module 1}}</option>
 											<option value="2">{{Module 2}}</option>
 											<option value="3">{{Module 3}}</option>
@@ -212,18 +212,12 @@ $eqLogics = eqLogic::byType('globalcache');
 										</sup>
 									</label>
 									<div class="col-sm-9">
-										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="voie">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="voie" disabled>
 											<option value="1">{{Voie 1}}</option>
 											<option value="2">{{Voie 2}}</option>
 											<option value="3">{{Voie 3}}</option>
 											<option value="4">{{Voie 4}}</option>
 										</select>
-									</div>
-								</div>
-								<div class="form-group">
-									<label class="col-sm-4 control-label" >{{Led d'activitée}}</label>
-									<div class="col-sm-6">
-										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="blink" checked/>{{Activer}}</label>
 									</div>
 								</div>
 								<div class="form-group">
@@ -234,11 +228,17 @@ $eqLogics = eqLogic::byType('globalcache');
 										</sup>
 									</label>
 									<div class="col-sm-9">
-										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="type">
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="type" disabled>
 											<option value="ir">{{Infra-rouge}}</option>
 											<option value="serial">{{RS232}}</option>
 											<option value="relay">{{Relais}}</option>
 										</select>
+									</div>
+								</div>
+								<div class="form-group">
+									<label class="col-sm-4 control-label" >{{Led d'activitée}}</label>
+									<div class="col-sm-6">
+										<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="blink" checked/>{{Activer}}</label>
 									</div>
 								</div>
 							</fieldset> 

@@ -378,8 +378,9 @@ class globalcache extends eqLogic {
 	public function Read(){	
 	//	$Ligne='';
 		//while(!feof($this->_socket) && strrchr($Ligne,'\r') === false){
-			$Ligne = fgets($this->_socket);
+			//$Ligne = fgets($this->_socket);
 		//}
+		$Ligne=stream_get_line($this->_socket, 1000000,"\r");
 		log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
 		$this->addCacheMonitor("RX",$Ligne);
 		return $Ligne;

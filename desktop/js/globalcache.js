@@ -1,10 +1,10 @@
-$('.cmdAction[data-action=learn]').hide();
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 	var _this = this;
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST", 
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "IrLearn",
 			id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -13,25 +13,28 @@ $('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) { 
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
 			}
-			$(_this).parents()
+			/*$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStop">')
 					.append($('<i class="fa fa-bullseye">'))
-					.append('{{Mode apprentissage}}'));
-			$(_this).remove();
+					.append('{{Mode apprentissage}}'));*/
+			$(_this).removeClass('btn-primary');
+			$(_this).addClass('btn-warning ');
+			$(_this).attr('data-action','learnStop');
 			
 		}
 	});
 });
 $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 	var _this = this;
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "IrLearn",
 			id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -40,24 +43,28 @@ $('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) {
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
 			}
 			$('.cmdAction[data-action=learn]').hide();
-			$(_this).parents()
+			/*$(_this).parents()
 				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart">')
 					.append($('<i class="fa fa-bullseye">'))
 					.append('{{Mode apprentissage}}'));
-			$(_this).remove();
+			$(_this).remove();*/
+			$(_this).removeClass('btn-warning');
+			$(_this).addClass('btn-primary');
+			$(_this).attr('data-action','learnStart');
 		}
 	});
 });
 $('.changeIncludeState').off().on('click', function () {
-	$.ajax({// fonction permettant de faire de l'ajax
-		type: "POST", // methode de transmission des données au fichier php
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+	$.ajax({
+		type: "POST",
+		async: false,
+		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "changeIncludeState"
 		},
@@ -65,7 +72,7 @@ $('.changeIncludeState').off().on('click', function () {
 		error: function (request, status, error) {
 			handleAjaxError(request, status, error);
 		},
-		success: function (data) { // si l'appel a bien fonctionné
+		success: function (data) {
 			if (data.state != 'ok') {
 				$('#div_alert').showAlert({message: data.result, level: 'danger'});
 				return;
@@ -85,6 +92,7 @@ $('body').off().on('globalcache::includeDevice', function (_event,_options) {
 		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
 });
 $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
+	$('.eqLogicAction[data-action=learnStart]').hide();
 	$('.SerialParameter').hide();
 	$('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
@@ -98,6 +106,7 @@ $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=t
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
+			$('.eqLogicAction[data-action=learnStart]').show();
 		break;
 		case 'serial':
 			$('.SerialParameter').show();
@@ -152,7 +161,7 @@ function addCmdToTable(_cmd) {
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir' && init(_cmd.id)!=''){
 		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
 			.append($('<i class="fa fa-signal">')
-				.text('{{Apprentissage}}')));
+				.text('{{Apprentissage}}'))).hide();
 		parmetre.append($('</br>'));
 	}
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
@@ -194,9 +203,10 @@ function addCmdToTable(_cmd) {
  	getMonitor($('.eqLogicAttr[data-l1key=id]').val());
 	$('.cmdAction[data-action=learn]').off().on('click',function() {
 		var _cmd = $(this).closest('.cmd');
-		$.ajax({// fonction permettant de faire de l'ajax
-			type: "POST", // methode de transmission des données au fichier php
-			url: "plugins/globalcache/core/ajax/globalcache.ajax.php", // url du fichier php
+		$.ajax({
+			type: "POST", 
+			async: false,
+			url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 			data: {
 				action: "getCode",
 				id:$('.eqLogicAttr[data-l1key=id]').val()
@@ -205,7 +215,7 @@ function addCmdToTable(_cmd) {
 			error: function (request, status, error) {
 				handleAjaxError(request, status, error);
 			},
-			success: function (data) { // si l'appel a bien fonctionné
+			success: function (data) {
 				if (data.state != 'ok') {
 					$('#div_alert').showAlert({message: data.result, level: 'danger'});
 					return;
@@ -219,8 +229,8 @@ function addCmdToTable(_cmd) {
 function getMonitor(id) {
 	$.ajax({
 		type: 'POST',
-	async: false,
-	url: 'plugins/globalcache/core/ajax/globalcache.ajax.php',
+		async: false,
+		url: 'plugins/globalcache/core/ajax/globalcache.ajax.php',
 		data: {
 			action: 'getCacheMonitor',
 			id:id
@@ -248,11 +258,10 @@ function getMonitor(id) {
 				});				
 				$('#table_Monitor').trigger('update');
             		}
-			if ($('#md_modal').dialog('isOpen') === true) {
-				setTimeout(function() {
-					getMonitor(id)
-				}, 100);
-			}
+			setTimeout(function() {
+				getMonitor(id)
+			}, 100);
+			
 		}
 	});
 }
