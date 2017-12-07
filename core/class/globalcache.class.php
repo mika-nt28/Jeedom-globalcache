@@ -448,14 +448,13 @@ class globalcacheCmd extends cmd {
 					$this->getEqLogic()->Read();
 			break;
 			case 'ir':
-				$id=rand(0,65535);
 				$freq=round(1000/($bytes[1]*0.241246),0)*1000;
 				unset($bytes[0]);
 				unset($bytes[1]);
 				unset($bytes[2]);
 				array_shift($bytes);
 				$data=implode(',',$bytes);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
+				$cmd="sendir,".$adresss.",".$this->getId().",".$freq.",1,1,".$data;
 				$this->getEqLogic()->Connect(4998);
 				while(true){
 					$this->getEqLogic()->Write($cmd);
@@ -463,7 +462,7 @@ class globalcacheCmd extends cmd {
 					$return=explode(',',trim($return));
 					if($return[0] == 'completeir'
 					  && $return[1] == $adresss
-					  && $return[2] == $id)
+					  && $return[2] == $this->getId())
 					break;
 				}
 			break;
