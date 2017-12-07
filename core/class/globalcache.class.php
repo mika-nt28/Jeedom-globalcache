@@ -325,43 +325,6 @@ class globalcache extends eqLogic {
 		$value[] = array('datetime' => date('d-m-Y H:i:s'),'sense' => $sense, 'monitor' => $_monitor);
 		cache::set('globalcache::Monitor::'.$this->getId(), json_encode(array_slice($value, -250, 250)), 0);
 	}
-	public function Send($byte){
-		$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
-		switch($this->getConfiguration('type')){
-			case 'relay':
-				$this->Connect(4998);
-				$data=implode(',',$byte);
-				$this->Write("setstate,".$adresss.",".$data);
-				if($this->getConfiguration('reponse'))
-					$this->Read();
-				$this->Disconnect();
-			break;
-			case 'ir':
-				$id=rand(0,65535);
-				$freq=round(1000/($byte[1]*0.241246),0)*1000;
-				unset($byte[0]);
-				unset($byte[1]);
-				unset($byte[2]);
-				array_shift($byte);
-				$data=implode(',',$byte);
-				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
-				$this->Connect(4998);
-				$this->Write($cmd);
-				$this->Read();
-				$cmd="completeir,".$adresss.",".$id;
-				$this->Write($cmd);
-				$this->Disconnect();
-			break;
-			case 'serial':
-				$this->Connect($this->getPort());
-				$data=implode(',',$byte);
-				$this->Write($data);
-				if($this->getConfiguration('reponse'))
-					$this->Read();
-				$this->Disconnect();
-			break;
-		}
-	}
 	public function Connect($Port){		
 		$Ip=$this->getLogicalId();
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
@@ -475,7 +438,44 @@ class globalcacheCmd extends cmd {
 			if($this->getConfiguration('LF'))
 				$bytes[]=$LF;
 		}
-		$this->getEqLogic()->Send($bytes);
+		$adresss=$this->getEqLogic()->getConfiguration('module').':'.$this->getEqLogic()->getConfiguration('voie');
+		switch($this->getEqLogic()->getConfiguration('type')){
+			case 'relay':
+				$this->getEqLogic()->Connect(4998);
+				$data=implode(',',$bytes);
+				$this->getEqLogic()->Write("setstate,".$adresss.",".$data);
+				if($this->getConfiguration('reponse'))
+					$this->getEqLogic()->Read();
+			break;
+			case 'ir':
+				$id=rand(0,65535);
+				$freq=round(1000/($bytes[1]*0.241246),0)*1000;
+				unset($bytes[0]);
+				unset($bytes[1]);
+				unset($bytes[2]);
+				array_shift($bytes);
+				$data=implode(',',$bytes);
+				$cmd="sendir,".$adresss.",".$id.",".$freq.",1,1,".$data;
+				$this->getEqLogic()->Connect(4998);
+				while(true){
+					$this->getEqLogic()->Write($cmd);
+					$return=$this->getEqLogic()->Read();
+					$return=explode(',',trim($return));
+					if($return[0] == 'completeir'
+					  && $return[1] == $adresss
+					  && $return[2] == $id)
+					break;
+				}
+			break;
+			case 'serial':
+				$this->getEqLogic()->Connect($this->getPort());
+				$data=implode(',',$bytes);
+				$this->getEqLogic()->Write($data);
+				if($this->getConfiguration('reponse'))
+					$this->getEqLogic()->Read();
+			break;
+		}
+		$this->getEqLogic()->Disconnect();
 	}
 }
 ?>
