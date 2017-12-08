@@ -190,8 +190,8 @@ class globalcache extends eqLogic {
 	public function postSave(){
 		if($this->getLogicalId()!='' /*&& self::url_exists($this->getLogicalId()) === false*/){
 			$this->Connect(4998);     
-         	$this->Write("getversion,".$this->getConfiguration('module'));
-            $result=$this->Read();
+         		$this->Write("getversion,".$this->getConfiguration('module'));
+           		$result=$this->Read();
 			$this->setConfiguration('version',$result);
 			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
