@@ -1,4 +1,7 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+$('body').off().on('globalcache::IRL', function (_event,_options) {		
+	alert("Mode apprentissage actif et en attente d'une commande");			
+});
 $('.changeIncludeState').off().on('click', function () {
 	$.ajax({
 		type: "POST",
