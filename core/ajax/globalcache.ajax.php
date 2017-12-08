@@ -11,20 +11,6 @@
 			globalcache::Discovery();
 			ajax::success();
 		}
-		if (init('action') == 'IrLearn') {
-			$eqLogic=eqLogic::byId(init('id'));
-			if(is_object($eqLogic)){
-				if (config::byKey('learn_mode', 'globalcache') == 0) {
-					config::save('learn_mode', 1, 'globalcache');
-					$eqLogic->IrLearnStart();
-				}else{
-					config::save('learn_mode', 0, 'globalcache');
-					$eqLogic->IrLearnStop();
-				}
-				ajax::success(true);
-			}
-			ajax::success(false);
-		}
 		if (init('action') == 'getCode') {
 			$eqLogic=eqLogic::byId(init('id'));
 			if(is_object($eqLogic))

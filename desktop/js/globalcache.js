@@ -1,64 +1,6 @@
 $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
-$('.eqLogicAction[data-action=learnStart]').off().on('click', function () {
-	var _this = this;
-	$.ajax({
-		type: "POST", 
-		async: false,
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
-		data: {
-			action: "IrLearn",
-			id:$('.eqLogicAttr[data-l1key=id]').val()
-		},
-		dataType: 'json',
-		error: function (request, status, error) {
-			handleAjaxError(request, status, error);
-		},
-		success: function (data) { 
-			if (data.state != 'ok') {
-				$('#div_alert').showAlert({message: data.result, level: 'danger'});
-				return;
-			}
-			/*$(_this).parents()
-				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStop">')
-					.append($('<i class="fa fa-bullseye">'))
-					.append('{{Mode apprentissage}}'));*/
-			$(_this).removeClass('btn-primary');
-			$(_this).addClass('btn-warning ');
-			$(_this).attr('data-action','learnStop');
-			
-		}
-	});
-});
-$('.eqLogicAction[data-action=learnStop]').off().on('click', function () {
-	var _this = this;
-	$.ajax({
-		type: "POST",
-		async: false,
-		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
-		data: {
-			action: "IrLearn",
-			id:$('.eqLogicAttr[data-l1key=id]').val()
-		},
-		dataType: 'json',
-		error: function (request, status, error) {
-			handleAjaxError(request, status, error);
-		},
-		success: function (data) {
-			if (data.state != 'ok') {
-				$('#div_alert').showAlert({message: data.result, level: 'danger'});
-				return;
-			}
-			$('.cmdAction[data-action=learn]').hide();
-			/*$(_this).parents()
-				.append($('<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart">')
-					.append($('<i class="fa fa-bullseye">'))
-					.append('{{Mode apprentissage}}'));
-			$(_this).remove();*/
-			$(_this).removeClass('btn-warning');
-			$(_this).addClass('btn-primary');
-			$(_this).attr('data-action','learnStart');
-		}
-	});
+$('body').off().on('globalcache::IRL', function (_event,_options) {		
+	alert("Mode apprentissage actif et en attente d'une commande");			
 });
 $('.changeIncludeState').off().on('click', function () {
 	$.ajax({
@@ -80,11 +22,6 @@ $('.changeIncludeState').off().on('click', function () {
 		}
 	});
 });
-
-$('body').off().on('globalcache::IRL', function (_event,_options) {
-	alert("Mode apprentissage actif");
-	$('.cmdAction[data-action=learn]').show();
-});
 $('body').off().on('globalcache::includeDevice', function (_event,_options) {
 	if (_options == '')
 		window.location.reload();
@@ -92,7 +29,6 @@ $('body').off().on('globalcache::includeDevice', function (_event,_options) {
 		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
 });
 $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
-	$('.eqLogicAction[data-action=learnStart]').hide();
 	$('.SerialParameter').hide();
 	$('.IrParameter').hide();
 	$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').show(); 
@@ -106,7 +42,6 @@ $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=t
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
-			$('.eqLogicAction[data-action=learnStart]').show();
 		break;
 		case 'serial':
 			$('.SerialParameter').show();
@@ -161,7 +96,7 @@ function addCmdToTable(_cmd) {
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir' && init(_cmd.id)!=''){
 		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
 			.append($('<i class="fa fa-signal">')
-				.text('{{Apprentissage}}'))).hide();
+				.text('{{Apprentissage}}')));
 		parmetre.append($('</br>'));
 	}
 	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){

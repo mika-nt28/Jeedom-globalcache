@@ -74,13 +74,6 @@ $eqLogics = eqLogic::byType('globalcache');
 	<a class="btn btn-success eqLogicAction pull-right" data-action="save"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
 	<a class="btn btn-danger eqLogicAction pull-right" data-action="remove"><i class="fa fa-minus-circle"></i> {{Supprimer}}</a>
 	<a class="btn btn-default eqLogicAction pull-right" data-action="configure"><i class="fa fa-cogs"></i></a>
-	<?php
-		if (config::byKey('learn_mode', 'globalcache', 0) == 0)
-			echo '<a class="btn btn-primary eqLogicAction pull-right" data-action="learnStart"><i class="fa fa-bullseye"></i> {{Mode apprentissage}}</a>';
-		else
-			echo '<a class="btn btn-warning eqLogicAction pull-right" data-action="learnStop"><i class="fa fa-bullseye"></i> {{Stop apprentissage}}</a>';
-	
-	?>
 	<ul class="nav nav-tabs" role="tablist">
 		<li role="presentation">
 			<a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay">
