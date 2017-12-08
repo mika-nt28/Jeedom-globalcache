@@ -188,30 +188,28 @@ class globalcache extends eqLogic {
 				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
 	}*/
 	public function postSave(){
-		if($this->getLogicalId()!='' && self::url_exists($this->getLogicalId()) === false){
-			$this->Connect(4998);
-			//$this->Write("getdevices");
-			//$this->Read();
-			//$this->setConfiguration('version',$this->Write(getversion,".$this->getConfiguration('module')));
-			//$this->Read();
+		if($this->getLogicalId()!='' /*&& self::url_exists($this->getLogicalId()) === false*/){
+			$this->Connect(4998);     
+         	$this->Write("getversion,".$this->getConfiguration('module'));
+            $result=$this->Read();
+			$this->setConfiguration('version',$result);
 			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 				switch($this->getConfiguration('type')){
 					case 'relay':	
-						$this->Write("device,".$this->getConfiguration('module').",3 RELAY");
 					break;
 					case 'ir':
-						$this->Write("device,".$this->getConfiguration('module').",3 IR");
 						$this->Write("set_IR,".$adresss.",".$this->getConfiguration('mode'));
-
+						$this->Read();
+						$this->Write("get_IR,".$adresss);
+						$this->Read();
 					break;
-					case 'serial':
-						$this->Write("device,".$this->getConfiguration('module').",1 SERIAL");
+					case 'serial':  
 						$this->Write("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
+              					$this->Read();
 					break;
 				}
 			}
-			$this->Write("endlistdevices");
 			$this->Disconnect();
 		}
 	}
@@ -222,7 +220,6 @@ class globalcache extends eqLogic {
 		return true;
 	}
 	public static function Discovery() {
-	//	error_reporting(~E_WARNING);
 		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0))){
 			log::add('globalcache', 'error', "Couldn't create socket: " . socket_strerror(socket_last_error($sock)));
 			return false;
@@ -251,6 +248,19 @@ class globalcache extends eqLogic {
 		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
 			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
 				$Equipement=self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
+				$Equipement->Connect(4998);    
+              			switch($Equipement->getConfiguration('type')){
+					case 'relay':	
+						$Equipement->Write("device,".$this->getConfiguration('module').",3 RELAY");
+					break;
+					case 'ir':
+						$Equipement->Write("device,".$this->getConfiguration('module').",3 IR");
+					break;
+					case 'serial':
+						$Equipement->Write("device,".$this->getConfiguration('module').",1 SERIAL");
+					break;
+				}
+             			$Equipement->Write("endlistdevices");
 				event::add('globalcache::includeDevice',$Equipement->getId());
 			}
 		}
@@ -330,10 +340,6 @@ class globalcache extends eqLogic {
 		$this->addCacheMonitor("TX",$data);
 	}
 	public function Read(){	
-	//	$Ligne='';
-		//while(!feof($this->_socket) && strrchr($Ligne,'\r') === false){
-			//$Ligne = fgets($this->_socket);
-		//}
 		$Ligne=stream_get_line($this->_socket, 1000000,"\r");
 		log::add('globalcache', 'debug',$this->getHumanName(). ' RX: ' . $Ligne);
 		$this->addCacheMonitor("RX",$Ligne);
