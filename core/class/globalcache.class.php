@@ -245,25 +245,25 @@ class globalcache extends eqLogic {
 		  	if($Model[0]=="Model")
 				$Type=str_replace(' ','_',$Model[1]);
 		}	
-		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
-			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
-				$Equipement=self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
-				$Equipement->Connect(4998);    
-              			switch($Equipement->getConfiguration('type')){
-					case 'relay':	
-						$Equipement->Write("device,".$this->getConfiguration('module').",3 RELAY");
-					break;
-					case 'ir':
-						$Equipement->Write("device,".$this->getConfiguration('module').",3 IR");
-					break;
-					case 'serial':
-						$Equipement->Write("device,".$this->getConfiguration('module').",1 SERIAL");
-					break;
-				}
-             			$Equipement->Write("endlistdevices");
-				event::add('globalcache::includeDevice',$Equipement->getId());
+		$Equipement = new globalcache();
+		$Equipement->setLogicalId($remote_ip);
+		$Equipement->Connect(4998);
+		$Equipement->Write("getdevices");
+		$return="";
+		while(true){
+			$return = $Equipement->Read();
+			if($return == "endlistdevices")
+				break;
+			$GC=explode(',',$return);
+			if($GC[1]!=0){
+				$Module=$GC[1];
+				$Param=explode(' ',$GC[2]);
+				for($Voie=1;$Voie<=$Param[0];$Voie++)
+					self::AddEquipement($Type." ".$Module.":".$Voie,$remote_ip,$Param[1],$Module,$Voie);
 			}
+				
 		}
+		$Equipement->Disconnect();
 		config::save('include_mode', 0, 'globalcache');
 	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
