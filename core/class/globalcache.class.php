@@ -53,15 +53,15 @@ class globalcache extends eqLogic {
 			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 				switch($this->getConfiguration('type')){
-					case 'relay':	
+					case 'RELAY':	
 					break;
-					case 'ir':
+					case 'IR':
 						$this->Write("set_IR,".$adresss.",".$this->getConfiguration('mode'));
 						$this->Read();
 						$this->Write("get_IR,".$adresss);
 						$this->Read();
 					break;
-					case 'serial':  
+					case 'SERIAL':  
 						$this->Write("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
               					$this->Read();
 					break;
@@ -245,7 +245,7 @@ class globalcache extends eqLogic {
   }
 class globalcacheCmd extends cmd {
 	public function preSave() {
-		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
+		if($this->getEqLogic()->getConfiguration('type') == 'IR'){
 			$this->setConfiguration('codage','DEC');
 		}
 	}
@@ -286,7 +286,7 @@ class globalcacheCmd extends cmd {
 				$LF=dechex(hexdec(0x0A));
 			break;
 		}
-		if($this->getEqLogic()->getConfiguration('type') != 'ir'){
+		if($this->getEqLogic()->getConfiguration('type') != 'IR'){
 			if($this->getConfiguration('CR'))
 				$bytes[]=$CR;
 			if($this->getConfiguration('LF'))
@@ -294,14 +294,14 @@ class globalcacheCmd extends cmd {
 		}
 		$adresss=$this->getEqLogic()->getConfiguration('module').':'.$this->getEqLogic()->getConfiguration('voie');
 		switch($this->getEqLogic()->getConfiguration('type')){
-			case 'relay':
+			case 'RELAY':
 				$this->getEqLogic()->Connect(4998);
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write("setstate,".$adresss.",".$data);
 				if($this->getConfiguration('reponse'))
 					$this->getEqLogic()->Read();
 			break;
-			case 'ir':
+			case 'IR':
 				$freq=round(1000/($bytes[1]*0.241246),0)*1000;
 				unset($bytes[0]);
 				unset($bytes[1]);
@@ -320,7 +320,7 @@ class globalcacheCmd extends cmd {
 					break;
 				}
 			break;
-			case 'serial':
+			case 'SERIAL':
 				$this->getEqLogic()->Connect($this->getPort());
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write($data);
