@@ -36,14 +36,14 @@ $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=t
 	$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().show(); 
 	$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().show(); 
 	switch($(this).val()){
-	       case 'ir':
+	       case 'IR':
 			$('.IrParameter').show();
 			$('.cmdAttr[data-l1key=configuration][data-l2key=codage]').val('DEC').hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=CR]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=LF]').parent().hide(); 
 			$('.cmdAttr[data-l1key=configuration][data-l2key=reponse]').parent().hide(); 
 		break;
-		case 'serial':
+		case 'SERIAL':
 			$('.SerialParameter').show();
 		break;
 	}
@@ -60,7 +60,7 @@ function addCmdToTable(_cmd) {
 			.append($('<input type="hidden" class="cmdAttr form-control input-sm" data-l1key="id">'))
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name">')));
 	var td=$('<td>');
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){			
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'IR'){			
 		td.append($('<div>')
 			.append($('<label>')
 				.text('{{Codage}}')
@@ -93,13 +93,13 @@ function addCmdToTable(_cmd) {
 				.append(jeedom.cmd.availableType()))
 			.append($('<span class="subType" subType="'+init(_cmd.subType)+'">')));
 	var parmetre=$('<td>');
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'ir' && init(_cmd.id)!=''){
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() == 'IR' && init(_cmd.id)!=''){
 		parmetre.append($('<a class="btn btn-success btn-xs cmdAction tooltips" data-action="learn">')
 			.append($('<i class="fa fa-signal">')
 				.text('{{Apprentissage}}')));
 		parmetre.append($('</br>'));
 	}
-	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'ir'){
+	if($('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').val() != 'IR'){
 		parmetre.append($('<label class="checkbox-inline">')
 		      .append($('<input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="reponse">'))
 		      .append('{{Attendre la réponse}}'));

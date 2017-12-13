@@ -2,149 +2,6 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
 	protected $_socket=null;
-	protected static $_GlobalCache=array(
-		"GC-100"=>array(
-			"Nom" => "GC-100",
-			"Module" => array(
-				1 => array(
-					"Type" => "serial",
-					"Voie" => 1,
-					"Port" => 4999
-				),
-				2 => array(
-					"Type" => "serial",
-					"Voie" => 1,
-					"Port" => 5000
-				),
-				3 => array(
-					"Type" => "relay",
-					"Voie" => 3,
-					"Port" => 4998
-				),
-				4 =>array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				),
-				5 => array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachWF2IR"=> array(
-			"Nom" => "iTach IR",
-			"Module" => array(
-				1 => array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachIP2IR"=> array(
-			"Nom" => "iTach IR",
-			"Module" => array(
-				1 => array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachIP2IR-P"=> array(
-			"Nom" => "iTach IR",
-			"Module" => array(
-				1 => array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachWF2SL"=> array(
-			"Nom" => "iTach Serial",
-			"Module" => array(
-				1 => array(
-					"Type" => "serial",
-					"Voie" => 1,
-					"Port" => 4999
-				)
-			)
-			
-		),
-		"iTachIP2SL"=> array(
-			"Nom" => "iTach Serial",
-			"Module" => array(
-				1 => array(
-					"Type" => "serial",
-					"Voie" => 1,
-					"Port" => 4999
-				)
-			)
-			
-		),
-		"iTachIP2SL-P"=> array(
-			"Nom" => "iTach Serial",
-			"Module" => array(
-				1 => array(
-					"Type" => "serial",
-					"Voie" => 1,
-					"Port" => 4999
-				)
-			)
-			
-		),
-		"iTachWF2CC"=> array(
-			"Nom" => "iTach Relay",
-			"Module" => array(
-				1 => array(
-					"Type" => "relay",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachIP2CC"=> array(
-			"Nom" => "iTach Relay",
-			"Module" => array(
-				1 => array(
-					"Type" => "relay",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"iTachIP2CC-P"=> array(
-			"Nom" => "iTach Relay",
-			"Module" => array(
-				1 => array(
-					"Type" => "relay",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		),
-		"Simple_Blaster_Ethernet"=> array(
-			"Nom" => "Simple Blaster Ethernet",
-			"Module" => array(
-				1 => array(
-					"Type" => "ir",
-					"Voie" => 3,
-					"Port" => 4998
-				)
-			)
-			
-		)
-	);
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'globalcache';
@@ -196,15 +53,15 @@ class globalcache extends eqLogic {
 			if ($this->getConfiguration('module') !='' && $this->getConfiguration('voie') !=''){
 				$adresss=$this->getConfiguration('module').':'.$this->getConfiguration('voie');
 				switch($this->getConfiguration('type')){
-					case 'relay':	
+					case 'RELAY':	
 					break;
-					case 'ir':
+					case 'IR':
 						$this->Write("set_IR,".$adresss.",".$this->getConfiguration('mode'));
 						$this->Read();
 						$this->Write("get_IR,".$adresss);
 						$this->Read();
 					break;
-					case 'serial':  
+					case 'SERIAL':  
 						$this->Write("set_SERIAL,".$adresss.",".$this->getConfiguration('baudrate').",".$this->getConfiguration('flowcontrol').",".$this->getConfiguration('parity'));
               					$this->Read();
 					break;
@@ -245,25 +102,25 @@ class globalcache extends eqLogic {
 		  	if($Model[0]=="Model")
 				$Type=str_replace(' ','_',$Model[1]);
 		}	
-		foreach(globalcache::$_GlobalCache[$Type]['Module'] as $Module => $Param){	
-			for($Voie=1;$Voie<=$Param['Voie'];$Voie++){		
-				$Equipement=self::AddEquipement(globalcache::$_GlobalCache[$Type]['Nom'],$remote_ip,$Param['Type'],$Module,$Voie);
-				$Equipement->Connect(4998);    
-              			switch($Equipement->getConfiguration('type')){
-					case 'relay':	
-						$Equipement->Write("device,".$this->getConfiguration('module').",3 RELAY");
-					break;
-					case 'ir':
-						$Equipement->Write("device,".$this->getConfiguration('module').",3 IR");
-					break;
-					case 'serial':
-						$Equipement->Write("device,".$this->getConfiguration('module').",1 SERIAL");
-					break;
-				}
-             			$Equipement->Write("endlistdevices");
-				event::add('globalcache::includeDevice',$Equipement->getId());
+		$Equipement = new globalcache();
+		$Equipement->setLogicalId($remote_ip);
+		$Equipement->Connect(4998);
+		$Equipement->Write("getdevices");
+		$return="";
+		while(true){
+			$return = $Equipement->Read();
+			if($return == "endlistdevices")
+				break;
+			$GC=explode(',',$return);
+			if($GC[1]!=0){
+				$Module=$GC[1];
+				$Param=explode(' ',$GC[2]);
+				for($Voie=1;$Voie<=$Param[0];$Voie++)
+					self::AddEquipement($Type." ".$Module.":".$Voie,$remote_ip,$Param[1],$Module,$Voie);
 			}
+				
 		}
+		$Equipement->Disconnect();
 		config::save('include_mode', 0, 'globalcache');
 	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
@@ -388,7 +245,7 @@ class globalcache extends eqLogic {
   }
 class globalcacheCmd extends cmd {
 	public function preSave() {
-		if($this->getEqLogic()->getConfiguration('type') == 'ir'){
+		if($this->getEqLogic()->getConfiguration('type') == 'IR'){
 			$this->setConfiguration('codage','DEC');
 		}
 	}
@@ -429,7 +286,7 @@ class globalcacheCmd extends cmd {
 				$LF=dechex(hexdec(0x0A));
 			break;
 		}
-		if($this->getEqLogic()->getConfiguration('type') != 'ir'){
+		if($this->getEqLogic()->getConfiguration('type') != 'IR'){
 			if($this->getConfiguration('CR'))
 				$bytes[]=$CR;
 			if($this->getConfiguration('LF'))
@@ -437,14 +294,14 @@ class globalcacheCmd extends cmd {
 		}
 		$adresss=$this->getEqLogic()->getConfiguration('module').':'.$this->getEqLogic()->getConfiguration('voie');
 		switch($this->getEqLogic()->getConfiguration('type')){
-			case 'relay':
+			case 'RELAY':
 				$this->getEqLogic()->Connect(4998);
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write("setstate,".$adresss.",".$data);
 				if($this->getConfiguration('reponse'))
 					$this->getEqLogic()->Read();
 			break;
-			case 'ir':
+			case 'IR':
 				$freq=round(1000/($bytes[1]*0.241246),0)*1000;
 				unset($bytes[0]);
 				unset($bytes[1]);
@@ -463,7 +320,7 @@ class globalcacheCmd extends cmd {
 					break;
 				}
 			break;
-			case 'serial':
+			case 'SERIAL':
 				$this->getEqLogic()->Connect($this->getPort());
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write($data);
