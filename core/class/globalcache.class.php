@@ -223,21 +223,14 @@ class globalcache extends eqLogic {
 		$cron->run();
 		return $cron;
 	}
-	private function getPort(){
+	public function getPort(){
 		$Port=4998;
 		switch($this->getConfiguration('type')){	
 			case 'serial':
-				/*$NbPrevModule=1;
-				foreach(eqLogic::byTypeAndSearhConfiguration('globalcache',array('type'=>'serial')) as $eqLogic){
-					if($eqLogic->getConfiguration('module') < $this->getConfiguration('module'))
-						$NbPrevModule++;
-				}
-				$Port+=$NbPrevModule;*/
 			    if($this->getConfiguration('module')== 1)       
 			      $Port=4999;
 			    if($this->getConfiguration('module')== 2)
 			      $Port=5000;
-            
 			break;
 		}			
 		return $Port;
