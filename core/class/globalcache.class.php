@@ -314,7 +314,7 @@ class globalcacheCmd extends cmd {
 				}
 			break;
 			case 'SERIAL':
-				$this->getEqLogic()->Connect($this->getPort());
+				$this->getEqLogic()->Connect($this->getEqLogic()->getPort());
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write($data);
 				if($this->getConfiguration('reponse'))
