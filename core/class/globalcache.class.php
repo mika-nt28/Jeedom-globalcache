@@ -226,7 +226,7 @@ class globalcache extends eqLogic {
 	public function getPort(){
 		$Port=4998;
 		switch($this->getConfiguration('type')){	
-			case 'serial':
+			case 'SERIAL':
 			    if($this->getConfiguration('module')== 1)       
 			      $Port=4999;
 			    if($this->getConfiguration('module')== 2)
