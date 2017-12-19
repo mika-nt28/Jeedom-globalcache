@@ -8,7 +8,7 @@ Ce plugin a pour but de connecter jeedom à vos équipements __global cache__.
 
 Il n'y a besoin d'aucune installation ou configuration particuliere pour utilisé ce plugin
 
-== Recheche des équipements
+== Geräte suchen
 
 Le plugin est doté d'une decouverte de vous global cache sur votre reseau avec une auto-configuration
 Vous avez juste a cliquer sur le bouton "Lancer Scan"
