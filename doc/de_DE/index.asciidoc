@@ -4,7 +4,7 @@
 
 Ce plugin a pour but de connecter jeedom à vos équipements __global cache__.
 
-== Installation et configuration
+== Installation und Konfiguration
 
 Il n'y a besoin d'aucune installation ou configuration particuliere pour utilisé ce plugin
 
