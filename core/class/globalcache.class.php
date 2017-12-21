@@ -89,14 +89,17 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'error', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)));
 			return false;
 			}
-		socket_set_timeout($sock,60);
-		$GlobalCache=0;
-		while($GlobalCache == 0){
+      		$start=time();
+		while(true){
 			$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 			log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
-			$GlobalCache=self::byLogicalId($remote_ip, 'globalcache',true);
+          		self::CreateGCEquipements($remote_ip,$buf);
+          		if(time()>$start+60)
+              			break;
 		}
 		socket_close($sock);
+	}
+	public static function CreateGCEquipements($remote_ip,$buf){  
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
 			$Model=explode('=',$param);
 		  	if($Model[0]=="Model")
@@ -116,13 +119,13 @@ class globalcache extends eqLogic {
 				$Module=$GC[1];
 				$Param=explode(' ',$GC[2]);
 				for($Voie=1;$Voie<=$Param[0];$Voie++)
-					self::AddEquipement($Type." ".$Module.":".$Voie,$remote_ip,$Param[1],$Module,$Voie);
+					globalcache::AddEquipement($Type." ".$Module.":".$Voie,$remote_ip,$Param[1],$Module,$Voie);
 			}
 				
 		}
 		$Equipement->Disconnect();
 		config::save('include_mode', 0, 'globalcache');
-	}
+   	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
 		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       
           		if (is_object($Equipement)
