@@ -98,6 +98,12 @@ class globalcache extends eqLogic {
               			break;
 		}
 		socket_close($sock);
+		$cron =cron::byClassAndFunction('globalcache', 'Discovery');
+		if (is_object($cron)) {
+			$cron->stop();
+			$cron->remove();
+		}
+		config::save('include_mode', 0, 'globalcache');
 	}
 	public static function CreateGCEquipements($remote_ip,$buf){  
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
@@ -124,7 +130,6 @@ class globalcache extends eqLogic {
 				
 		}
 		$Equipement->Disconnect();
-		config::save('include_mode', 0, 'globalcache');
    	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
 		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       
