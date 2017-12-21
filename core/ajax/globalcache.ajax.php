@@ -7,7 +7,6 @@
 			throw new Exception(__('401 - Accès non autorisé', __FILE__));
 		}
 		if (init('action') == 'changeIncludeState') {
-			config::save('include_mode', 1, 'globalcache');
 			$cron =cron::byClassAndFunction('globalcache', 'Discovery');
 			if (!is_object($cron)) {
 				$cron = new cron();
