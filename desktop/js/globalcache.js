@@ -5,7 +5,7 @@ $('body').off().on('globalcache::IRL', function (_event,_options) {
 $('.changeIncludeState').off().on('click', function () {
 	$.ajax({
 		type: "POST",
-		async: false,
+		async: true,
 		url: "plugins/globalcache/core/ajax/globalcache.ajax.php",
 		data: {
 			action: "changeIncludeState"
