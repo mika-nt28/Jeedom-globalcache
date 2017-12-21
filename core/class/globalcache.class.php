@@ -77,6 +77,7 @@ class globalcache extends eqLogic {
 		return true;
 	}
 	public static function Discovery() {
+		config::save('include_mode', 1, 'globalcache');
 		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0))){
 			log::add('globalcache', 'error', "Couldn't create socket: " . socket_strerror(socket_last_error($sock)));
 			return false;
@@ -98,12 +99,12 @@ class globalcache extends eqLogic {
               			break;
 		}
 		socket_close($sock);
+		config::save('include_mode', 0, 'globalcache');
 		$cron =cron::byClassAndFunction('globalcache', 'Discovery');
 		if (is_object($cron)) {
 			$cron->stop();
 			$cron->remove();
 		}
-		config::save('include_mode', 0, 'globalcache');
 	}
 	public static function CreateGCEquipements($remote_ip,$buf){  
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
