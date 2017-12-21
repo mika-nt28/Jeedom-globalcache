@@ -8,7 +8,20 @@
 		}
 		if (init('action') == 'changeIncludeState') {
 			config::save('include_mode', 1, 'globalcache');
-			globalcache::Discovery();
+			$cron =cron::byClassAndFunction('globalcache', 'Discovery');
+			if (!is_object($cron)) {
+				$cron = new cron();
+				$cron->setClass('globalcache');
+				$cron->setFunction('Discovery');
+				$cron->setEnable(1);
+				$cron->setDeamon(1);
+				$cron->setSchedule('* * * * *');
+				$cron->setTimeout('999999');
+				$cron->save();
+			}
+			$cron->save();
+			$cron->start();
+			$cron->run();
 			ajax::success();
 		}
 		if (init('action') == 'getCode') {
