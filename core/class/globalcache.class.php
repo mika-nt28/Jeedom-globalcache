@@ -269,7 +269,7 @@ class globalcacheCmd extends cmd {
       		$bytes=array();
     	  	switch($this->getConfiguration('codage')){
 			case 'ASCII':
-               			$bytes[]=trim($data);
+               			$bytes[]=$data;
 				$CR="\r";
 				$LF="\n";
 			break;
