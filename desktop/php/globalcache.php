@@ -62,11 +62,11 @@ $eqLogics = eqLogic::byType('globalcache');
 			} else {
 				foreach ($eqLogics as $eqLogic) {
 					echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
-					$file='plugins/globalcache/pluugin_info/'.$eqLogic-getConfiguration('type').'_icon.png';
+					$file='plugins/globalcache/plugin_info/'.$eqLogic-getConfiguration('type').'_icon.png';
 					if(file_exists($file))
 						echo '<center><img src="'.$file.'" height="105" width="95" /></center>';
 					else
-						echo '<center><img src="plugins/globalcache/pluugin_info/globalcache_icon.png" height="105" width="95" /></center>';
+						echo '<center><img src="plugins/globalcache/plugin_info/globalcache_icon.png" height="105" width="95" /></center>';
 					echo '<span style="font-size : 1.1em;position:relative; top : 15px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;"><center>' . $eqLogic->getHumanName(true, true) . '</center></span>';
 					echo '</div>';
 				}
