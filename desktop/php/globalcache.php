@@ -62,7 +62,7 @@ $eqLogics = eqLogic::byType('globalcache');
 			} else {
 				foreach ($eqLogics as $eqLogic) {
 					echo '<div class="eqLogicDisplayCard cursor" data-eqLogic_id="' . $eqLogic->getId() . '" style="background-color : #ffffff; height : 200px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
-					$file='plugins/globalcache/plugin_info/'.$eqLogic-getConfiguration('type').'_icon.png';
+					$file='plugins/globalcache/plugin_info/'.$eqLogic->getConfiguration('type').'_icon.png';
 					if(file_exists($file))
 						echo '<center><img src="'.$file.'" height="105" width="95" /></center>';
 					else
