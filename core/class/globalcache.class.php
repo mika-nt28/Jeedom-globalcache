@@ -89,17 +89,19 @@ class globalcache extends eqLogic {
 		if (!socket_set_option($sock, IPPROTO_IP, MCAST_JOIN_GROUP, array("group"=>"239.255.250.250","interface"=>0))) {
 			log::add('globalcache', 'error', "socket_set_option() failed: reason: " . socket_strerror(socket_last_error($sock)));
 			return false;
-			}
+		}
+		socket_set_option($socket,SOL_SOCKET, SO_RCVTIMEO, array("sec"=>60, "usec"=>0));
       		$start=time();
 		while(true){
 			$r = socket_recvfrom($sock, $buf, 512, 0, $remote_ip, $remote_port);
 			log::add('globalcache', 'debug', $remote_ip." : ".$remote_port." -- " . $buf);
           		self::CreateGCEquipements($remote_ip,$buf);
-          		if(time()>$start+60)
+          		if(time()-$start > 60)
               			break;
 		}
 		socket_close($sock);
 		config::save('include_mode', 0, 'globalcache');
+		event::add('globalcache::includeDevice', null);
 		$cron =cron::byClassAndFunction('globalcache', 'Discovery');
 		if (is_object($cron)) {
 			$cron->stop();
@@ -131,6 +133,7 @@ class globalcache extends eqLogic {
 				
 		}
 		$Equipement->Disconnect();
+		event::add('globalcache::includeDevice', null);
    	}
 	public static function AddEquipement($Name,$_logicalId,$Type,$Module,$Voie){  
 		foreach(self::byLogicalId($_logicalId, 'globalcache',true) as $Equipement){       

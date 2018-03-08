@@ -23,10 +23,10 @@ $('.changeIncludeState').off().on('click', function () {
 	});
 });
 $('body').off().on('globalcache::includeDevice', function (_event,_options) {
-	if (_options == '')
+	//if (_options == '')
 		window.location.reload();
-	else
-		window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
+	//else
+		//window.location.href = 'index.php?v=d&p=globalcache&m=globalcache&id=' + _options;
 });
 $('body').off().on('change','.eqLogicAttr[data-l1key=configuration][data-l2key=type]',function(){
 	$('.SerialParameter').hide();
