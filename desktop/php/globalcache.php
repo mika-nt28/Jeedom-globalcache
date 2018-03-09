@@ -25,7 +25,8 @@ $eqLogics = eqLogic::byType('globalcache');
 		<legend>{{Gestion}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
-				if (config::byKey('include_mode', 'globalcache', 0) == 1) {
+                		$cron =cron::byClassAndFunction('globalcache', 'Discovery');
+				if (is_object($cron)) {
 					echo '<div class="cursor changeIncludeState include card" data-mode="1" data-state="0" style="background-color : #8000FF; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >';
 					echo '<center class="includeicon">';
 					echo '<i class="fa fa-spinner fa-pulse" style="font-size : 6em;color:#406E88;"></i>';

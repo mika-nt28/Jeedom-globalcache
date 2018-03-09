@@ -46,7 +46,8 @@ class globalcache extends eqLogic {
 	}*/
 	public function postSave(){
 		if($this->getLogicalId()!='' /*&& self::url_exists($this->getLogicalId()) === false*/){
-			$this->Connect(4998);     
+			if ($this->Connect(4998) === FALSE)
+				return false;
          		$this->Write("getversion,".$this->getConfiguration('module'));
            		$result=$this->Read();
 			$this->setConfiguration('version',$result);
@@ -77,7 +78,7 @@ class globalcache extends eqLogic {
 		return true;
 	}
 	public static function Discovery() {
-		config::save('include_mode', 1, 'globalcache');
+		event::add('globalcache::includeDevice', null);
 		if(!($sock = socket_create(AF_INET, SOCK_DGRAM, 0))){
 			log::add('globalcache', 'error', "Couldn't create socket: " . socket_strerror(socket_last_error($sock)));
 			return false;
@@ -100,13 +101,13 @@ class globalcache extends eqLogic {
               			break;
 		}
 		socket_close($sock);
-		config::save('include_mode', 0, 'globalcache');
-		event::add('globalcache::includeDevice', null);
 		$cron =cron::byClassAndFunction('globalcache', 'Discovery');
 		if (is_object($cron)) {
-			$cron->stop();
+			//$cron->stop();
+			//while($cron->running()){}
 			$cron->remove();
 		}
+		event::add('globalcache::includeDevice', null);
 	}
 	public static function CreateGCEquipements($remote_ip,$buf){  
 		foreach(explode('<-',str_replace('>','',$buf)) as $param){
@@ -116,7 +117,8 @@ class globalcache extends eqLogic {
 		}	
 		$Equipement = new globalcache();
 		$Equipement->setLogicalId($remote_ip);
-		$Equipement->Connect(4998);
+		if ($Equipement->Connect(4998) === FALSE)
+			return false;
 		$Equipement->Write("getdevices");
 		$return="";
 		while(true){
@@ -158,8 +160,10 @@ class globalcache extends eqLogic {
 		return $Equipement;
 	}
 	public function Learn(){
-		if($_socket == null)
-			$this->Connect(4998);
+		if($_socket == null){
+			if ($this->Connect(4998) === FALSE)
+				return false;
+		}
 		$this->Write("get_IRL");
 		$return = $this->Read();
 		event::add('globalcache::IRL', $return);
@@ -200,7 +204,8 @@ class globalcache extends eqLogic {
 		log::add('globalcache', 'debug',$this->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
 		$this->_socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
 		if (!$this->_socket) {
-			throw new Exception(__("$errstr ($errno)", __FILE__));
+			log::add('globalcache', 'debug',$this->getHumanName(). " " . __("$errstr ($errno)", __FILE__));
+			return false;
 		} 
 	}
 	public function Write($data){		
@@ -300,7 +305,8 @@ class globalcacheCmd extends cmd {
 		$adresss=$this->getEqLogic()->getConfiguration('module').':'.$this->getEqLogic()->getConfiguration('voie');
 		switch($this->getEqLogic()->getConfiguration('type')){
 			case 'RELAY':
-				$this->getEqLogic()->Connect(4998);
+				if ($this->getEqLogic()->Connect(4998) === FALSE)
+					return false;
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write("setstate,".$adresss.",".$data);
 				if($this->getConfiguration('reponse'))
@@ -314,7 +320,8 @@ class globalcacheCmd extends cmd {
 				array_shift($bytes);
 				$data=implode(',',$bytes);
 				$cmd="sendir,".$adresss.",".$this->getId().",".$freq.",1,1,".$data;
-				$this->getEqLogic()->Connect(4998);
+				if ($this->getEqLogic()->Connect(4998) === FALSE)
+					return false;
 				while(true){
 					$this->getEqLogic()->Write($cmd);
 					$return=$this->getEqLogic()->Read();
@@ -326,7 +333,8 @@ class globalcacheCmd extends cmd {
 				}
 			break;
 			case 'SERIAL':
-				$this->getEqLogic()->Connect($this->getEqLogic()->getPort());
+				if ($this->getEqLogic()->Connect($this->getEqLogic()->getPort()) === FALSE)
+					return false;
 				$data=implode(',',$bytes);
 				$this->getEqLogic()->Write($data);
 				if($this->getConfiguration('reponse'))
