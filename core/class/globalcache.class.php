@@ -3,11 +3,9 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
 	protected $_socket=null;
 	public static function cron() {
-		foreach(eqLogic::byType('globalcache') as $Equipement){ 
-			$cron = cron::byClassAndFunction('globalcache', 'Discovery');
-			if (is_object($cron) && !$cron->running())
-				$cron->remove();
-		}
+		$cron = cron::byClassAndFunction('globalcache', 'Discovery');
+		if (is_object($cron) && !$cron->running())
+			$cron->remove();
   	}
 	public static function deamon_info() {
 		$return = array();
