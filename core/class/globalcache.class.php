@@ -213,6 +213,10 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'debug',$this->getHumanName(). " " . __("$errstr ($errno)", __FILE__));
 			return false;
 		} 
+		if (!stream_set_blocking($this->_socket,false)) {
+			log::add('globalcache', 'debug',$this->getHumanName(). " " . __("$errstr ($errno)", __FILE__));
+			return false;
+		} 
 	}
 	public function Write($data){		
 		log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
