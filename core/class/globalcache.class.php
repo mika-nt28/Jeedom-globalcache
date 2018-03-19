@@ -218,7 +218,7 @@ class globalcache extends eqLogic {
 	}
 	public function Write($data){		
 		log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-		fwrite($this->_socket, $data."\r");
+		fwrite($this->_socket, $data);
 		$this->addCacheMonitor("TX",$data);
 	}
 	public function Read(){	
@@ -331,7 +331,7 @@ class globalcacheCmd extends cmd {
 				if ($this->getEqLogic()->Connect(4998) === FALSE)
 					return false;
 				while(true){
-					$this->getEqLogic()->Write($cmd);
+					$this->getEqLogic()->Write($cmd."\r");
 					$return=$this->getEqLogic()->Read();
 					$return=explode(',',trim($return));
 					if($return[0] == 'completeir'
