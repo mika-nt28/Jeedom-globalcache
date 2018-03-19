@@ -3,11 +3,9 @@ require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 class globalcache extends eqLogic {
 	protected $_socket=null;
 	public static function cron() {
-		foreach(eqLogic::byType('globalcache') as $Equipement){ 
-			$cron = cron::byClassAndFunction('globalcache', 'Discovery');
-			if (is_object($cron) && !$cron->running())
-				$cron->remove();
-		}
+		$cron = cron::byClassAndFunction('globalcache', 'Discovery');
+		if (is_object($cron) && !$cron->running())
+			$cron->remove();
   	}
 	public static function deamon_info() {
 		$return = array();
@@ -213,14 +211,14 @@ class globalcache extends eqLogic {
 			log::add('globalcache', 'debug',$this->getHumanName(). " " . __("$errstr ($errno)", __FILE__));
 			return false;
 		} 
-		if (!stream_set_blocking($this->_socket,false)) {
+		/*if (!stream_set_blocking($this->_socket,false)) {
 			log::add('globalcache', 'debug',$this->getHumanName(). " " . __("$errstr ($errno)", __FILE__));
 			return false;
-		} 
+		} */
 	}
 	public function Write($data){		
 		log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-		fwrite($this->_socket, $data."\r");
+		fwrite($this->_socket, $data);
 		$this->addCacheMonitor("TX",$data);
 	}
 	public function Read(){	
@@ -333,7 +331,7 @@ class globalcacheCmd extends cmd {
 				if ($this->getEqLogic()->Connect(4998) === FALSE)
 					return false;
 				while(true){
-					$this->getEqLogic()->Write($cmd);
+					$this->getEqLogic()->Write($cmd."\r");
 					$return=$this->getEqLogic()->Read();
 					$return=explode(',',trim($return));
 					if($return[0] == 'completeir'
