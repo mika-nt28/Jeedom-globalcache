@@ -343,8 +343,13 @@ class globalcacheCmd extends cmd {
 			case 'SERIAL':
 				if ($this->getEqLogic()->Connect($this->getEqLogic()->getPort()) === FALSE)
 					return false;
-				$data=implode(',',$bytes);
-				$this->getEqLogic()->Write($data);
+            	if($this->getConfiguration('codage')=='HEXA'){
+                  foreach($bytes as $data)
+                      $this->getEqLogic()->Write($data);
+                }else{
+                  $data=implode(',',$bytes);
+                  $this->getEqLogic()->Write($data);
+                }
 				if($this->getConfiguration('reponse'))
 					$this->getEqLogic()->Read();
 			break;
