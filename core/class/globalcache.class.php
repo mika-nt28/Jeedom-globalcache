@@ -218,7 +218,7 @@ class globalcache extends eqLogic {
 	}
 	public function Write($data){		
 		log::add('globalcache','info',$this->getHumanName(). ' TX : '.$data);
-		fwrite($this->_socket, $data);
+		fwrite($this->_socket, $data."\r");
 		$this->addCacheMonitor("TX",$data);
 	}
 	public function Read(){	
@@ -343,8 +343,13 @@ class globalcacheCmd extends cmd {
 			case 'SERIAL':
 				if ($this->getEqLogic()->Connect($this->getEqLogic()->getPort()) === FALSE)
 					return false;
-				$data=implode(',',$bytes);
-				$this->getEqLogic()->Write($data);
+            	if($this->getConfiguration('codage')=='HEXA'){
+                  foreach($bytes as $data)
+                      $this->getEqLogic()->Write($data);
+                }else{
+                  $data=implode(',',$bytes);
+                  $this->getEqLogic()->Write($data);
+                }
 				if($this->getConfiguration('reponse'))
 					$this->getEqLogic()->Read();
 			break;
