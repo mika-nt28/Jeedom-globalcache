@@ -331,7 +331,7 @@ class globalcacheCmd extends cmd {
 				if ($this->getEqLogic()->Connect(4998) === FALSE)
 					return false;
 				while(true){
-					$this->getEqLogic()->Write($cmd);
+					$this->getEqLogic()->Write($cmd."\r");
 					$return=$this->getEqLogic()->Read();
 					$return=explode(',',trim($return));
 					if($return[0] == 'completeir'
