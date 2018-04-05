@@ -297,9 +297,7 @@ class globalcacheCmd extends cmd {
 				$LF=hexdec(0x0A);
 			break;
 			case 'HEXA':
-				foreach(explode(' ',trim($data)) as $byte){
-					$bytes[]=dechex(hexdec($byte));
-				}
+               			$bytes[]='\x'.str_replace(' ','\x',trim($data)); 
 				$CR=dechex(hexdec(0x0D));
 				$LF=dechex(hexdec(0x0A));
 			break;
@@ -343,13 +341,8 @@ class globalcacheCmd extends cmd {
 			case 'SERIAL':
 				if ($this->getEqLogic()->Connect($this->getEqLogic()->getPort()) === FALSE)
 					return false;
-            	if($this->getConfiguration('codage')=='HEXA'){
-                  foreach($bytes as $data)
-                      $this->getEqLogic()->Write($data);
-                }else{
-                  $data=implode(',',$bytes);
-                  $this->getEqLogic()->Write($data);
-                }
+				$data=implode(',',$bytes);
+				$this->getEqLogic()->Write($data);
 				if($this->getConfiguration('reponse'))
 					$this->getEqLogic()->Read();
 			break;
