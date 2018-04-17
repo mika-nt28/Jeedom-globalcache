@@ -9,7 +9,7 @@ $eqLogics = eqLogic::byType('globalcache');
     <div class="col-lg-2 col-md-3 col-sm-4">
         <div class="bs-sidebar">
             <ul id="ul_eqLogic" class="nav nav-list bs-sidenav">
-		<!--a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un équipement}}</a-->
+		<a class="btn btn-default eqLogicAction" style="width : 100%;margin-top : 5px;margin-bottom: 5px;" data-action="add"><i class="fa fa-plus-circle"></i> {{Ajouter un équipement}}</a>
                 <li class="filter" style="margin-bottom: 5px;">
 					<input class="filter form-control input-sm" placeholder="{{Rechercher}}" style="width: 100%"/>
 				</li>
@@ -42,12 +42,12 @@ $eqLogics = eqLogic::byType('globalcache');
 					echo '</div>';
 				}
 			?>
-			<!--div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
+			<div class="cursor eqLogicAction" data-action="add" style="background-color : #ffffff; height : 140px;margin-bottom : 10px;padding : 5px;border-radius: 2px;width : 160px;margin-left : 10px;" >
 				<center>
 					<i class="fa fa-plus-circle" style="font-size : 5em;color:#406E88;"></i>
 				</center>
 				<span style="font-size : 1.1em;position:relative; top : 23px;word-break: break-all;white-space: pre-wrap;word-wrap: break-word;color:#406E88"><center>{{Ajouter}}</center></span>
-			</div-->
+			</div>
 			<div class="cursor eqLogicAction" data-action="gotoPluginConf" style="height: 120px; margin-bottom: 10px; padding: 5px; border-radius: 2px; width: 160px; margin-left: 10px; position: absolute; left: 170px; top: 0px; background-color: rgb(255, 255, 255);">
 				<center>
 			      		<i class="fa fa-wrench" style="font-size : 5em;color:#767676;"></i>
@@ -56,6 +56,7 @@ $eqLogics = eqLogic::byType('globalcache');
 			</div>
 		</div>
         <legend>{{Mes Equipments}}</legend>
+		<input class="form-control" placeholder="{{Rechercher}}" style="margin-bottom:4px;" id="in_searchEqlogic" />
 		<div class="eqLogicThumbnailContainer">
 			<?php
 			if (count($eqLogics) == 0) {
@@ -191,7 +192,7 @@ $eqLogics = eqLogic::byType('globalcache');
 										</sup>
 									</label>
 									<div class="col-sm-9">
-										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="module" disabled>
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="module">
 											<option value="1">{{Module 1}}</option>
 											<option value="2">{{Module 2}}</option>
 											<option value="3">{{Module 3}}</option>
@@ -210,7 +211,7 @@ $eqLogics = eqLogic::byType('globalcache');
 										</sup>
 									</label>
 									<div class="col-sm-9">
-										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="voie" disabled>
+										<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="voie">
 											<option value="1">{{Voie 1}}</option>
 											<option value="2">{{Voie 2}}</option>
 											<option value="3">{{Voie 3}}</option>
