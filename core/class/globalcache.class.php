@@ -7,48 +7,6 @@ class globalcache extends eqLogic {
 		if (is_object($cron) && !$cron->running())
 			$cron->remove();
   	}
-	public static function deamon_info() {
-		$return = array();
-		$return['log'] = 'globalcache';
-		$return['launchable'] = 'ok';
-		/*$return['state'] = 'nok';
-		foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
-				$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
-				if (!is_object($cron)) 	
-					return $return;
-			}
-		}*/
-		$return['state'] = 'ok';
-		return $return;
-	}
-	public static function deamon_start($_debug = false) {
-		log::remove('globalcache');
-		self::deamon_stop();
-		$deamon_info = self::deamon_info();
-		if ($deamon_info['launchable'] != 'ok') 
-			return;
-		if ($deamon_info['state'] == 'ok') 
-			return;
-		/*foreach(eqLogic::byType('globalcache') as $globalcache){
-			if($globalcache->getIsEnable()){
-				$globalcache->CreateDemon();   
-			}
-		}*/
-	}
-	public static function deamon_stop() {	
-		foreach(eqLogic::byType('globalcache') as $globalcache){
-			$cache = cache::byKey('globalcache::Monitor::'.$globalcache->getId());	
-			$cache->remove();
-			$cron = cron::byClassAndFunction('globalcache', 'Monitor', array('id' => $globalcache->getId()));
-			if (is_object($cron)) 	
-				$cron->remove();
-		}
-	}	
-	/*public function preSave(){
-		if(self::url_exists($this->getLogicalId()) === false)
-				throw new Exception(__('Impossible de se connecter a la cible, Verifier l\'ardresse', __FILE__));
-	}*/
 	public function postSave(){
 		if($this->getLogicalId()!='' /*&& self::url_exists($this->getLogicalId()) === false*/){
 			if ($this->Connect(4998) === FALSE)
@@ -175,27 +133,6 @@ class globalcache extends eqLogic {
 		//$this->Write("stop_IRL");
 		$this->Disconnect();
 		return $return;
-	}
-	public static function Monitor($_option) {
-		log::add('globalcache', 'debug', 'Objet mis à jour => ' . json_encode($_option));
-		$globalcache = globalcache::byId($_option['id']);
-		if (is_object($globalcache) && $globalcache->getIsEnable()) {
-			$Ip=$globalcache->getLogicalId();
-			$Port=$globalcache->getPort();
-			log::add('globalcache', 'debug',$globalcache->getHumanName(). " Connexion a l'adresse tcp://$Ip:$Port");
-			$socket = stream_socket_client("tcp://$Ip:$Port", $errno, $errstr, 100);
-			if (!$socket) 
-				throw new Exception(__("$errstr ($errno)", __FILE__));
-			log::add('globalcache', 'debug',$globalcache->getHumanName(). ' Démarrage du démon');
-			while (!feof($socket)) {
-				//$Ligne=stream_get_line($socket, 1000000,"\n");
-            			$Ligne = fgets($socket);
-				log::add('globalcache', 'debug',$globalcache->getHumanName(). ' RX: ' . $Ligne);
-				if($Ligne!==false)
-             				$globalcache->addCacheMonitor("TX",$Ligne);
-			}
-			fclose($socket); 
-		}
 	}
 	private function addCacheMonitor($sense="TX",$_monitor) {
 		$cache = cache::byKey('globalcache::Monitor::'.$this->getId());
