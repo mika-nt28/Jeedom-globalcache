@@ -1,10 +1,12 @@
 {
 	"id" : "globalcache",
 	"name" : "Global Cache",
+	"description" : "Ce plugin permet de connecter tous les appareil global cache a nos jeedom",
 	"licence" : "AGPL",
 	"author" : "Halbout Michael",
 	"require" : "3.0",
 	"category" : "automation protocol",
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
 	"issue" : "https://github.com/mika-nt28/Jeedom-globalcache/issues",
  	"changelog" : "https://github.com/mika-nt28/Jeedom-globalcache/commits/master",
  	"documentation" : "https://mika-nt28.github.io/Jeedom-globalcache/"
