@@ -234,7 +234,15 @@ class globalcacheCmd extends cmd {
 				$LF=hexdec(0x0A);
 			break;
 			case 'HEXA':
-               			$bytes[]='\x'.str_replace(' ','\x',trim($data)); 
+				
+				if($this->getEqLogic()->getConfiguration('type') != 'IR'){
+					$bytes[0]='';
+					foreach(explode(' ',trim($data)) as $byte){
+						$bytes[0].=chr(hexdec($byte));
+					}
+				}else{
+               				$bytes[]='\x'.str_replace(' ','\x',trim($data)); 
+				}
 				$CR=dechex(hexdec(0x0D));
 				$LF=dechex(hexdec(0x0A));
 			break;
