@@ -1,7 +1,7 @@
 {
 	"id" : "globalcache",
 	"name" : "Global Cache",
-	"description" : "Ce plugin permet de connecter tous les appareil global cache a nos jeedom",
+	"description" : "Ce plugin permet de connecter tous les appareils Global Cache à Jeedom",
 	"licence" : "AGPL",
 	"author" : "Halbout Michael",
 	"require" : "3.0",
