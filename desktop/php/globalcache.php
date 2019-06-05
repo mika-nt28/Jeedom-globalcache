@@ -106,7 +106,7 @@
 						<fieldset>
 							<div class="form-group ">
 								<label class="col-sm-3 control-label">
-									{{Nom de l'équipement}}
+									{{Nom}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Indiquez le nom de votre équipement" style="font-size : 1em;color:grey;"></i>
 									</sup>
@@ -118,7 +118,7 @@
 							</div>
 							<div class="form-group">							
 								<label class="col-sm-3 control-label">
-									{{Adresse IP de l'equipement}}
+									{{Adresse IP}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Indiquez l'adresse IP de votre équipement. Cette information est obigatoire pour permetre la connexion avec votre equipement" style="font-size : 1em;color:grey;"></i>
 									</sup>
@@ -128,7 +128,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-	                					<label class="col-sm-2 control-label" >
+	                					<label class="col-sm-3 control-label" >
 									{{Objet parent}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Indiquez l'objet dans lequel le widget de cette equipement apparaiterai sur le dashboard" style="font-size : 1em;color:grey;"></i>
@@ -195,7 +195,7 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Module}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner l'adresse du conneteur de communication" style="font-size : 1em;color:grey;"></i>
@@ -214,7 +214,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Voies}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner l'adresse du conneteur de communication" style="font-size : 1em;color:grey;"></i>
@@ -230,7 +230,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Type de connexion}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner le type d'equipement piloté" style="font-size : 1em;color:grey;"></i>
@@ -245,7 +245,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-4 control-label" >{{Led d'activitée}}</label>
+								<label class="col-sm-3 control-label" >{{Led d'activitée}}</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="blink" checked/>{{Activer}}</label>
 								</div>
@@ -257,7 +257,7 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Mode de transmission}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner le mode de transmission infro-rouge" style="font-size : 1em;color:grey;"></i>
@@ -280,7 +280,7 @@
 					<form class="form-horizontal">
 						<fieldset>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Baudrate}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner le baudrate de la connexion" style="font-size : 1em;color:grey;"></i>
@@ -301,7 +301,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Type de control de flux}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner le type de control de flux de la connexion" style="font-size : 1em;color:grey;"></i>
@@ -315,7 +315,7 @@
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-2 control-label" >
+								<label class="col-sm-3 control-label" >
 									{{Parité}}
 									<sup>
 										<i class="fa fa-question-circle tooltips" title="Séléctionner la parité de la connexion" style="font-size : 1em;color:grey;"></i>
