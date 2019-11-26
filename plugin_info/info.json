@@ -7,5 +7,6 @@
 	"require" : "3.0",
 	"category" : "automation protocol",
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
- 	"documentation" : "https://mika-nt28.github.io/Jeedom-globalcache/"
+ 	"documentation" : "https://mika-nt28.github.io/Jeedom-globalcache/",
+	"changelog" : "https://mika-nt28.github.io/Jeedom-globalcache/"
 }
