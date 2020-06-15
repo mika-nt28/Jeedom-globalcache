@@ -113,7 +113,7 @@
 								</label>
 								<div class="col-sm-3">
 									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
-	                    						<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement template}}"/>
+	                    						<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}"/>
 								</div>
 							</div>
 							<div class="form-group">							
@@ -181,12 +181,6 @@
 										{{Visible}}
 									</label>
 								</div>
-							</div>
-	       						<div class="form-group">
-	        						<label class="col-sm-3 control-label">{{template param 1}}</label>
-							        <div class="col-sm-3">
-							            <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="city" placeholder="param1"/>
-							        </div>
 							</div>
 						</fieldset>
 					</form>
