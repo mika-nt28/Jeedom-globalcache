@@ -237,7 +237,7 @@
 									</sup>
 								</label>
 								<div class="col-sm-9">
-									<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="type" disabled>
+									<select class="eqLogicAttr form-control input-sm" data-l1key="configuration" data-l2key="type">
 										<option value="IR">{{Infra-rouge}}</option>
 										<option value="SERIAL">{{RS232}}</option>
 										<option value="RELAY">{{Relais}}</option>
